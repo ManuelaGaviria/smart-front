@@ -16,6 +16,7 @@ function Logo({ children, onAnimationComplete }) {
 
     animateLogo();
 
+    
     // Cleanup function
     return () => {
       controls.stop();
