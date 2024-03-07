@@ -11,3 +11,40 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.login-container {
+  background-image: url('./images/fondo.jpg');
+  background-size: cover; 
+  background-position: center; 
+  width: 100vw; 
+  height: 100vh; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
+
+.logo {
+  background-image: url('./images/logo.png');
+  background-repeat: no-repeat; 
+  background-position: center; 
+  padding: 25px;
+  border-radius: 5px;
+  width: 200px; 
+  height: 200px;
+  justify-content: center; 
+  align-items: center;
+  position: absolute;
+  top: 50%;
+}
+
+.contenedor {
+  background-color: white;
+  text-align: center;
+  box-shadow: 10px 10px 10px rgb(87, 83, 83);
+  border-radius: 5px;
+  width: 50vw;
+  max-height: 65vh;
+  overflow-y: auto;
+  position: absolute;
+  z-index: 999; /* Asegura que el contenedor esté en la capa superior */
+}
