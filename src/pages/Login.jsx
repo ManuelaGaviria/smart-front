@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useContext, useEffect } from "react"
+import { useLocation, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import Contenedor from '../components/Contenedor';
 import LabelInput from '../components/LabelInput';
@@ -8,6 +9,7 @@ import ButtonLink from '../components/ButtonLink';
 import Button from '../components/Button';
 
 function Login() {
+  const navigate = useNavigate();
   const {changeName, changePassword} = useContext (GeneralContext)
 
   const [logoAnimationComplete, setLogoAnimationComplete] = useState(false);
@@ -17,6 +19,10 @@ function Login() {
     setLogoAnimationComplete(true);
     setAnimateContenedor(true); // Indica que el contenedor debe animarse
   };
+
+  function validateLogin () {
+    navigate('/Admin')
+  }
 
   return (
     <div className="login-container">
@@ -28,9 +34,9 @@ function Login() {
             <LabelInput texto="Usuario" eventoCambio={changeName}></LabelInput>
             <LabelInput tipo="password" texto="Contraseña" eventoCambio={changePassword}></LabelInput>
           </div>
-          <ButtonLink clase="ButtonNav">¿Olvidaste tu contraseña?</ButtonLink>
+          <ButtonLink destino="/Recuperar" clase="ButtonNav">¿Olvidaste tu contraseña?</ButtonLink>
           <br />
-          <Button clase="Button">Iniciar Sesión</Button>
+          <Button eventoClick={validateLogin} clase="Button">Iniciar Sesión</Button>
         </Contenedor>
       )}
     </div>

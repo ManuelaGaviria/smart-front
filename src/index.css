@@ -47,7 +47,7 @@ h1 {
 .contenedor {
   background-color: white;
   text-align: center;
-  box-shadow: 10px 10px 10px rgb(148, 209, 199);
+  box-shadow: 10px 10px 10px #72b9a9;
   border-radius: 5px;
   width: 50vw;
   max-height: 65vh;
@@ -102,7 +102,7 @@ h1 {
 }
 
 .input:hover{
-  border-color: #6fe9a7;
+  border-color: #72b9a9;
 }
 
 .ButtonNav {
