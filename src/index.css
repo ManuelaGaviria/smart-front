@@ -12,6 +12,13 @@ code {
     monospace;
 }
 
+h1 {
+  font-family: "Madimi One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #c11612
+}
+
 .login-container {
   background-image: url('./images/fondo.jpg');
   background-size: cover; 
@@ -40,11 +47,98 @@ code {
 .contenedor {
   background-color: white;
   text-align: center;
-  box-shadow: 10px 10px 10px rgb(87, 83, 83);
+  box-shadow: 10px 10px 10px rgb(148, 209, 199);
   border-radius: 5px;
   width: 50vw;
   max-height: 65vh;
   overflow-y: auto;
   position: absolute;
   z-index: 999; /* Asegura que el contenedor esté en la capa superior */
+}
+
+.malla {
+  display: grid;
+  grid-template-columns: 45% 10% 45%;
+}
+
+.columnaIzquierda {
+  display: flex;
+  justify-content: right;
+  text-align: right;
+  align-items: center;
+  padding: 10px;
+}
+
+.columnaDerecha {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  align-items: center;
+  padding: 10px;
+}
+
+.fullscreenCard {
+  background-color: white;
+  padding: 30px;
+  text-align: center;
+  width: 100vw;
+  height: 83vh;
+  overflow-y: auto;
+  margin-top: 12vh;
+}
+
+.InputContainer{
+  align-items: center;
+  justify-content: center;
+}
+
+.input {
+  padding: 5px;
+  border-width: 2px 2px 2px 2px;
+  border-radius: 50px;
+  border-color: #c11612;
+  outline: none;
+  transition: 0.3s;
+}
+
+.input:hover{
+  border-color: #6fe9a7;
+}
+
+.ButtonNav {
+  cursor: pointer;
+  font-family: "Madimi One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: #c11612;
+  font-size: 15px;
+  background-color: rgba(0,0,0,0);
+  border-width: 0px 0px 0px 0px;
+  margin-bottom: 5px;
+}
+
+.ButtonNav:hover {
+  font-size: 20px;
+  color: #72b9a9;
+  transition: 0.3s;
+}
+
+.Button {
+  cursor: pointer;
+  background-color: #72b9a9;
+  padding: 10px;
+  border-radius: 50px;
+  border-color: #72b9a9;
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  width: 30%;
+  transition: 0.3s;
+  margin-bottom: 20px;
+}
+
+.Button:hover {
+    background-color: #c11612;
+    color: white;
+    width: 40%;
 }
