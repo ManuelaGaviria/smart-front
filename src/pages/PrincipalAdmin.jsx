@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react';
+import Logo2 from '../components/Logo2'
 
 function PrincipalAdmin() {
+
   return (
-    <div>PrincipalAdmin</div>
+    <div className='AdminContainer'>
+      <Logo2></Logo2>
+    </div>
   )
 }
 

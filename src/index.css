@@ -30,6 +30,17 @@ h1 {
   align-items: center;
 }
 
+.AdminContainer {
+  background-image: url('./images/fondo2.jpg');
+  background-size: cover; 
+  background-position: center; 
+  width: 100vw; 
+  height: 100vh; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
+
 .logo {
   background-image: url('./images/logo.png');
   background-repeat: no-repeat; 
