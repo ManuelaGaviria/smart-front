@@ -6,6 +6,7 @@ import GeneralContext from '../context/GeneralContext';
 import React, { useState } from 'react';
 import { useContext, useEffect } from "react"
 import ButtonLink from '../components/ButtonLink';
+import { motion} from 'framer-motion';
 
 function ResetPassword() {
     const {changeName, changePassword} = useContext (GeneralContext)
@@ -18,7 +19,11 @@ function ResetPassword() {
         setAnimateContenedor(true); // Indica que el contenedor debe animarse
     };
   return (
-    <div className="login-container">
+    <motion.div className="login-container"
+    initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
+    animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
+    exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
+    transition={{ duration: 2 }}>
       <Logo onAnimationComplete={handleLogoAnimationComplete}></Logo>
       {logoAnimationComplete && (
         <Contenedor animate={animateContenedor}>
@@ -31,7 +36,7 @@ function ResetPassword() {
           <ButtonLink destino="/" clase="Button">Regresar</ButtonLink>
         </Contenedor>
       )}
-    </div>
+    </motion.div>
   )
 }
 

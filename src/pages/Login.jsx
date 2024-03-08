@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useContext, useEffect } from "react"
 import { useLocation, useNavigate } from 'react-router-dom';
+import { motion} from 'framer-motion';
 import Logo from '../components/Logo';
 import Contenedor from '../components/Contenedor';
 import LabelInput from '../components/LabelInput';
@@ -25,7 +26,11 @@ function Login() {
   }
 
   return (
-    <div className="login-container">
+    <motion.div className="login-container"
+    initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
+    animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
+    exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
+    transition={{ duration: 2 }}>
       <Logo onAnimationComplete={handleLogoAnimationComplete}></Logo>
       {logoAnimationComplete && (
         <Contenedor animate={animateContenedor}>
@@ -34,12 +39,12 @@ function Login() {
             <LabelInput texto="Usuario" eventoCambio={changeName}></LabelInput>
             <LabelInput tipo="password" texto="Contraseña" eventoCambio={changePassword}></LabelInput>
           </div>
-          <ButtonLink destino="/Recuperar" clase="ButtonNav">¿Olvidaste tu contraseña?</ButtonLink>
+          <ButtonLink destino="/ResetPassword" clase="ButtonNav">¿Olvidaste tu contraseña?</ButtonLink>
           <br />
           <Button eventoClick={validateLogin} clase="Button">Iniciar Sesión</Button>
         </Contenedor>
       )}
-    </div>
+    </motion.div>
   );
 }
 

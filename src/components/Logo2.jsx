@@ -2,14 +2,15 @@ import { motion} from 'framer-motion';
 
 function Logo2({children}) {
   return (
-    <motion.div 
-    className='logo'
-    initial={{opacity:0, x:-200}} 
-    animate={{opacity:1, x:-350}} 
-    exit={{opacity:0, x:200}}
-    transition={{duration:2, delay:0.5}}
+    <motion.div
+      className='logo2'
+      initial={{ opacity: 0, y: 100 }} // Inicia desde abajo (puedes ajustar la distancia según tus necesidades)
+      animate={{ opacity: 1, y: -100 }} // Animación de abajo hacia arriba
+      exit={{ opacity: 0, y: -100 }} // Sale hacia abajo
+      transition={{ duration: 2, delay: 0.5 }}
+      
     >
-        {children}
+      {children}
     </motion.div>
   )
 }
