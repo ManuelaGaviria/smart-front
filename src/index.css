@@ -41,6 +41,11 @@ h1 {
   align-items: center;
 }
 
+.centerCircle{
+  position: absolute;
+  top: 10%;
+}
+
 .logo {
   background-image: url('./images/logo.png');
   background-repeat: no-repeat; 
@@ -201,6 +206,30 @@ h1 {
     width: 40%;
 }
 
+.Button2 {
+  cursor: pointer;
+  background-color: #72b9a9;
+  padding: 10px;
+  border-radius: 50px;
+  border-color: #72b9a9;
+  color: white;
+  font-weight: 600;
+  font-size: 25px;
+  width: 40%;
+  transition: 0.3s;
+  margin-bottom: 20px;
+}
+
+.Button2:hover {
+    background-color: #c11612;
+    color: white;
+    width: 50%;
+}
+
+.tituloPrincipal{
+  font-size: 40px;
+}
+
 .logoAdminContainer {
   display: flex;
   justify-content: center;
@@ -301,4 +330,18 @@ h1 {
 /* button click effect*/
 .Btn:active {
   transform: translate(2px ,2px);
+}
+
+.ButtonContainer{
+  display: grid;
+
+}
+
+.niveles{
+  display: flex;
+  justify-content: center;
+}
+
+.radioButton{
+  margin: 0px 10px 0px 10px;
 }

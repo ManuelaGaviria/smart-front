@@ -4,14 +4,11 @@ import { motion} from 'framer-motion';
 import ImageButton from '../components/ImageButton';
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { PiStudentBold } from "react-icons/pi";
-import { LuLogOut } from "react-icons/lu";
-import ButtonLink from '../components/ButtonLink';
 import LogoutButton from '../components/LogoutButton';
 
 
 function PrincipalAdmin() {
   return (
-    
     <motion.div 
     className='AdminContainer'
     initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
