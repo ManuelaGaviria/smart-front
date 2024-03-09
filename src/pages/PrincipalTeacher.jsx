@@ -27,7 +27,7 @@ function PrincipalTeacher() {
           <h1 className='tituloPrincipal'>Profesores</h1>
           <div className='ButtonContainer'>
             <ButtonLink destino="/CreateTeacher" clase="Button2">Crear Profesor</ButtonLink>
-            <ButtonLink clase="Button2">Ver profesores</ButtonLink>
+            <ButtonLink destino="/ActionsTeacher" clase="Button2">Ver profesores</ButtonLink>
             <ButtonLink destino="/Admin" clase="Button2">Regresar</ButtonLink>
           </div>
         </div>

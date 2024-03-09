@@ -7,6 +7,8 @@ import PrincipalTeacher from "../pages/PrincipalTeacher";
 import PrincipalStudent from "../pages/PrincipalStudent";
 import CreateStudent from "../pages/CreateStudent";
 import CreateTeacher from "../pages/CreateTeacher";
+import ActionsTeacher from "../pages/ActionsTeacher";
+import ActionsStudent from "../pages/ActionsStudent"
 
 
 function AppRoutes() {
@@ -22,6 +24,8 @@ function AppRoutes() {
                 <Route exact path="/PrincipalStudent" element={<PrincipalStudent></PrincipalStudent>}></Route>
                 <Route exact path="/CreateTeacher" element={<CreateTeacher></CreateTeacher>}></Route>
                 <Route exact path="/CreateStudent" element={<CreateStudent></CreateStudent>}></Route>
+                <Route exact path="/ActionsTeacher" element={<ActionsTeacher></ActionsTeacher>}></Route>
+                <Route exact path="/ActionsStudent" element={<ActionsStudent></ActionsStudent>}></Route>
             </Routes>
         </AnimatePresence>
     </>

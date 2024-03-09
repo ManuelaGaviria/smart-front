@@ -1,11 +1,6 @@
 import {motion} from 'framer-motion';
-import { useEffect } from 'react';
 
 function FullscreenCard({ children, clase}) {
-
-    useEffect(() => {
-        document.body.style.backgroundColor = 'rgb(40, 0, 80)'
-      }, [])
 
   return (
     <motion.div
