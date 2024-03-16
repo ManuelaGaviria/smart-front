@@ -9,13 +9,23 @@ export const GeneralProvider = ({children}) => {
         setName(e.target.value)
     }
 
-    const [password, setPassword] = useState("")
-    const changePassword = (e) => {
-        setPassword(e.target.value)
+    const [document, setDocument] = useState("")
+    const changeDocument = (e) => {
+        setDocument(e.target.value)
+    }
+
+    const [correo, setCorreo] = useState("")
+    const changeCorreo = (e) => {
+        setCorreo(e.target.value)
+    }
+
+    const [nacimiento, setNacimiento] = useState("")
+    const changeNacimiento = (e) => {
+        setNacimiento(e.target.value)
     }
 
     return <GeneralContext.Provider value={{
-        name,changeName, password, changePassword
+        name,changeName, document, changeDocument, correo, changeCorreo, nacimiento, changeNacimiento
     }}>
         {children}
     </GeneralContext.Provider>
