@@ -20,8 +20,10 @@ function CreateTeacher() {
             correo: correo,
             nacimiento: nacimiento
         }
+        console.log(data)
+
         try {
-            const respuesta = await fetchBody ('/','POST',data) 
+            const respuesta = await fetchBody ('/profesores/agregar','POST',data) 
             console.log(respuesta);
             if (respuesta.exito){
                 alert("Se agregó el profesor con éxito")
