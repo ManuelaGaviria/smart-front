@@ -80,6 +80,12 @@ h1 {
   max-height: 65vh;
   overflow-y: auto;
   position: absolute;
+  z-index: 15;
+}
+
+.CenterTable{
+  display: flex;
+  justify-content: center;
 }
 
 .ButtonsAdminContainer {
@@ -369,4 +375,33 @@ h1 {
 
 .radioButton{
   margin: 0px 10px 0px 10px;
+}
+
+.Table{
+  background-color: white;
+  border-radius: 20px;
+  
+}
+
+th{
+  color: #c11612;
+}
+
+
+.Actions{
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 90px 0px 90px;
+}
+
+.BackgroundOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Color negro con opacidad */
+  z-index: 10; /* Asegura que esté sobre todos los demás elementos */
+  pointer-events: none; /* Permite que los clics pasen a través de este elemento */
+  transition: opacity 0.3s ease; /* Agrega una transición suave */
 }

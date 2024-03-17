@@ -1,4 +1,4 @@
-function LabelInput({texto,tipo,eventoCambio}) {
+function LabelInputEdit({texto,tipo,eventoCambio, valorInicial}) {
     
     return (
       <div className="malla">
@@ -6,10 +6,10 @@ function LabelInput({texto,tipo,eventoCambio}) {
               <label className="label">{texto}</label>
           </div>
           <div className="columnaDerecha">
-              <input className="input" type={tipo} onChange={eventoCambio}/>
+              <input className="input" type={tipo} onChange={eventoCambio} value={valorInicial || ''}/>
           </div>
       </div>
     )
   }
   
-  export default LabelInput
+  export default LabelInputEdit
