@@ -223,6 +223,24 @@ h1 {
     width: 40%;
 }
 
+.ButtonRegresar{
+  cursor: pointer;
+  background-color: #72b9a9;
+  padding: 10px;
+  border-radius: 50px;
+  border-color: #72b9a9;
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  width: 15%;
+  transition: 0.3s;
+  margin-top: 20px;
+}
+
+.ButtonRegresar:hover{
+  width: 20%;
+}
+
 .Button2 {
   cursor: pointer;
   background-color: #72b9a9;

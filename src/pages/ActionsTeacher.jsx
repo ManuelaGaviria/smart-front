@@ -8,7 +8,6 @@ import { useContext } from "react";
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
 import Button from '../components/Button';
-import LabelInput from '../components/LabelInput';
 import ContenedorForms from '../components/ContenedorForms';
 import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
@@ -148,7 +147,7 @@ function ActionsTeacher() {
               </tbody>
             </table>
         </div>
-        <ButtonLink destino="/PrincipalTeacher">Regresar</ButtonLink>
+        <ButtonLink destino="/PrincipalTeacher" clase="ButtonRegresar">Regresar</ButtonLink>
       </FullScreenCard>
       {editModalOpen && (
       <>

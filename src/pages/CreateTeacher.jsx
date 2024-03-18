@@ -31,7 +31,6 @@ function CreateTeacher() {
           changeCorreo({ target: { value: '' } });
           changeNacimiento({ target: { value: '' } });
           alert("Se agregó el profesor con éxito");
-          // Limpiar los campos después de agregar el profesor con éxito
           
         } else {
           alert('Error: ' + respuesta.error);

@@ -2,7 +2,7 @@ import {Link} from "react-router-dom"
 
 
 
-function ButtonLink({children,destino,clase, eventoClick}) {
+function ButtonLink({children,destino, clase, eventoClick}) {
 
   return (
     <Link to={destino}>
