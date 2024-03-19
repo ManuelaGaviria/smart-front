@@ -1,4 +1,11 @@
-function LabelInputEdit({texto,tipo,eventoCambio, valorInicial}) {
+import { useEffect } from "react"
+
+function LabelInputEdit({texto,tipo,eventoCambio, valorInicial, id}) {
+
+    useEffect(() => {
+        document.getElementById(id).value = valorInicial;
+        //eventoCambio(valorInicial);
+    }, []);
     
     return (
       <div className="malla">
@@ -6,10 +13,14 @@ function LabelInputEdit({texto,tipo,eventoCambio, valorInicial}) {
               <label className="label">{texto}</label>
           </div>
           <div className="columnaDerecha">
-              <input className="input" type={tipo} onChange={eventoCambio} value={valorInicial || ''}/>
+              <input id={id} className="input" type={tipo} onChange={eventoCambio} />
           </div>
       </div>
     )
+  }
+
+  LabelInputEdit.defaultProps={
+    valorInicial: ""
   }
   
   export default LabelInputEdit

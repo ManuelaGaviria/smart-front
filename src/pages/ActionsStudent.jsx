@@ -13,7 +13,7 @@ import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
 
 function ActionsStudent() {
-  const { name, changeName, document, changeDocument, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
   const [students, setStudents] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -55,13 +55,18 @@ function ActionsStudent() {
     }
   }
 
-  async function editTeacher() {
-    if (name === "" || document === "" || correo === "" ){
+  async function editStudent(id) {
+    const name = document.getElementById('studentName').value;
+    const documento = document.getElementById('studentDocumento').value;
+    const correo = document.getElementById('studentEmail').value;
+    const nacimiento = document.getElementById('studentDate').value;
+    if (name === "" || documento === "" || correo === "" ){
         alert("Por favor, llena todos los campos.");
     } else {
         const data = {
+            id: id,
             nombre: name,
-            documento: document,
+            documento: documento,
             correo: correo,
             nacimiento: nacimiento
         }
@@ -72,6 +77,7 @@ function ActionsStudent() {
             console.log(respuesta);
             if (respuesta.exito){
                 alert("Se editó el estudiante con éxito");
+                handleCloseModal();
                 await listStudents();
             }
             else {
@@ -114,7 +120,7 @@ function ActionsStudent() {
     initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
     animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
     exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
-    transition={{ duration: 2 }}>
+    transition={{ duration: 1 }}>
         <Logo3></Logo3>
         <FullScreenCard>
         <div className='CenterTable'>
@@ -155,13 +161,13 @@ function ActionsStudent() {
         <ContenedorForms>
           <h1>Editar Estudiante</h1>
           <div className="InputContainer">
-            <LabelInputEdit texto="Nombre" eventoCambio={changeName} valorInicial={selectedStudent.nombre}></LabelInputEdit>
-            <LabelInputEdit tipo="number" texto="Documento" eventoCambio={changeDocument} valorInicial={selectedStudent.documento}></LabelInputEdit>
-            <LabelInputEdit tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedStudent.correo}></LabelInputEdit>
-            <LabelInputEdit tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedStudent.nacimiento}></LabelInputEdit>
+            <LabelInputEdit id="studentName" texto="Nombre" eventoCambio={changeName} valorInicial={selectedStudent.nombre}></LabelInputEdit>
+            <LabelInputEdit id="studentDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedStudent.documento}></LabelInputEdit>
+            <LabelInputEdit id="studentMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedStudent.correo}></LabelInputEdit>
+            <LabelInputEdit id="studentDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedStudent.nacimiento}></LabelInputEdit>
           </div>
           <br />
-          <Button clase="Button" eventoClick={editTeacher}>Editar</Button>
+          <Button clase="Button" eventoClick={() => editStudent(selectedStudent.id)}>Editar</Button>
           <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
         </ContenedorForms>
       </>

@@ -2,6 +2,7 @@ import { useContext } from "react";
 import { motion} from 'framer-motion';
 import ContenedorForms from '../components/ContenedorForms';
 import LabelInput from '../components/LabelInput';
+import LabelInputEdit from "../components/LabelInputEdit";
 import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
 import RadioButton from '../components/RadioButton';
@@ -9,15 +10,15 @@ import { fetchBody } from '../utils/fetch';
 import GeneralContext from "../context/GeneralContext";
 
 function CreateStudent() {
-  const { name, changeName, document, changeDocument, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
 
   async function validate() {
-    if (name === "" || document === "" || correo === "") {
+    if (name === "" || documento === "" || correo === "") {
       alert("Por favor, llena todos los campos.");
     } else {
       const data = {
         nombre: name,
-        documento: document,
+        documento: documento,
         correo: correo,
         nacimiento: nacimiento
       };
@@ -28,11 +29,14 @@ function CreateStudent() {
         console.log(respuesta);
         if (respuesta.exito) {
           changeName({ target: { value: '' } });
-          changeDocument({ target: { value: '' } });
+          changeDocumento({ target: { value: '' } });
           changeCorreo({ target: { value: '' } });
           changeNacimiento({ target: { value: '' } });
+          document.getElementById("idName").value = "";
+          document.getElementById("idDocument").value = "";
+          document.getElementById("idMail").value = "";
+          document.getElementById("idDate").value = "";
           alert("Se agregó el estudiante con éxito");
-          
         } else {
           alert('Error: ' + respuesta.error);
         }
@@ -48,14 +52,14 @@ function CreateStudent() {
     initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
     animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
     exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
-    transition={{ duration: 2 }}>
+    transition={{ duration: 1 }}>
         <ContenedorForms>
             <h1>Crear Estudiante</h1>
           <div className="InputContainer">
-            <LabelInput eventoCambio={changeName} texto="Nombre"></LabelInput>
-            <LabelInput eventoCambio={changeDocument} tipo="number" texto="Documento"></LabelInput>
-            <LabelInput eventoCambio={changeCorreo} tipo="email" texto="Correo"></LabelInput>
-            <LabelInput eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento"></LabelInput>
+            <LabelInputEdit id="idName" eventoCambio={changeName} texto="Nombre"></LabelInputEdit>
+            <LabelInputEdit id="idDocument" eventoCambio={changeDocumento} tipo="number" texto="Documento"></LabelInputEdit>
+            <LabelInputEdit id="idMail" eventoCambio={changeCorreo} tipo="email" texto="Correo"></LabelInputEdit>
+            <LabelInputEdit id="idNacimiento" eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento"></LabelInputEdit>
             <div>
                 <label>Niveles Matriculados</label>
                 <div className='niveles'>

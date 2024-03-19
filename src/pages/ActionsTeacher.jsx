@@ -13,7 +13,7 @@ import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
 
 function ActionsTeacher() {
-  const { name, changeName, document, changeDocument, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
   const [teachers, setTeachers] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -55,33 +55,40 @@ function ActionsTeacher() {
     }
   }
 
-  async function editTeacher() {
-    if (name === "" || document === "" || correo === "" ){
-        alert("Por favor, llena todos los campos.");
+  async function editTeacher(id) {
+    const name = document.getElementById('teacherName').value;
+    const documento = document.getElementById('teacherDocumento').value;
+    const correo = document.getElementById('teacherEmail').value;
+    const nacimiento = document.getElementById('teacherDate').value;
+    if (name === "" || documento === "" || correo === "") {
+      alert ("Ningún campo puede estar vacio")
     } else {
-        const data = {
-            nombre: name,
-            documento: document,
-            correo: correo,
-            nacimiento: nacimiento
-        }
-        console.log(data)
 
-        try {
-            const respuesta = await fetchBody ('/profesores/editar','PUT',data) 
-            console.log(respuesta);
-            if (respuesta.exito){
-                alert("Se editó el profesor con éxito");
-                await listTeachers();
-            }
-            else {
-                alert('Error: ' + respuesta.error)
-            }
-        } catch (error) {
-            alert('Error al procesar la solicitud')
-            console.error('Error:', error)
-        }
-    }
+      const data = {
+        id: id,
+        nombre: name,
+        documento: documento,
+        correo: correo,
+        nacimiento: nacimiento
+      }
+      console.log(data)
+
+      try {
+          const respuesta = await fetchBody ('/profesores/editar','PUT',data) 
+          console.log(respuesta);
+          if (respuesta.exito){
+              alert("Se editó el profesor con éxito");
+              handleCloseModal();
+              await listTeachers();
+          }
+          else {
+              alert('Error: ' + respuesta.error)
+          }
+      } catch (error) {
+          alert('Error al procesar la solicitud')
+          console.error('Error:', error)
+      }
+    }  
   }
 
 
@@ -116,7 +123,7 @@ function ActionsTeacher() {
       initial={{ opacity: 0, x: 1000 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -1000 }}
-      transition={{ duration: 2 }}
+      transition={{ duration: 1 }}
     >
       <Logo3 />
       <FullScreenCard>
@@ -158,13 +165,13 @@ function ActionsTeacher() {
         <ContenedorForms>
           <h1>Editar Profesor</h1>
           <div className="InputContainer">
-            <LabelInputEdit texto="Nombre" eventoCambio={changeName} valorInicial={selectedTeacher.nombre}></LabelInputEdit>
-            <LabelInputEdit tipo="number" texto="Documento" eventoCambio={changeDocument} valorInicial={selectedTeacher.documento}></LabelInputEdit>
-            <LabelInputEdit tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedTeacher.correo}></LabelInputEdit>
-            <LabelInputEdit tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedTeacher.nacimiento}></LabelInputEdit>
+            <LabelInputEdit id='teacherName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedTeacher.nombre}></LabelInputEdit>
+            <LabelInputEdit id='teacherDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedTeacher.documento}></LabelInputEdit>
+            <LabelInputEdit id='teacherEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedTeacher.correo}></LabelInputEdit>
+            <LabelInputEdit id='teacherDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedTeacher.nacimiento}></LabelInputEdit>
           </div>
           <br />
-          <Button clase="Button" eventoClick={editTeacher}>Editar</Button>
+          <Button clase="Button" eventoClick={() => editTeacher(selectedTeacher.id)}>Editar</Button>
           <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
         </ContenedorForms>
       </>

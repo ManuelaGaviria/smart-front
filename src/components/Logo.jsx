@@ -9,7 +9,7 @@ function Logo({ children, onAnimationComplete }) {
       await controls.start({
         opacity: 1,
         x: '10%', // Mover al centro de la pantalla
-        transition: { duration: 2, delay: 2 },
+        transition: { duration: 1, delay: 1 },
       });
       handleAnimationComplete();
     };

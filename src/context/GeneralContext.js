@@ -9,9 +9,9 @@ export const GeneralProvider = ({children}) => {
         setName(e.target.value)
     }
 
-    const [document, setDocument] = useState("")
-    const changeDocument = (e) => {
-        setDocument(e.target.value)
+    const [documento, setDocumento] = useState("")
+    const changeDocumento = (e) => {
+        setDocumento(e.target.value)
     }
 
     const [correo, setCorreo] = useState("")
@@ -25,7 +25,7 @@ export const GeneralProvider = ({children}) => {
     }
 
     return <GeneralContext.Provider value={{
-        name,changeName, document, changeDocument, correo, changeCorreo, nacimiento, changeNacimiento
+        name,changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento
     }}>
         {children}
     </GeneralContext.Provider>

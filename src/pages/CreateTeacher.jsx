@@ -2,21 +2,22 @@ import { useContext, useEffect } from "react";
 import { motion } from 'framer-motion';
 import ContenedorForms from '../components/ContenedorForms';
 import LabelInput from '../components/LabelInput';
+import LabelInputEdit from "../components/LabelInputEdit";
 import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
 import { fetchBody } from '../utils/fetch';
 import GeneralContext from '../context/GeneralContext';
 
 function CreateTeacher() {
-  const { name, changeName, document, changeDocument, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
 
   async function validate() {
-    if (name === "" || document === "" || correo === "") {
+    if (name === "" || documento === "" || correo === "") {
       alert("Por favor, llena todos los campos.");
     } else {
       const data = {
         nombre: name,
-        documento: document,
+        documento: documento,
         correo: correo,
         nacimiento: nacimiento
       };
@@ -27,9 +28,13 @@ function CreateTeacher() {
         console.log(respuesta);
         if (respuesta.exito) {
           changeName({ target: { value: '' } });
-          changeDocument({ target: { value: '' } });
+          changeDocumento({ target: { value: '' } });
           changeCorreo({ target: { value: '' } });
           changeNacimiento({ target: { value: '' } });
+          document.getElementById("idName").value = "";
+          document.getElementById("idDocument").value = "";
+          document.getElementById("idMail").value = "";
+          document.getElementById("idDate").value = "";
           alert("Se agregó el profesor con éxito");
           
         } else {
@@ -47,14 +52,14 @@ function CreateTeacher() {
       initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
       animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
       exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
-      transition={{ duration: 2 }}>
+      transition={{ duration: 1 }}>
       <ContenedorForms>
         <h1>Crear Profesor</h1>
         <div className="InputContainer">
-          <LabelInput texto="Nombre" eventoCambio={changeName}></LabelInput>
-          <LabelInput tipo="number" texto="Documento" eventoCambio={changeDocument}></LabelInput>
-          <LabelInput tipo="email" texto="Correo" eventoCambio={changeCorreo}></LabelInput>
-          <LabelInput tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento}></LabelInput>
+          <LabelInputEdit id="idName" texto="Nombre" eventoCambio={changeName} ></LabelInputEdit>
+          <LabelInputEdit id="idDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento}></LabelInputEdit>
+          <LabelInputEdit id="idMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} ></LabelInputEdit>
+          <LabelInputEdit id="idDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento}></LabelInputEdit>
         </div>
         <br />
         <Button eventoClick={validate} clase="Button">Crear</Button>

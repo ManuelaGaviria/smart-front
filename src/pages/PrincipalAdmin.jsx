@@ -24,7 +24,7 @@ function PrincipalAdmin() {
       initial={{ opacity: 0, y: -500 }} // Inicia desde abajo (puedes ajustar la distancia según tus necesidades)
       animate={{ opacity: 1, y: -50 }} // Animación de arriba hacia abajo
       exit={{ opacity: 0, y: 500 }} // Sale hacia abajo
-      transition={{ duration: 2 }}
+      transition={{ duration: 1 }}
       > 
         <div className='ButtonsAdminContainer'>
           <h1>Bienvenido Administrador</h1>

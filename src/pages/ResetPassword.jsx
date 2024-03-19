@@ -23,7 +23,7 @@ function ResetPassword() {
     initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
     animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
     exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
-    transition={{ duration: 2 }}>
+    transition={{ duration: 1 }}>
       <Logo onAnimationComplete={handleLogoAnimationComplete}></Logo>
       {logoAnimationComplete && (
         <Contenedor animate={animateContenedor}>
