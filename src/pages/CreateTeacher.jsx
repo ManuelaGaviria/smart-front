@@ -1,8 +1,7 @@
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import ContenedorForms from '../components/ContenedorForms';
-import LabelInput from '../components/LabelInput';
 import LabelInputEdit from "../components/LabelInputEdit";
 import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
@@ -13,7 +12,7 @@ function CreateTeacher() {
   const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
 
   async function validate() {
-    if (name === "" || documento === "" || correo === "") {
+    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -56,6 +55,10 @@ function CreateTeacher() {
             icon: "error",
             title: "Error",
             text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
           });
         }
       } catch (error) {
@@ -63,6 +66,10 @@ function CreateTeacher() {
           icon: "error",
           title: "Error",
           text: 'Error al procesar la solicitud para crear un profesor',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
         });
       }
     }

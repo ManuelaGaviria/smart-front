@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import Logo3 from '../components/Logo3';
 import { motion } from 'framer-motion';
 import FullScreenCard from '../components/FullScreenCard';
@@ -13,11 +14,11 @@ import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
 
 function ActionsTeacher() {
-  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
   const [teachers, setTeachers] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
-  const [backgroundOpacity, setBackgroundOpacity] = useState(0.5);
+  const [backgroundOpacity] = useState(0.5);
 
   useEffect(() => {
     listTeachers();
@@ -38,11 +39,18 @@ function ActionsTeacher() {
       if (respuesta.exito) {
         setTeachers(respuesta.lista)
       } else {
-        alert('Error: ' + respuesta.error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: respuesta.error,
+        });
       }
     } catch (error) {
-      alert('Error al procesar la solicitud');
-      console.error('Error:', error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: 'Error al procesar la solicitud para listar los profesores',
+      });
     }
   }
 
@@ -60,8 +68,16 @@ function ActionsTeacher() {
     const documento = document.getElementById('teacherDocumento').value;
     const correo = document.getElementById('teacherEmail').value;
     const nacimiento = document.getElementById('teacherDate').value;
-    if (name === "" || documento === "" || correo === "") {
-      alert ("Ningún campo puede estar vacio")
+    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Por favor llena todos los campos",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     } else {
 
       const data = {
@@ -71,22 +87,41 @@ function ActionsTeacher() {
         correo: correo,
         nacimiento: nacimiento
       }
-      console.log(data)
-
       try {
           const respuesta = await fetchBody ('/profesores/editar','PUT',data) 
-          console.log(respuesta);
           if (respuesta.exito){
-              alert("Se editó el profesor con éxito");
+              Swal.fire({
+                icon: "success",
+                title: "Se actualizó profesor con éxito!",
+                customClass: {
+                  confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+              });
               handleCloseModal();
               await listTeachers();
           }
           else {
-              alert('Error: ' + respuesta.error)
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: respuesta.error,
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
           }
       } catch (error) {
-          alert('Error al procesar la solicitud')
-          console.error('Error:', error)
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para editar un profesor',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
       }
     }  
   }
@@ -94,24 +129,55 @@ function ActionsTeacher() {
 
   async function handleDelete(id) {
     // Mostrar una alerta de confirmación antes de eliminar al profesor
-    const confirmacion = window.confirm("¿Estás seguro de eliminar este profesor?");
+    const confirmacion = await Swal.fire({
+      title: '¿Estás seguro de eliminar este profesor?',
+      text: "Esta acción no se puede revertir",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      customClass: {
+        confirmButton: 'btn-color',
+        cancelButton: 'btn-color-cancel'
+      },
+      buttonsStyling: false
+  });
     
     // Verificar si el usuario confirmó la eliminación
-    if (confirmacion) {
+    if (confirmacion.isConfirmed) {
       const data = { id: id };
       try {
         const respuesta = await fetchBody('/profesores/eliminar', 'DELETE', data );
-        console.log(respuesta);
-        console.log("respuesta.exito= " + respuesta.exito)
         if (respuesta.exito){
-          alert("Se eliminó el profesor con éxito");
+          Swal.fire({
+            icon: "success",
+            title: "Profesor eliminado con éxito!",
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
           await listTeachers();
         } else {
-          alert('Error: ' + respuesta.error)
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
         }
       } catch (error) {
-        alert('Error al procesar la solicitud')
-        console.error('Error:', error)
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para eliminar un profesor',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
       }
     }
   }

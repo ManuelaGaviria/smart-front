@@ -441,3 +441,20 @@ th{
   width: 150px;
 }
 
+.btn-color-cancel{
+  cursor: pointer;
+  background-color: #c11612;
+  padding: 10px;
+  border-radius: 50px;
+  border-color: #72b9a9;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+  margin-bottom: 20px;
+  width: 100px;
+}
+
+.btn-color-cancel:hover{
+  width: 150px;
+}
+

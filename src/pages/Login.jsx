@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useContext, useEffect } from "react"
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useContext } from "react"
+import { useNavigate } from 'react-router-dom';
 import { motion} from 'framer-motion';
 import Logo from '../components/Logo';
 import Contenedor from '../components/Contenedor';

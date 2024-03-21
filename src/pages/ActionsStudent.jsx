@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
 import Logo3 from '../components/Logo3';
 import { motion} from 'framer-motion';
 import FullScreenCard from '../components/FullScreenCard';
@@ -13,11 +14,11 @@ import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
 
 function ActionsStudent() {
-  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
   const [students, setStudents] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [backgroundOpacity, setBackgroundOpacity] = useState(0.5);
+  const [backgroundOpacity] = useState(0.5);
 
   useEffect(() => {
     listStudents();
@@ -38,11 +39,18 @@ function ActionsStudent() {
       if (respuesta.exito) {
         setStudents(respuesta.lista)
       } else {
-        alert('Error: ' + respuesta.error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: respuesta.error,
+        });
       }
     } catch (error) {
-      alert('Error al procesar la solicitud');
-      console.error('Error:', error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: 'Error al procesar la solicitud para listar los estudiantes',
+      });
     }
   }
 
@@ -60,8 +68,16 @@ function ActionsStudent() {
     const documento = document.getElementById('studentDocumento').value;
     const correo = document.getElementById('studentEmail').value;
     const nacimiento = document.getElementById('studentDate').value;
-    if (name === "" || documento === "" || correo === "" ){
-        alert("Por favor, llena todos los campos.");
+    if (name === "" || documento === "" || correo === "" || nacimiento === "" ){
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Por favor llena todos los campos",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     } else {
         const data = {
             id: id,
@@ -70,46 +86,96 @@ function ActionsStudent() {
             correo: correo,
             nacimiento: nacimiento
         }
-        console.log(data)
-
         try {
             const respuesta = await fetchBody ('/estudiantes/editar','PUT',data) 
-            console.log(respuesta);
             if (respuesta.exito){
-                alert("Se editó el estudiante con éxito");
+                Swal.fire({
+                  icon: "success",
+                  title: "Se actualizó estudiante con éxito!",
+                  customClass: {
+                    confirmButton: 'btn-color'
+                  },
+                  buttonsStyling: false
+                });
                 handleCloseModal();
                 await listStudents();
             }
             else {
-                alert('Error: ' + respuesta.error)
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: respuesta.error,
+                  customClass: {
+                    confirmButton: 'btn-color'
+                  },
+                  buttonsStyling: false
+                });
             }
         } catch (error) {
-            alert('Error al procesar la solicitud')
-            console.error('Error:', error)
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: 'Error al procesar la solicitud para editar un profesor',
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
         }
     }
   }
 
   async function handleDelete(id) {
     // Mostrar una alerta de confirmación antes de eliminar al estudiante
-    const confirmacion = window.confirm("¿Estás seguro de eliminar este estudiante?");
+    const confirmacion = await Swal.fire({
+      title: '¿Estás seguro de eliminar este profesor?',
+      text: "Esta acción no se puede revertir",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      customClass: {
+        confirmButton: 'btn-color',
+        cancelButton: 'btn-color-cancel'
+      },
+      buttonsStyling: false
+    });
     
     // Verificar si el usuario confirmó la eliminación
-    if (confirmacion) {
+    if (confirmacion.isConfirmed) {
       const data = { id: id };
       try {
         const respuesta = await fetchBody('/estudiantes/eliminar', 'DELETE', data );
-        console.log(respuesta);
-        console.log("respuesta.exito= " + respuesta.exito)
         if (respuesta.exito){
-          alert("Se eliminó el estudiante con éxito");
+          Swal.fire({
+            icon: "success",
+            title: "Estudiantes eliminado con éxito!",
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
           await listStudents();
         } else {
-          alert('Error: ' + respuesta.error)
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
         }
       } catch (error) {
-        alert('Error al procesar la solicitud')
-        console.error('Error:', error)
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para eliminar un estudiante',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
       }
     }
   }

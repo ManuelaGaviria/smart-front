@@ -1,8 +1,7 @@
 import { useContext } from "react";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { motion} from 'framer-motion';
 import ContenedorForms from '../components/ContenedorForms';
-import LabelInput from '../components/LabelInput';
 import LabelInputEdit from "../components/LabelInputEdit";
 import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
@@ -14,7 +13,7 @@ function CreateStudent() {
   const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
 
   async function validate() {
-    if (name === "" || documento === "" || correo === "") {
+    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -31,11 +30,8 @@ function CreateStudent() {
         correo: correo,
         nacimiento: nacimiento
       };
-      console.log(data);
-
       try {
         const respuesta = await fetchBody('/estudiantes/agregar', 'POST', data);
-        console.log(respuesta);
         if (respuesta.exito) {
           changeName({ target: { value: '' } });
           changeDocumento({ target: { value: '' } });
@@ -58,13 +54,21 @@ function CreateStudent() {
             icon: "error",
             title: "Error",
             text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
           });
         }
       } catch (error) {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: 'Error al procesar la solicitud para crear un profesor',
+          text: 'Error al procesar la solicitud para crear un estudiante',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
         });
       }
     }

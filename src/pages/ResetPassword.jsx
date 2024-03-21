@@ -4,12 +4,12 @@ import Contenedor from '../components/Contenedor';
 import Button from '../components/Button';
 import GeneralContext from '../context/GeneralContext';
 import React, { useState } from 'react';
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import ButtonLink from '../components/ButtonLink';
 import { motion} from 'framer-motion';
 
 function ResetPassword() {
-    const {changeName, changePassword} = useContext (GeneralContext)
+    const {changeName} = useContext (GeneralContext)
 
     const [logoAnimationComplete, setLogoAnimationComplete] = useState(false);
     const [animateContenedor, setAnimateContenedor] = useState(false);
