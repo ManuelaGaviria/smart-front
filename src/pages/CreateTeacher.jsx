@@ -1,4 +1,5 @@
 import { useContext, useEffect } from "react";
+import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import ContenedorForms from '../components/ContenedorForms';
 import LabelInput from '../components/LabelInput';
@@ -13,19 +14,25 @@ function CreateTeacher() {
 
   async function validate() {
     if (name === "" || documento === "" || correo === "") {
-      alert("Por favor, llena todos los campos.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Por favor llena todos los campos",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     } else {
+      //poner validaciones para el correo, que tenga el arroba, y mirar como verificar si es un correo válido
       const data = {
         nombre: name,
         documento: documento,
         correo: correo,
         nacimiento: nacimiento
       };
-      console.log(data);
-
       try {
         const respuesta = await fetchBody('/profesores/agregar', 'POST', data);
-        console.log(respuesta);
         if (respuesta.exito) {
           changeName({ target: { value: '' } });
           changeDocumento({ target: { value: '' } });
@@ -35,14 +42,28 @@ function CreateTeacher() {
           document.getElementById("idDocument").value = "";
           document.getElementById("idMail").value = "";
           document.getElementById("idDate").value = "";
-          alert("Se agregó el profesor con éxito");
+          Swal.fire({
+            icon: "success",
+            title: "Profesor creado con éxito!",
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
           
         } else {
-          alert('Error: ' + respuesta.error);
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+          });
         }
       } catch (error) {
-        alert('Error al procesar la solicitud');
-        console.error('Error:', error);
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para crear un profesor',
+        });
       }
     }
   }

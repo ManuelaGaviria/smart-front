@@ -423,3 +423,21 @@ th{
   pointer-events: none; /* Permite que los clics pasen a través de este elemento */
   transition: opacity 0.3s ease; /* Agrega una transición suave */
 }
+
+.btn-color{
+  cursor: pointer;
+  background-color: #72b9a9;
+  padding: 10px;
+  border-radius: 50px;
+  border-color: #72b9a9;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s;
+  margin-bottom: 20px;
+  width: 100px;
+}
+
+.btn-color:hover{
+  width: 150px;
+}
+
