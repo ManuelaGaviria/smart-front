@@ -37,10 +37,10 @@ function CreateStudent() {
           changeDocumento({ target: { value: '' } });
           changeCorreo({ target: { value: '' } });
           changeNacimiento({ target: { value: '' } });
-          document.getElementById("idName").value = "";
-          document.getElementById("idDocument").value = "";
-          document.getElementById("idMail").value = "";
-          document.getElementById("idDate").value = "";
+          document.getElementById("idNameStudent").value = "";
+          document.getElementById("idDocumentStudent").value = "";
+          document.getElementById("idMailStudent").value = "";
+          document.getElementById("idDateStudent").value = "";
           Swal.fire({
             icon: "success",
             title: "Estudiante creado con éxito!",
@@ -83,10 +83,10 @@ function CreateStudent() {
         <ContenedorForms>
             <h1>Crear Estudiante</h1>
           <div className="InputContainer">
-            <LabelInputEdit id="idName" eventoCambio={changeName} texto="Nombre"></LabelInputEdit>
-            <LabelInputEdit id="idDocument" eventoCambio={changeDocumento} tipo="number" texto="Documento"></LabelInputEdit>
-            <LabelInputEdit id="idMail" eventoCambio={changeCorreo} tipo="email" texto="Correo"></LabelInputEdit>
-            <LabelInputEdit id="idNacimiento" eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento"></LabelInputEdit>
+            <LabelInputEdit id="idNameStudent" eventoCambio={changeName} texto="Nombre"></LabelInputEdit>
+            <LabelInputEdit id="idDocumentStudent" eventoCambio={changeDocumento} tipo="number" texto="Documento"></LabelInputEdit>
+            <LabelInputEdit id="idMailStudent" eventoCambio={changeCorreo} tipo="email" texto="Correo"></LabelInputEdit>
+            <LabelInputEdit id="idDateStudent" eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento"></LabelInputEdit>
             <div>
                 <label>Niveles Matriculados</label>
                 <div className='niveles'>

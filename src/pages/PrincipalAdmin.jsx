@@ -1,13 +1,25 @@
-
+import React, { useEffect } from 'react'
 import Logo2 from '../components/Logo2';
 import { motion} from 'framer-motion';
 import ImageButton from '../components/ImageButton';
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { PiStudentBold } from "react-icons/pi";
 import LogoutButton from '../components/LogoutButton';
+import { fetchBody } from '../utils/fetch';
+import { useNavigate } from 'react-router-dom';
 
 
 function PrincipalAdmin() {
+  const navigate = useNavigate();
+    useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "administrador"});
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        }
+        verificar();
+    }, [])
   return (
     <motion.div 
     className='AdminContainer'

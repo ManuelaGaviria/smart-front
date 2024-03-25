@@ -4,6 +4,11 @@ const GeneralContext = createContext()
 
 export const GeneralProvider = ({children}) => {
 
+    const [password, setPassword] = useState("")
+    const changePassword = (e) => {
+        setPassword(e.target.value)
+    }
+
     const [name, setName] = useState("")
     const changeName = (e) => {
         setName(e.target.value)
@@ -25,7 +30,7 @@ export const GeneralProvider = ({children}) => {
     }
 
     return <GeneralContext.Provider value={{
-        name,changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento
+        name,changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento, password, changePassword
     }}>
         {children}
     </GeneralContext.Provider>
