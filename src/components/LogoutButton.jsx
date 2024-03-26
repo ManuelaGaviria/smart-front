@@ -1,12 +1,13 @@
 import React from 'react';
 import Button from './Button';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 function LogoutButton() {
     const navigate = useNavigate();
 
     function logout () {
       navigate('/')
+      localStorage.clear();
     }
   return (
     <div class="Logout">

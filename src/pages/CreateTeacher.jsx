@@ -11,6 +11,8 @@ import GeneralContext from '../context/GeneralContext';
 function CreateTeacher() {
   const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
 
+
+
   async function validate() {
     if (name === "" || documento === "" || correo === "" || nacimiento === "") {
       Swal.fire({
