@@ -12,7 +12,6 @@ import Button from '../components/Button';
 import ContenedorForms from '../components/ContenedorForms';
 import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
-import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ActionsStudent() {
@@ -26,7 +25,7 @@ function ActionsStudent() {
         }
         verificar();
     }, [])
-    
+
   const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
   const [students, setStudents] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);

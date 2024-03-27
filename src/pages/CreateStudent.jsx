@@ -22,7 +22,7 @@ function CreateStudent() {
         }
         verificar();
     }, [])
-    
+
   const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
 
   async function validate() {
@@ -41,10 +41,11 @@ function CreateStudent() {
         nombre: name,
         documento: documento,
         correo: correo,
-        nacimiento: nacimiento
+        nacimiento: nacimiento,
+        rol: "estudiante"
       };
       try {
-        const respuesta = await fetchBody('/estudiantes/agregar', 'POST', data);
+        const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
         if (respuesta.exito) {
           changeName({ target: { value: '' } });
           changeDocumento({ target: { value: '' } });

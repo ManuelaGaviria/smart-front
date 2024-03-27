@@ -41,10 +41,11 @@ function CreateTeacher() {
         nombre: name,
         documento: documento,
         correo: correo,
-        nacimiento: nacimiento
+        nacimiento: nacimiento,
+        rol: "profesor"
       };
       try {
-        const respuesta = await fetchBody('/profesores/agregar', 'POST', data);
+        const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
         if (respuesta.exito) {
           changeName({ target: { value: '' } });
           changeDocumento({ target: { value: '' } });
