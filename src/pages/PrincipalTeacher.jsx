@@ -3,8 +3,21 @@ import { motion} from 'framer-motion';
 import { FaChalkboardTeacher } from "react-icons/fa";
 import CircleImage from '../components/CircleImage';
 import ButtonLink from '../components/ButtonLink';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fetchBody } from '../utils/fetch';
 
 function PrincipalTeacher() {
+  const navigate = useNavigate();
+    useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "administrador"});
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        }
+        verificar();
+    }, [])
   return (
     <motion.div 
     className='AdminContainer'

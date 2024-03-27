@@ -12,8 +12,21 @@ import Button from '../components/Button';
 import ContenedorForms from '../components/ContenedorForms';
 import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function ActionsStudent() {
+  const navigate = useNavigate();
+    useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "administrador"});
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        }
+        verificar();
+    }, [])
+    
   const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
   const [students, setStudents] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);

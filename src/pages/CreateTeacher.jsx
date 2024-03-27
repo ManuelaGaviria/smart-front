@@ -7,11 +7,22 @@ import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
 import { fetchBody } from '../utils/fetch';
 import GeneralContext from '../context/GeneralContext';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function CreateTeacher() {
+  const navigate = useNavigate();
+    useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "administrador"});
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        }
+        verificar();
+    }, [])
+  
   const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
-
-
 
   async function validate() {
     if (name === "" || documento === "" || correo === "" || nacimiento === "") {
