@@ -47,7 +47,7 @@ function ActionsTeacher() {
 
   async function listTeachers() {
     try {
-      const respuesta = await fetchGet('/profesores/');
+      const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "profesor"}) 
       if (respuesta.exito) {
         setTeachers(respuesta.lista)
       } else {
@@ -68,6 +68,7 @@ function ActionsTeacher() {
 
   async function handleEdit(id) {
     const teacherToEdit = teachers.find(teacher => teacher.id === id);
+    console.log(teacherToEdit);
     if (teacherToEdit) {
       openEditModal(teacherToEdit);
     } else {
@@ -100,7 +101,7 @@ function ActionsTeacher() {
         nacimiento: nacimiento
       }
       try {
-          const respuesta = await fetchBody ('/profesores/editar','PUT',data) 
+          const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
           if (respuesta.exito){
               Swal.fire({
                 icon: "success",
@@ -158,7 +159,7 @@ function ActionsTeacher() {
     if (confirmacion.isConfirmed) {
       const data = { id: id };
       try {
-        const respuesta = await fetchBody('/profesores/eliminar', 'DELETE', data );
+        const respuesta = await fetchBody('/usuarios/eliminar', 'DELETE', data );
         if (respuesta.exito){
           Swal.fire({
             icon: "success",
@@ -224,8 +225,8 @@ function ActionsTeacher() {
                     <td>{teacher.correo}</td>
                     <td>{teacher.nacimiento}</td>
                     <td className='Actions'>
-                      <button onClick={() => handleEdit(teacher.id)}><MdModeEdit /></button>
-                      <button onClick={() => handleDelete(teacher.id)}><MdDelete /></button>
+                      <button className='btn-edit' onClick={() => handleEdit(teacher.id)}><MdModeEdit /></button>
+                      <button className='btn-delete' onClick={() => handleDelete(teacher.id)}><MdDelete /></button>
                     </td>
                   </tr>
                 ))}

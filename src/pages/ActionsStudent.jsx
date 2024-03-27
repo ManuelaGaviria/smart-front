@@ -47,7 +47,7 @@ function ActionsStudent() {
 
   async function listStudents() {
     try {
-      const respuesta = await fetchGet('/estudiantes/');
+      const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "estudiante"}) 
       if (respuesta.exito) {
         setStudents(respuesta.lista)
       } else {
@@ -99,7 +99,7 @@ function ActionsStudent() {
             nacimiento: nacimiento
         }
         try {
-            const respuesta = await fetchBody ('/estudiantes/editar','PUT',data) 
+            const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
             if (respuesta.exito){
                 Swal.fire({
                   icon: "success",
@@ -156,7 +156,7 @@ function ActionsStudent() {
     if (confirmacion.isConfirmed) {
       const data = { id: id };
       try {
-        const respuesta = await fetchBody('/estudiantes/eliminar', 'DELETE', data );
+        const respuesta = await fetchBody('/usuarios/eliminar', 'DELETE', data );
         if (respuesta.exito){
           Swal.fire({
             icon: "success",
@@ -220,8 +220,8 @@ function ActionsStudent() {
                     <td>{student.correo}</td>
                     <td>{student.nacimiento}</td>
                     <td className='Actions'>
-                      <button onClick={() => handleEdit(student.id)}><MdModeEdit /></button>
-                      <button onClick={() => handleDelete(student.id)}><MdDelete /></button>
+                      <button className='btn-edit' onClick={() => handleEdit(student.id)}><MdModeEdit /></button>
+                      <button className='btn-delete' onClick={() => handleDelete(student.id)}><MdDelete /></button>
                     </td>
                   </tr>
                 ))}

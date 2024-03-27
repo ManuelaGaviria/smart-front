@@ -458,3 +458,38 @@ th{
   width: 150px;
 }
 
+.btn-edit{
+  cursor: pointer;
+  background-color: #ffdc17;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: none;
+  font-size: 20px;
+  color: white;
+}
+
+.btn-edit:hover{
+  width: 35px;
+  height: 35px;
+  transition: 0.3s;
+}
+
+.btn-delete{
+  cursor: pointer;
+  background-color: #c11612;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  border: none;
+  font-size: 20px;
+  color: white;
+}
+
+.btn-delete:hover{
+  width: 35px;
+  height: 35px;
+  color: white;
+  transition: 0.3s;
+}
+

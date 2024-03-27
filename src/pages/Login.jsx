@@ -24,8 +24,6 @@ function Login() {
   };
 
   async function validateLogin () {
-    console.log(correo);
-    console.log(password);
     if (correo === "" || password === "" ) {
       alert("Llena todos los campos")
     } else {
@@ -33,9 +31,8 @@ function Login() {
         correo: correo,
         contrasena: password
       };
-      console.log(data);
       try {
-        const respuesta = await fetchBody('/profesores/login', 'POST', data);
+        const respuesta = await fetchBody('/usuarios/login', 'POST', data);
         if (respuesta.exito) {
           localStorage.setItem("token", respuesta.token);
           console.log(localStorage.getItem("token"));
