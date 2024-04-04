@@ -9,8 +9,8 @@ import CreateStudent from "../pages/CreateStudent";
 import CreateTeacher from "../pages/CreateTeacher";
 import ActionsTeacher from "../pages/ActionsTeacher";
 import ActionsStudent from "../pages/ActionsStudent";
-import Teacher from "../pages/Teacher";
-import Student from "../pages/Student";
+import Teacher from "../pages/PagesTeachers/Teacher";
+import Student from "../pages/PagesStudents/Student";
 
 
 function AppRoutes() {

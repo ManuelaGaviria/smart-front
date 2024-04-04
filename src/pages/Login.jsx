@@ -25,7 +25,15 @@ function Login() {
 
   async function validateLogin () {
     if (correo === "" || password === "" ) {
-      alert("Llena todos los campos")
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Por favor llena todos los campos",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     } else {
       const data = {
         correo: correo,
@@ -35,7 +43,6 @@ function Login() {
         const respuesta = await fetchBody('/usuarios/login', 'POST', data);
         if (respuesta.exito) {
           localStorage.setItem("token", respuesta.token);
-          console.log(localStorage.getItem("token"));
           const rolUsuario = JSON.parse(atob(localStorage.getItem("token").split('.')[1])).rol;
           if (rolUsuario === "administrador") {
             navigate("/Admin")
