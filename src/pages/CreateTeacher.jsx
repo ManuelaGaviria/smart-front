@@ -44,6 +44,7 @@ function CreateTeacher() {
         nacimiento: nacimiento,
         rol: "profesor"
       };
+
       try {
         const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
         if (respuesta.exito) {

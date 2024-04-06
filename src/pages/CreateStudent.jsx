@@ -44,6 +44,9 @@ function CreateStudent() {
         nacimiento: nacimiento,
         rol: "estudiante"
       };
+      const dataLevels = {
+        
+      }
       try {
         const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
         if (respuesta.exito) {
@@ -104,11 +107,11 @@ function CreateStudent() {
             <div>
                 <label>Niveles Matriculados</label>
                 <div className='niveles'>
-                    <RadioButton id="opcion1" label="A1"/>
-                    <RadioButton id="opcion2" label="A2"/>
-                    <RadioButton id="opcion3" label="B1"/>
-                    <RadioButton id="opcion4" label="B2"/>
-                    <RadioButton id="opcion5" label="C1"/>
+                    <RadioButton id="NivelA1" label="A1"/>
+                    <RadioButton id="NivelA2" label="A2"/>
+                    <RadioButton id="NivelB1" label="B1"/>
+                    <RadioButton id="NivelB2" label="B2"/>
+                    <RadioButton id="NivelC1" label="C1"/>
                 </div> 
             </div>
           </div>
