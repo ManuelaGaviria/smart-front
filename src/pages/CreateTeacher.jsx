@@ -29,63 +29,97 @@ function CreateTeacher() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Por favor llena todos los campos",
+        text: "Por favor llena todos los campos.",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
+    } else if (correo.indexOf('@') === -1) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El correo electrónico debe contener un arroba (@).",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
+    } else if (!/^\d+$/.test(documento) || parseInt(documento) < 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El documento debe contener solo números positivos y sin puntos ni comas.",
         customClass: {
           confirmButton: 'btn-color'
         },
         buttonsStyling: false
       });
     } else {
-      //poner validaciones para el correo, que tenga el arroba, y mirar como verificar si es un correo válido
-      const data = {
-        nombre: name,
-        documento: documento,
-        correo: correo,
-        nacimiento: nacimiento,
-        rol: "profesor"
-      };
-
-      try {
-        const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
-        if (respuesta.exito) {
-          changeName({ target: { value: '' } });
-          changeDocumento({ target: { value: '' } });
-          changeCorreo({ target: { value: '' } });
-          changeNacimiento({ target: { value: '' } });
-          document.getElementById("idName").value = "";
-          document.getElementById("idDocument").value = "";
-          document.getElementById("idMail").value = "";
-          document.getElementById("idDate").value = "";
-          Swal.fire({
-            icon: "success",
-            title: "Profesor creado con éxito!",
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-          
-        } else {
+      var fechaNacimiento = new Date(nacimiento);
+      var edadMinima = new Date();
+      edadMinima.setFullYear(edadMinima.getFullYear() - 18); // Restar 18 años a la fecha actual
+      
+      if (fechaNacimiento >= new Date() || fechaNacimiento > edadMinima) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "La fecha de nacimiento no puede ser posterior a la fecha actual y el profesor debe tener al menos 18 años.",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      } else {
+        const data = {
+          nombre: name,
+          documento: documento,
+          correo: correo,
+          nacimiento: nacimiento,
+          rol: "profesor"
+        };
+        try {
+          const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
+          if (respuesta.exito) {
+            changeName({ target: { value: '' } });
+            changeDocumento({ target: { value: '' } });
+            changeCorreo({ target: { value: '' } });
+            changeNacimiento({ target: { value: '' } });
+            document.getElementById("idName").value = "";
+            document.getElementById("idDocument").value = "";
+            document.getElementById("idMail").value = "";
+            document.getElementById("idDate").value = "";
+            Swal.fire({
+              icon: "success",
+              title: "Profesor creado con éxito!",
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+            
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: respuesta.error,
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+          }
+        } catch (error) {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: respuesta.error,
+            text: 'Error al procesar la solicitud para crear un profesor',
             customClass: {
               confirmButton: 'btn-color'
             },
             buttonsStyling: false
           });
         }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: 'Error al procesar la solicitud para crear un profesor',
-          customClass: {
-            confirmButton: 'btn-color'
-          },
-          buttonsStyling: false
-        });
       }
     }
   }

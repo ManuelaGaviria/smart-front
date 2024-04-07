@@ -77,70 +77,106 @@ function ActionsStudent() {
 
   async function editStudent(id) {
     const name = document.getElementById('studentName').value;
-    const documento = document.getElementById('studentDocumento').value;
-    const correo = document.getElementById('studentEmail').value;
+    const documento = document.getElementById('studentDocument').value;
+    const correo = document.getElementById('studentMail').value;
     const nacimiento = document.getElementById('studentDate').value;
-    if (name === "" || documento === "" || correo === "" || nacimiento === "" ){
+    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Por favor llena todos los campos",
+        text: "Por favor llena todos los campos.",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
+    } else if (correo.indexOf('@') === -1) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El correo electrónico debe contener un arroba (@).",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
+    } else if (!/^\d+$/.test(documento) || parseInt(documento) < 0) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "El documento debe contener solo números positivos y sin puntos ni comas.",
         customClass: {
           confirmButton: 'btn-color'
         },
         buttonsStyling: false
       });
     } else {
+      var fechaNacimiento = new Date(nacimiento);
+      var edadMinima = new Date();
+      edadMinima.setFullYear(edadMinima.getFullYear() - 8); // Restar 8 años a la fecha actual
+      
+      if (fechaNacimiento >= new Date() || fechaNacimiento > edadMinima) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "La fecha de nacimiento no puede ser posterior a la fecha actual y el estudiante debe tener al menos 8 años.",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      } else {
         const data = {
-            id: id,
-            nombre: name,
-            documento: documento,
-            correo: correo,
-            nacimiento: nacimiento
-        }
+          id: id,
+          nombre: name,
+          documento: documento,
+          correo: correo,
+          nacimiento: nacimiento,
+        };
         try {
-            const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
-            if (respuesta.exito){
-                Swal.fire({
-                  icon: "success",
-                  title: "Se actualizó estudiante con éxito!",
-                  customClass: {
-                    confirmButton: 'btn-color'
-                  },
-                  buttonsStyling: false
-                });
-                handleCloseModal();
-                await listStudents();
-            }
-            else {
-                Swal.fire({
-                  icon: "error",
-                  title: "Error",
-                  text: respuesta.error,
-                  customClass: {
-                    confirmButton: 'btn-color'
-                  },
-                  buttonsStyling: false
-                });
-            }
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: 'Error al procesar la solicitud para editar un profesor',
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-        }
+          const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
+          if (respuesta.exito){
+              Swal.fire({
+                icon: "success",
+                title: "Se actualizó estudiante con éxito!",
+                customClass: {
+                  confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+              });
+              handleCloseModal();
+              await listStudents();
+          }
+          else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: respuesta.error,
+                customClass: {
+                  confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+              });
+          }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para editar un profesor',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
+      }
     }
   }
 
   async function handleDelete(id) {
     // Mostrar una alerta de confirmación antes de eliminar al estudiante
     const confirmacion = await Swal.fire({
-      title: '¿Estás seguro de eliminar este profesor?',
+      title: '¿Estás seguro de eliminar este estudiante?',
       text: "Esta acción no se puede revertir",
       icon: 'warning',
       showCancelButton: true,
