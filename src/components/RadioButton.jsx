@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const RadioButton = ({ id, label }) => {
-  const [checked, setChecked] = useState(false);
-
+const RadioButton = ({ id, label, checked, onChange }) => {
   const handleClick = () => {
-    setChecked(!checked); // Cambia el estado
+    onChange(id);
   };
 
   return (
@@ -21,5 +19,3 @@ const RadioButton = ({ id, label }) => {
 };
 
 export default RadioButton;
-
-

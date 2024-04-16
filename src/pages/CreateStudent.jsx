@@ -1,3 +1,4 @@
+
 import { useContext } from "react";
 import Swal from 'sweetalert2';
 import { motion} from 'framer-motion';
@@ -8,7 +9,7 @@ import ButtonLink from '../components/ButtonLink';
 import RadioButton from '../components/RadioButton';
 import { fetchBody } from '../utils/fetch';
 import GeneralContext from "../context/GeneralContext";
-import React, { useEffect } from 'react';
+import React, { useEffect,  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function CreateStudent() {
@@ -77,7 +78,8 @@ function CreateStudent() {
           documento: documento,
           correo: correo,
           nacimiento: nacimiento,
-          rol: "estudiante"
+          rol: "estudiante",
+          niveles: selectedLevels
         };
         try {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
@@ -124,6 +126,16 @@ function CreateStudent() {
     }
   }
 
+  const [selectedLevels, setSelectedLevels] = useState([]);
+
+  const handleLevelChange = (id) => {
+    if (selectedLevels.includes(id)) {
+      setSelectedLevels(selectedLevels.filter(levelId => levelId !== id));
+    } else {
+      setSelectedLevels([...selectedLevels, id]);
+    }
+  };
+
   return (
     <motion.div className="login-container"
     initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
@@ -140,11 +152,11 @@ function CreateStudent() {
             <div>
                 <label>Niveles Matriculados</label>
                 <div className='niveles'>
-                    <RadioButton id="NivelA1" label="A1"/>
-                    <RadioButton id="NivelA2" label="A2"/>
-                    <RadioButton id="NivelB1" label="B1"/>
-                    <RadioButton id="NivelB2" label="B2"/>
-                    <RadioButton id="NivelC1" label="C1"/>
+                    <RadioButton id="A1" label="A1" onChange={handleLevelChange} checked={selectedLevels.includes("A1")}/>
+                    <RadioButton id="A2" label="A2" onChange={handleLevelChange} checked={selectedLevels.includes("A2")}/>
+                    <RadioButton id="B1" label="B1" onChange={handleLevelChange} checked={selectedLevels.includes("B1")}/>
+                    <RadioButton id="B2" label="B2" onChange={handleLevelChange} checked={selectedLevels.includes("B2")}/>
+                    <RadioButton id="C1" label="C1" onChange={handleLevelChange} checked={selectedLevels.includes("C1")}/>
                 </div> 
             </div>
           </div>
