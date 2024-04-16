@@ -245,6 +245,7 @@ function ActionsStudent() {
                   <th style={{ width: '250px' }}>Documento</th>
                   <th style={{ width: '250px' }}>Correo</th>
                   <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
+                  <th style={{ width: '250px' }}>Niveles</th>
                   <th style={{ width: '250px' }}>Acciones</th>
                 </tr>
               </thead>
@@ -255,6 +256,7 @@ function ActionsStudent() {
                     <td>{student.documento}</td>
                     <td>{student.correo}</td>
                     <td>{student.nacimiento}</td>
+                    <td>HOLI</td>
                     <td className='Actions'>
                       <button className='btn-edit' onClick={() => handleEdit(student.id)}><MdModeEdit /></button>
                       <button className='btn-delete' onClick={() => handleDelete(student.id)}><MdDelete /></button>
