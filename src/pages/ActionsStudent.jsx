@@ -28,6 +28,7 @@ function ActionsStudent() {
 
   const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
   const [students, setStudents] = useState([]);
+  const [nivelesMatriculados, setNiveles] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [backgroundOpacity] = useState(0.5);
@@ -49,7 +50,10 @@ function ActionsStudent() {
     try {
       const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "estudiante"}) 
       if (respuesta.exito) {
-        setStudents(respuesta.lista)
+        setStudents(respuesta.lista);
+
+        
+
       } else {
         Swal.fire({
           icon: "error",
@@ -241,12 +245,12 @@ function ActionsStudent() {
             <table className='Table'>
               <thead>
                 <tr>
-                  <th style={{ width: '250px' }}>Nombre</th>
-                  <th style={{ width: '250px' }}>Documento</th>
-                  <th style={{ width: '250px' }}>Correo</th>
-                  <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
-                  <th style={{ width: '250px' }}>Niveles</th>
-                  <th style={{ width: '250px' }}>Acciones</th>
+                  <th style={{ width: '200px' }}>Nombre</th>
+                  <th style={{ width: '200px' }}>Documento</th>
+                  <th style={{ width: '200px' }}>Correo</th>
+                  <th style={{ width: '200px' }}>Fecha de Nacimiento</th>
+                  <th style={{ width: '200px' }}>Niveles Matriculados</th>
+                  <th style={{ width: '200px' }}>Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -256,7 +260,11 @@ function ActionsStudent() {
                     <td>{student.documento}</td>
                     <td>{student.correo}</td>
                     <td>{student.nacimiento}</td>
-                    <td>HOLI</td>
+                    <td>
+                      {Object.keys(student.niveles).map((nivel) => (
+                        student.niveles[nivel] && <div key={nivel} style={{ display: 'inline-block', marginRight: '3px' }}>{nivel}</div>
+                      ))}
+                    </td>
                     <td className='Actions'>
                       <button className='btn-edit' onClick={() => handleEdit(student.id)}><MdModeEdit /></button>
                       <button className='btn-delete' onClick={() => handleDelete(student.id)}><MdDelete /></button>

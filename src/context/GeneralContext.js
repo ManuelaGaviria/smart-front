@@ -29,8 +29,18 @@ export const GeneralProvider = ({children}) => {
         setNacimiento(e.target.value)
     }
 
+    const [niveles, setNiveles] = useState([])
+    const changeNiveles = (e) => {
+        setNiveles(e.target.value)
+    }
+
     return <GeneralContext.Provider value={{
-        name,changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento, password, changePassword
+        name,changeName, 
+        documento, changeDocumento, 
+        correo, changeCorreo, 
+        nacimiento, changeNacimiento, 
+        password, changePassword,
+        niveles, changeNiveles
     }}>
         {children}
     </GeneralContext.Provider>
