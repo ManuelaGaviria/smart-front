@@ -9,6 +9,11 @@ export const GeneralProvider = ({children}) => {
         setPassword(e.target.value)
     }
 
+    const [confirmationPassword, setConfirmationPassword] = useState("")
+    const changeConfirmationPassword = (e) => {
+        setConfirmationPassword(e.target.value)
+    }
+
     const [name, setName] = useState("")
     const changeName = (e) => {
         setName(e.target.value)
@@ -40,7 +45,8 @@ export const GeneralProvider = ({children}) => {
         correo, changeCorreo, 
         nacimiento, changeNacimiento, 
         password, changePassword,
-        niveles, changeNiveles
+        niveles, changeNiveles,
+        confirmationPassword, changeConfirmationPassword
     }}>
         {children}
     </GeneralContext.Provider>

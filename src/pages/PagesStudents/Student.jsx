@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import Logo2 from '../../components/Logo2';
 import { motion} from 'framer-motion';
 import ImageButton from '../../components/ImageButton';
@@ -7,14 +7,17 @@ import { PiStudentBold } from "react-icons/pi";
 import LogoutButton from '../../components/LogoutButton';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
-import LabelInput from '../../components/LabelInput';
 import Button from '../../components/Button';
 import ContenedorForms from '../../components/ContenedorForms';
+import LabelInputIcon from '../../components/LabelInputIcon';
+import GeneralContext from '../../context/GeneralContext';
 
 function Student() {
     const navigate = useNavigate();
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [backgroundOpacity] = useState(1.5);
+    const {password, changePassword, confirmationPassword, changeConfirmationPassword} = useContext (GeneralContext);
+   
 
     useEffect(() => {
         const verificar = async () => {
@@ -70,8 +73,8 @@ function Student() {
           <span className="close" onClick={closeModal}>&times;</span>
           <h1>Cambiar Contraseña</h1>
           <div className="InputContainer">
-            <LabelInput id="studentName" texto="Nombre"></LabelInput>
-            
+            <LabelInputIcon eventoCambio={changePassword} texto="Nueva contraseña"></LabelInputIcon>
+            <LabelInputIcon eventoCambio={changeConfirmationPassword} texto="Confirmar contraseña"></LabelInputIcon>
           </div>
           <br />
           <Button clase="Button">Cambiar Contraseña</Button>

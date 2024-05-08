@@ -108,6 +108,11 @@ h1 {
   grid-template-columns: 45% 10% 45%;
 }
 
+.mallaIcon{
+  display: grid;
+  grid-template-columns: 45% 45%;
+}
+
 .columnaIzquierda {
   display: flex;
   justify-content: right;
@@ -122,6 +127,15 @@ h1 {
   text-align: left;
   align-items: center;
   padding: 10px;
+}
+
+.PasswordInput {
+  display: flex;
+  align-items: center; /* Alinea verticalmente los elementos */
+}
+
+.PasswordInput > .LabelInput {
+  flex-grow: 1; /* Hace que el input ocupe todo el espacio disponible */
 }
 
 .columnaDerechaImageButton {
@@ -493,6 +507,16 @@ th{
   height: 35px;
   color: white;
   transition: 0.3s;
+}
+
+.eyes{
+  margin-left: 5px;
+  color: #c11612;
+}
+
+.eyesClose{
+  margin-left: 5px;
+  color:#72b9a9;
 }
 
 

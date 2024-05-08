@@ -10,6 +10,7 @@ import ButtonLink from '../components/ButtonLink';
 import Button from '../components/Button';
 import { fetchBody } from '../utils/fetch';
 import Swal from 'sweetalert2';
+import LabelInputIcon from '../components/LabelInputIcon';
 
 function Login() {
   const navigate = useNavigate();
@@ -80,7 +81,7 @@ function Login() {
           <h1>Iniciar Sesión</h1>
           <div className="InputContainer">
             <LabelInput texto="Correo" eventoCambio={changeCorreo}></LabelInput>
-            <LabelInput tipo="password" texto="Contraseña" eventoCambio={changePassword}></LabelInput>
+            <LabelInputIcon texto="Contraseña" eventoCambio={changePassword}></LabelInputIcon>
           </div>
           <ButtonLink destino="/ResetPassword" clase="ButtonNav">¿Olvidaste tu contraseña?</ButtonLink>
           <br />
