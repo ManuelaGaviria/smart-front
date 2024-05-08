@@ -71,13 +71,15 @@ function ActionsStudent() {
       const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "estudiante"}) 
       if (respuesta.exito) {
         setStudents(respuesta.lista);
-        console.log("lista");
-        console.log(respuesta.lista);
       } else {
         Swal.fire({
           icon: "error",
           title: "Error",
           text: respuesta.error,
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
         });
       }
     } catch (error) {
@@ -85,6 +87,10 @@ function ActionsStudent() {
         icon: "error",
         title: "Error",
         text: 'Error al procesar la solicitud para listar los estudiantes',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
       });
     }
   }
@@ -94,7 +100,15 @@ function ActionsStudent() {
     if (studentToEdit) {
       openEditModal(studentToEdit);
     } else {
-      console.log('Estudiante no encontrado');
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: 'Estudiante no encontrado',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     }
   }
 
@@ -155,13 +169,11 @@ function ActionsStudent() {
           documento: documento,
           correo: correo,
           nacimiento: nacimiento,
+          rol: "estudiante",
           niveles: selectedLevels
         };
-        console.log(data);
-        console.log(selectedLevels);
         try {
           const respuesta = await fetchBody ('/usuarios/editar','PUT',data);
-          console.log(respuesta);
           if (respuesta.exito){
               Swal.fire({
                 icon: "success",

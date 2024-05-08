@@ -55,6 +55,10 @@ function ActionsTeacher() {
           icon: "error",
           title: "Error",
           text: respuesta.error,
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
         });
       }
     } catch (error) {
@@ -62,17 +66,28 @@ function ActionsTeacher() {
         icon: "error",
         title: "Error",
         text: 'Error al procesar la solicitud para listar los profesores',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
       });
     }
   }
 
   async function handleEdit(id) {
     const teacherToEdit = teachers.find(teacher => teacher.id === id);
-    console.log(teacherToEdit);
     if (teacherToEdit) {
       openEditModal(teacherToEdit);
     } else {
-      console.log('Profesor no encontrado');
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: 'Profesor no encontrado',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     }
   }
 
@@ -133,6 +148,7 @@ function ActionsTeacher() {
           documento: documento,
           correo: correo,
           nacimiento: nacimiento,
+          rol: "profesor"
         };
         try {
           const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
