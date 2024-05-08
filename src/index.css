@@ -393,7 +393,9 @@ h1 {
 
 .radioButton{
   margin: 0px 10px 0px 10px;
+  accent-color: #c11612;
 }
+
 
 .Table{
   background-color: white;

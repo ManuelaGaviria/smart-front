@@ -11,7 +11,8 @@ const RadioButton = ({ id, label, checked, onChange }) => {
         type="radio"
         id={id}
         checked={checked}
-        onChange={() => {}} 
+        onChange={() => {}}
+        className='radio'
       />
       <label htmlFor={id}>{label}</label>
     </div>
