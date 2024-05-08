@@ -97,7 +97,7 @@ function CreateTeacher() {
               },
               buttonsStyling: false
             });
-            
+            navigate("/PrincipalTeacher");
           } else {
             Swal.fire({
               icon: "error",

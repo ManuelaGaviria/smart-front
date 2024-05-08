@@ -100,6 +100,7 @@ function CreateStudent() {
               },
               buttonsStyling: false
             });
+            navigate("/PrincipalStudent");
           } else {
             Swal.fire({
               icon: "error",
