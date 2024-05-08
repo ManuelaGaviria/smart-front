@@ -33,7 +33,7 @@ function ActionsStudent() {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [backgroundOpacity] = useState(0.5);
 
-  const [selectedLevels, setSelectedLevels] = useState([]);
+  const [selectedLevels, setSelectedLevels] = useState({});
 
   const handleLevelChange = (id) => {
     setSelectedLevels(prevLevels => {
@@ -41,15 +41,16 @@ function ActionsStudent() {
       const updatedLevels = { ...prevLevels };
       // Si el nivel ya está seleccionado, lo eliminamos
       if (updatedLevels[id]) {
-        delete updatedLevels[id];
+        updatedLevels[id] = false;
       } else {
-        // Si el nivel no está seleccionado, lo agregamos
+        // Si el nivel no está seleccionado, lo agregamos o lo marcamos como seleccionado
         updatedLevels[id] = true;
       }
       // Devolvemos el objeto de niveles actualizado
       return updatedLevels;
     });
   };
+  
   
 
   useEffect(() => {
