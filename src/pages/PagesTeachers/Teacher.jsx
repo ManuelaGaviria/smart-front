@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Logo2 from '../../components/Logo2';
 import { motion} from 'framer-motion';
 import ImageButton from '../../components/ImageButton';
@@ -7,18 +7,31 @@ import { PiStudentBold } from "react-icons/pi";
 import LogoutButton from '../../components/LogoutButton';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
+import LabelInput from '../../components/LabelInput';
+import Button from '../../components/Button';
+import ContenedorForms from '../../components/ContenedorForms';
 
 function Teacher() {
     const navigate = useNavigate();
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+    const [backgroundOpacity] = useState(1.5);
+
     useEffect(() => {
         const verificar = async () => {
             const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "profesor"});
             if (respuesta.exito === false) {
                 navigate("/")
-            }
+            } else {
+              console.log(respuesta);
+              console.log(respuesta.status);
+              if (respuesta.status) {
+                  setShowPasswordModal(true);
+              }
+          }
         }
         verificar();
     }, [])
+
   return (
     <motion.div 
     className='AdminContainer'
@@ -45,6 +58,23 @@ function Teacher() {
           </div>
         </div> 
       </motion.div>
+      {showPasswordModal && (
+      <>
+        <div
+          className="BackgroundOverlay"
+          style={{ opacity: backgroundOpacity }}
+        />
+        <ContenedorForms>
+          <h1>Cambiar Contraseña</h1>
+          <div className="InputContainer">
+            <LabelInput texto="Nueva contraseña"></LabelInput>
+            
+          </div>
+          <br />
+          <Button clase="Button">Cambiar Contraseña</Button>
+        </ContenedorForms>
+      </>
+    )}
     </motion.div>
   )
 }
