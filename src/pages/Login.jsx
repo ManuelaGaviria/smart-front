@@ -54,6 +54,16 @@ function Login() {
           } else {
             navigate("/")
           }
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: 'El usuario no existe o la contraseña no coincide',
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
         }
       } catch (error) {
         Swal.fire({

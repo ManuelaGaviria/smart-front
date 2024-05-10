@@ -103,10 +103,6 @@ function Teacher() {
           }
         }
       }
-      
-      
-      
-
     }
 
   return (
