@@ -1,9 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import Logo2 from '../../components/Logo2';
 import { motion} from 'framer-motion';
-import ImageButton from '../../components/ImageButton';
-import { FaChalkboardTeacher } from "react-icons/fa";
-import { PiStudentBold } from "react-icons/pi";
 import LogoutButton from '../../components/LogoutButton';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +9,7 @@ import ContenedorForms from '../../components/ContenedorForms';
 import LabelInputIcon from '../../components/LabelInputIcon';
 import GeneralContext from '../../context/GeneralContext';
 import Swal from 'sweetalert2';
+import ButtonLink from '../../components/ButtonLink';
 
 function Student() {
     const navigate = useNavigate();
@@ -128,9 +126,13 @@ function Student() {
       > 
         <div className='ButtonsAdminContainer'>
           <h1>Bienvenido Estudiante</h1>
+          <p>Selecciona tu nivel actual</p>
           <div className=''>
-            <ImageButton icon={FaChalkboardTeacher} texto="Programar Clase" destino="/PrincipalTeacher"></ImageButton>
-            <ImageButton icon={PiStudentBold} texto="Tomar Examen" destino="/PrincipalStudent"></ImageButton>
+            <ButtonLink destino="/A1" clase="circleLevels">A1</ButtonLink>
+            <ButtonLink destino="/A2" clase="circleLevels">A2</ButtonLink>
+            <ButtonLink destino="/B1" clase="circleLevels">B1</ButtonLink>
+            <ButtonLink destino="/B2" clase="circleLevels">B2</ButtonLink>
+            <ButtonLink destino="/C1" clase="circleLevels">C1</ButtonLink>
           </div>
         </div> 
       </motion.div>

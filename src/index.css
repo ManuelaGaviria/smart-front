@@ -103,6 +103,19 @@ h1 {
   height: 200px;
 }
 
+.circleLevels{
+  margin: 3px;
+  justify-content: center;
+  align-items: center;
+  background-color: #72b9a9;
+  border-radius: 100px;
+  width: 100px;
+  height: 100px;
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+}
+
 .malla {
   display: grid;
   grid-template-columns: 45% 10% 45%;
@@ -267,6 +280,7 @@ h1 {
   width: 40%;
   transition: 0.3s;
   margin-bottom: 20px;
+  margin-right: 5px;
 }
 
 .Button2:hover {
