@@ -31,6 +31,8 @@ import C1 from "../pages/PagesStudents/Niveles/C1/C1";
 import ProgramarC1 from "../pages/PagesStudents/Niveles/C1/ProgramarC1";
 import ExamenEscritoC1 from "../pages/PagesStudents/Niveles/C1/ExamenEscritoC1";
 import NotasC1 from "../pages/PagesStudents/Niveles/C1/NotasC1";
+import ProgramarClaseA1 from "../pages/PagesStudents/Niveles/A1/ProgramarClaseA1";
+import ProgramarExamenA1 from "../pages/PagesStudents/Niveles/A1/ProgramarExamenA1";
 
 
 function AppRoutes() {
@@ -51,23 +53,31 @@ function AppRoutes() {
                 
                 <Route exact path="/Teacher" element={<Teacher></Teacher>}></Route>
 
+
                 <Route exact path="/Student" element={<Student></Student>}></Route>
+
                 <Route exact path="/A1" element={<A1></A1>}></Route>
                 <Route exact path="/ProgramarA1" element={<Programar></Programar>}></Route>
                 <Route exact path="/ExamenEscritoA1" element={<ExamenEscrito></ExamenEscrito>}></Route>
                 <Route exact path="/NotasA1" element={<NotasA1></NotasA1>}></Route>
+                <Route exact path="/ProgramarClaseA1" element={<ProgramarClaseA1></ProgramarClaseA1>}></Route>
+                <Route exact path="/ProgramarExamenA1" element={<ProgramarExamenA1></ProgramarExamenA1>}></Route>
+
                 <Route exact path="/A2" element={<A2></A2>}></Route>
                 <Route exact path="/ProgramarA2" element={<ProgramarA2></ProgramarA2>}></Route>
                 <Route exact path="/ExamenEscritoA2" element={<ExamenEscritoA2></ExamenEscritoA2>}></Route>
                 <Route exact path="/NotasA2" element={<NotasA2></NotasA2>}></Route>
+
                 <Route exact path="/B1" element={<B1></B1>}></Route>
                 <Route exact path="/ProgramarB1" element={<ProgramarB1></ProgramarB1>}></Route>
                 <Route exact path="/ExamenEscritoB1" element={<ExamenEscritoB1></ExamenEscritoB1>}></Route>
                 <Route exact path="/NotasB1" element={<NotasB1></NotasB1>}></Route>
+
                 <Route exact path="/B2" element={<B2></B2>}></Route>
                 <Route exact path="/ProgramarB2" element={<ProgramarB2></ProgramarB2>}></Route>
                 <Route exact path="/ExamenEscritoB2" element={<ExamenEscritoB2></ExamenEscritoB2>}></Route>
                 <Route exact path="/NotasB2" element={<NotasB2></NotasB2>}></Route>
+
                 <Route exact path="/C1" element={<C1></C1>}></Route>
                 <Route exact path="/ProgramarC1" element={<ProgramarC1></ProgramarC1>}></Route>
                 <Route exact path="/ExamenEscritoC1" element={<ExamenEscritoC1></ExamenEscritoC1>}></Route>

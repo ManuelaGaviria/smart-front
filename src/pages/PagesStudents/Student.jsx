@@ -112,7 +112,7 @@ function Student() {
     initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
     animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
     exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
-    transition={{ duration: 2 }}>
+    transition={{ duration: 1 }}>
       <LogoutButton></LogoutButton>
       <div className='logoAdminContainer'>
         <Logo2></Logo2>
