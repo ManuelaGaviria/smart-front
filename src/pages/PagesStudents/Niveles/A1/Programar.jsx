@@ -38,7 +38,7 @@ function Programar() {
             <ImageButton icon={FaCalendarAlt} texto="Horario" destino="/HorarioA1"></ImageButton>
             <br></br>
             <br></br>
-            <ButtonLink destino="/Student" clase="Button2">Regresar</ButtonLink>
+            <ButtonLink destino="/A1" clase="Button2">Regresar</ButtonLink>
           </div>
         </div> 
       </motion.div>

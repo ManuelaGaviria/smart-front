@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import FullscreenCard from '../../../../components/FullScreenCard';
 import ButtonLink from '../../../../components/ButtonLink';
 
-function NotasA1() {
+function ProgramarExamenB1() {
     return (
         <motion.div
             className='ContainerFull'
@@ -15,6 +15,8 @@ function NotasA1() {
             <Logo3></Logo3>
             <FullscreenCard>
             <div>
+            <ButtonLink destino="/AsignarB1" clase="ButtonRegresar">Asignar</ButtonLink>
+            <ButtonLink destino="/CancelarB1" clase="ButtonRegresar">Cancelar</ButtonLink>
             </div>
             <br></br>
             <div className='CenterTable'>
@@ -24,29 +26,25 @@ function NotasA1() {
                             <th style={{ width: '200px' }}>Nivel</th>
                             <th style={{ width: '200px' }}>Examen #</th>
                             <th style={{ width: '200px' }}>Descripcion</th>
-                            <th style={{ width: '200px' }}>Nota examen escrito</th>
-                            <th style={{ width: '200px' }}>Nota examen oral</th>
-                            <th style={{ width: '200px' }}>Nota final</th>
-                            <th style={{ width: '200px' }}>Retroalimentación</th>
+                            <th style={{ width: '200px' }}>Nota</th>
+                            <th style={{ width: '200px' }}>Estado</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>INGA1</td>
+                            <td>INGB1</td>
                             <td>1</td>
                             <td>Quiz Units 1&2</td>
-                            <td>4.0</td>
-                            <td>4.5</td>
-                            <td>4.3</td>
-                            <td>Estudiar el tema X</td>
+                            <td>0.0</td>
+                            <td>Pendiente</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <ButtonLink destino="/A1" clase="ButtonRegresar">Regresar</ButtonLink>
+            <ButtonLink destino="/ProgramarB1" clase="ButtonRegresar">Regresar</ButtonLink>
             </FullscreenCard>
         </motion.div>
     )
 }
 
-export default NotasA1
+export default ProgramarExamenB1

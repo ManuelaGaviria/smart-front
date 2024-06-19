@@ -114,6 +114,8 @@ h1 {
   color: white;
   text-decoration: none;
   font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .malla {
@@ -534,5 +536,69 @@ th{
   margin-left: 5px;
   color:#72b9a9;
 }
+
+.date-select {
+  background-color: white;
+  border: 2px solid red;
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  outline: none;
+  margin-left: 5px;
+  font-family: "Madimi One", sans-serif;
+  font-weight: 400;
+}
+
+.date-select option {
+  color: black;
+  background-color: white;
+}
+
+.labelFecha{
+  font-family: "Madimi One", sans-serif;
+}
+
+.custom-checkbox {
+  margin: 3px;
+  align-items: center;
+}
+
+.custom-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.custom-checkbox label {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  user-select: none;
+  color: white;
+  font-size: 16px;
+}
+
+.custom-checkbox label::before {
+  content: "";
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border: 2px solid red;
+  border-radius: 5px;
+}
+
+.custom-checkbox input[type="checkbox"]:checked + label::before {
+  content: "✔";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  font-size: 18px;
+}
+
 
 

@@ -33,7 +33,14 @@ import ExamenEscritoC1 from "../pages/PagesStudents/Niveles/C1/ExamenEscritoC1";
 import NotasC1 from "../pages/PagesStudents/Niveles/C1/NotasC1";
 import ProgramarClaseA1 from "../pages/PagesStudents/Niveles/A1/ProgramarClaseA1";
 import ProgramarExamenA1 from "../pages/PagesStudents/Niveles/A1/ProgramarExamenA1";
-
+import ProgramarClaseA2 from "../pages/PagesStudents/Niveles/A2/ProgramarClaseA2";
+import ProgramarExamenA2 from "../pages/PagesStudents/Niveles/A2/ProgramarExamenA2";
+import ProgramarClaseB1 from "../pages/PagesStudents/Niveles/B1/ProgramarClaseB1";
+import ProgramarExamenB1 from "../pages/PagesStudents/Niveles/B1/ProgramarExamenB1";
+import ProgramarClaseB2 from "../pages/PagesStudents/Niveles/B2/ProgramarClaseB2";
+import ProgramarExamenB2 from "../pages/PagesStudents/Niveles/B2/ProgramarExamenB2";
+import ProgramarClaseC1 from "../pages/PagesStudents/Niveles/C1/ProgramarClaseC1";
+import ProgramarExamenC1 from "../pages/PagesStudents/Niveles/C1/ProgramarExamenC1";
 
 function AppRoutes() {
     const location = useLocation();
@@ -67,21 +74,29 @@ function AppRoutes() {
                 <Route exact path="/ProgramarA2" element={<ProgramarA2></ProgramarA2>}></Route>
                 <Route exact path="/ExamenEscritoA2" element={<ExamenEscritoA2></ExamenEscritoA2>}></Route>
                 <Route exact path="/NotasA2" element={<NotasA2></NotasA2>}></Route>
+                <Route exact path="/ProgramarClaseA2" element={<ProgramarClaseA2></ProgramarClaseA2>}></Route>
+                <Route exact path="/ProgramarExamenA2" element={<ProgramarExamenA2></ProgramarExamenA2>}></Route>
 
                 <Route exact path="/B1" element={<B1></B1>}></Route>
                 <Route exact path="/ProgramarB1" element={<ProgramarB1></ProgramarB1>}></Route>
                 <Route exact path="/ExamenEscritoB1" element={<ExamenEscritoB1></ExamenEscritoB1>}></Route>
                 <Route exact path="/NotasB1" element={<NotasB1></NotasB1>}></Route>
+                <Route exact path="/ProgramarClaseB1" element={<ProgramarClaseB1></ProgramarClaseB1>}></Route>
+                <Route exact path="/ProgramarExamenB1" element={<ProgramarExamenB1></ProgramarExamenB1>}></Route>
 
                 <Route exact path="/B2" element={<B2></B2>}></Route>
                 <Route exact path="/ProgramarB2" element={<ProgramarB2></ProgramarB2>}></Route>
                 <Route exact path="/ExamenEscritoB2" element={<ExamenEscritoB2></ExamenEscritoB2>}></Route>
                 <Route exact path="/NotasB2" element={<NotasB2></NotasB2>}></Route>
+                <Route exact path="/ProgramarClaseB2" element={<ProgramarClaseB2></ProgramarClaseB2>}></Route>
+                <Route exact path="/ProgramarExamenB2" element={<ProgramarExamenB2></ProgramarExamenB2>}></Route>
 
                 <Route exact path="/C1" element={<C1></C1>}></Route>
                 <Route exact path="/ProgramarC1" element={<ProgramarC1></ProgramarC1>}></Route>
                 <Route exact path="/ExamenEscritoC1" element={<ExamenEscritoC1></ExamenEscritoC1>}></Route>
                 <Route exact path="/NotasC1" element={<NotasC1></NotasC1>}></Route>
+                <Route exact path="/ProgramarClaseC1" element={<ProgramarClaseC1></ProgramarClaseC1>}></Route>
+                <Route exact path="/ProgramarExamenC1" element={<ProgramarExamenC1></ProgramarExamenC1>}></Route>
             </Routes>
         </AnimatePresence>
     </>

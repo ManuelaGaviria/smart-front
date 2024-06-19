@@ -12,7 +12,17 @@ import Swal from 'sweetalert2';
 import ButtonLink from '../../components/ButtonLink';
 
 function Student() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+    useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "estudiante"});
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        }
+        verificar();
+    }, [])
+
     const [showPasswordModal, setShowPasswordModal] = useState(false);
     const [backgroundOpacity] = useState(1.5);
     const {password, changePassword, confirmationPassword, changeConfirmationPassword} = useContext (GeneralContext);

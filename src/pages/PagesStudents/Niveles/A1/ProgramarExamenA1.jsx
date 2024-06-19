@@ -28,7 +28,6 @@ function ProgramarExamenA1() {
                             <th style={{ width: '200px' }}>Descripcion</th>
                             <th style={{ width: '200px' }}>Nota</th>
                             <th style={{ width: '200px' }}>Estado</th>
-                            <th style={{ width: '200px' }}>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -38,10 +37,6 @@ function ProgramarExamenA1() {
                             <td>Quiz Units 1&2</td>
                             <td>0.0</td>
                             <td>Pendiente</td>
-                            <td>
-                                <button>Asignar</button>
-                                <button>Cancelar</button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
