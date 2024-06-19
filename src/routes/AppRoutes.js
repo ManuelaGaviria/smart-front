@@ -41,6 +41,7 @@ import ProgramarClaseB2 from "../pages/PagesStudents/Niveles/B2/ProgramarClaseB2
 import ProgramarExamenB2 from "../pages/PagesStudents/Niveles/B2/ProgramarExamenB2";
 import ProgramarClaseC1 from "../pages/PagesStudents/Niveles/C1/ProgramarClaseC1";
 import ProgramarExamenC1 from "../pages/PagesStudents/Niveles/C1/ProgramarExamenC1";
+import HorarioA1 from "../pages/PagesStudents/Niveles/A1/HorarioA1";
 
 function AppRoutes() {
     const location = useLocation();
@@ -69,6 +70,7 @@ function AppRoutes() {
                 <Route exact path="/NotasA1" element={<NotasA1></NotasA1>}></Route>
                 <Route exact path="/ProgramarClaseA1" element={<ProgramarClaseA1></ProgramarClaseA1>}></Route>
                 <Route exact path="/ProgramarExamenA1" element={<ProgramarExamenA1></ProgramarExamenA1>}></Route>
+                <Route exact path="/HorarioA1" element={<HorarioA1></HorarioA1>}></Route>
 
                 <Route exact path="/A2" element={<A2></A2>}></Route>
                 <Route exact path="/ProgramarA2" element={<ProgramarA2></ProgramarA2>}></Route>
