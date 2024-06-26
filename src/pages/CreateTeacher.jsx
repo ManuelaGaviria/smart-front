@@ -9,6 +9,7 @@ import { fetchBody } from '../utils/fetch';
 import GeneralContext from '../context/GeneralContext';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Select from "../components/Select";
 
 function CreateTeacher() {
   const navigate = useNavigate();
@@ -22,10 +23,20 @@ function CreateTeacher() {
         verificar();
     }, [])
   
-  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { name, changeName, apellido, changeApellido, tipoDocumento, changeTipoDocumento, documento, changeDocumento, correo, changeCorreo, genero, changeGenero, nacimiento, changeNacimiento } = useContext(GeneralContext);
+
+  const opcionesDocumento = [
+    { nombre: 'CC', id: 2 },
+    { nombre: 'CE', id: 3 }
+  ];
+
+  const opcionesGenero = [
+    { nombre: 'Femenino', id: 1 },
+    { nombre: 'Masculino', id: 2 }
+  ];
 
   async function validate() {
-    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
+    if (name === "" || apellido === "" || tipoDocumento === "" || documento === "" || correo === "" || genero === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -73,19 +84,27 @@ function CreateTeacher() {
       } else {
         const data = {
           nombre: name,
+          apellido: apellido,
+          tipoDocumento: tipoDocumento,
           documento: documento,
           correo: correo,
+          genero: genero,
           nacimiento: nacimiento,
           rol: "profesor"
         };
+        console.log(data);
         try {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
+          console.log(respuesta);
           if (respuesta.exito) {
+            
             changeName({ target: { value: '' } });
+            changeApellido({ target: { value: '' } });
             changeDocumento({ target: { value: '' } });
             changeCorreo({ target: { value: '' } });
             changeNacimiento({ target: { value: '' } });
             document.getElementById("idName").value = "";
+            document.getElementById("idApellido").value = "";
             document.getElementById("idDocument").value = "";
             document.getElementById("idMail").value = "";
             document.getElementById("idDate").value = "";
@@ -134,8 +153,11 @@ function CreateTeacher() {
         <h1>Crear Profesor</h1>
         <div className="InputContainer">
           <LabelInputEdit id="idName" texto="Nombre" eventoCambio={changeName} ></LabelInputEdit>
+          <LabelInputEdit id="idApellido" eventoCambio={changeApellido} texto="Apellidos"></LabelInputEdit>
+          <Select id="idTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
           <LabelInputEdit id="idDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento}></LabelInputEdit>
           <LabelInputEdit id="idMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} ></LabelInputEdit>
+          <Select id="idGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
           <LabelInputEdit id="idDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento}></LabelInputEdit>
         </div>
         <br />

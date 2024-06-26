@@ -19,6 +19,16 @@ export const GeneralProvider = ({children}) => {
         setName(e.target.value)
     }
 
+    const [apellido, setApellido] = useState("")
+    const changeApellido = (e) => {
+        setApellido(e.target.value)
+    }
+
+    const [tipoDocumento, setTipoDocumento] = useState("")
+    const changeTipoDocumento = (e) => {
+        setTipoDocumento(e.target.value)
+    }
+
     const [documento, setDocumento] = useState("")
     const changeDocumento = (e) => {
         setDocumento(e.target.value)
@@ -27,6 +37,11 @@ export const GeneralProvider = ({children}) => {
     const [correo, setCorreo] = useState("")
     const changeCorreo = (e) => {
         setCorreo(e.target.value)
+    }
+
+    const [genero, setGenero] = useState("")
+    const changeGenero = (e) => {
+        setGenero(e.target.value)
     }
 
     const [nacimiento, setNacimiento] = useState("")
@@ -41,8 +56,11 @@ export const GeneralProvider = ({children}) => {
 
     return <GeneralContext.Provider value={{
         name,changeName, 
+        apellido, changeApellido,
+        tipoDocumento, changeTipoDocumento,
         documento, changeDocumento, 
         correo, changeCorreo, 
+        genero, changeGenero,
         nacimiento, changeNacimiento, 
         password, changePassword,
         niveles, changeNiveles,

@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import Logo3 from '../components/Logo3';
 import { motion } from 'framer-motion';
 import FullScreenCard from '../components/FullScreenCard';
-import { fetchBody, fetchGet } from '../utils/fetch';
+import { fetchBody } from '../utils/fetch';
 import GeneralContext from '../context/GeneralContext';
 import { useContext } from "react";
 import { MdModeEdit } from "react-icons/md";
@@ -13,6 +13,7 @@ import ContenedorForms from '../components/ContenedorForms';
 import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
 import { useNavigate } from 'react-router-dom';
+import SelectEdit from '../components/SelectEdit';
 
 function ActionsTeacher() {
   const navigate = useNavigate();
@@ -26,11 +27,21 @@ function ActionsTeacher() {
         verificar();
     }, [])
 
-  const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
+  const { changeName, changeApellido, changeTipoDocumento, changeDocumento, changeCorreo, changeGenero, changeNacimiento } = useContext(GeneralContext);
   const [teachers, setTeachers] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
   const [backgroundOpacity] = useState(0.5);
+
+  const opcionesDocumento = [
+    { nombre: 'CC', id: 2 },
+    { nombre: 'CE', id: 3 }
+  ];
+
+  const opcionesGenero = [
+    { nombre: 'Femenino', id: 1 },
+    { nombre: 'Masculino', id: 2 }
+  ];
 
   useEffect(() => {
     listTeachers();
@@ -93,10 +104,13 @@ function ActionsTeacher() {
 
   async function editTeacher(id) {
     const name = document.getElementById('teacherName').value;
+    const apellido = document.getElementById('teacherApellido').value;
+    const tipoDocumento = document.getElementById('teacherTipoDocumento').value;
     const documento = document.getElementById('teacherDocumento').value;
     const correo = document.getElementById('teacherEmail').value;
+    const genero = document.getElementById('teacherGenero').value;
     const nacimiento = document.getElementById('teacherDate').value;
-    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
+    if (name === "" || apellido === "" || tipoDocumento === "" || documento === "" || correo === "" || genero === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -145,11 +159,15 @@ function ActionsTeacher() {
         const data = {
           id:id,
           nombre: name,
+          apellido: apellido,
+          tipoDocumento: tipoDocumento,
           documento: documento,
           correo: correo,
+          genero: genero,
           nacimiento: nacimiento,
           rol: "profesor"
         };
+        console.log(data);
         try {
           const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
           if (respuesta.exito){
@@ -262,8 +280,11 @@ function ActionsTeacher() {
               <thead>
                 <tr>
                   <th style={{ width: '250px' }}>Nombre</th>
+                  <th style={{ width: '250px' }}>Apellidos</th>
+                  <th style={{ width: '250px' }}>Tipo Documento</th>
                   <th style={{ width: '250px' }}>Documento</th>
                   <th style={{ width: '250px' }}>Correo</th>
+                  <th style={{ width: '250px' }}>Genero</th>
                   <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
                   <th style={{ width: '250px' }}>Acciones</th>
                 </tr>
@@ -272,8 +293,11 @@ function ActionsTeacher() {
                 {teachers.map((teacher) => (
                   <tr key={teacher.id}>
                     <td>{teacher.nombre}</td>
+                    <td>{teacher.apellido}</td>
+                    <td>{teacher.tipoDocumento}</td>
                     <td>{teacher.documento}</td>
                     <td>{teacher.correo}</td>
+                    <td>{teacher.genero}</td>
                     <td>{teacher.nacimiento}</td>
                     <td className='Actions'>
                       <button className='btn-edit' onClick={() => handleEdit(teacher.id)}><MdModeEdit /></button>
@@ -296,8 +320,11 @@ function ActionsTeacher() {
           <h1>Editar Profesor</h1>
           <div className="InputContainer">
             <LabelInputEdit id='teacherName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedTeacher.nombre}></LabelInputEdit>
+            <LabelInputEdit id="teacherApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedTeacher.apellido}></LabelInputEdit>
+            <SelectEdit id="teacherTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedTeacher.tipoDocumento}></SelectEdit>
             <LabelInputEdit id='teacherDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedTeacher.documento}></LabelInputEdit>
             <LabelInputEdit id='teacherEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedTeacher.correo}></LabelInputEdit>
+            <SelectEdit id="teacherGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedTeacher.genero}></SelectEdit>
             <LabelInputEdit id='teacherDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedTeacher.nacimiento}></LabelInputEdit>
           </div>
           <br />

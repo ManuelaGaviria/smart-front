@@ -11,6 +11,7 @@ import { fetchBody } from '../utils/fetch';
 import GeneralContext from "../context/GeneralContext";
 import React, { useEffect,  useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Select from "../components/Select";
 
 function CreateStudent() {
   const navigate = useNavigate();
@@ -24,10 +25,21 @@ function CreateStudent() {
         verificar();
     }, [])
 
-  const { name, changeName, documento, changeDocumento, correo, changeCorreo, nacimiento, changeNacimiento } = useContext(GeneralContext);
+  const { name, changeName, apellido, changeApellido, tipoDocumento, changeTipoDocumento, documento, changeDocumento, correo, changeCorreo, genero, changeGenero, nacimiento, changeNacimiento } = useContext(GeneralContext);
+
+  const opcionesDocumento = [
+    { nombre: 'TI', id: 1 },
+    { nombre: 'CC', id: 2 },
+    { nombre: 'CE', id: 3 }
+  ];
+
+  const opcionesGenero = [
+    { nombre: 'Femenino', id: 1 },
+    { nombre: 'Masculino', id: 2 }
+  ];
 
   async function validate() {
-    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
+    if (name === "" || apellido === "" || tipoDocumento === "" || documento === "" || correo === "" || genero === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -75,20 +87,26 @@ function CreateStudent() {
       } else {
         const data = {
           nombre: name,
+          apellido: apellido,
+          tipoDocumento: tipoDocumento,
           documento: documento,
           correo: correo,
+          genero: genero,
           nacimiento: nacimiento,
           rol: "estudiante",
           niveles: selectedLevels
         };
+        console.log(data);
         try {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
           if (respuesta.exito) {
             changeName({ target: { value: '' } });
+            changeApellido({ target: { value: '' } });
             changeDocumento({ target: { value: '' } });
             changeCorreo({ target: { value: '' } });
             changeNacimiento({ target: { value: '' } });
             document.getElementById("idNameStudent").value = "";
+            document.getElementById("idApellidoStudent").value = "";
             document.getElementById("idDocumentStudent").value = "";
             document.getElementById("idMailStudent").value = "";
             document.getElementById("idDateStudent").value = "";
@@ -147,7 +165,10 @@ function CreateStudent() {
             <h1>Crear Estudiante</h1>
           <div className="InputContainer">
             <LabelInputEdit id="idNameStudent" eventoCambio={changeName} texto="Nombre"></LabelInputEdit>
+            <LabelInputEdit id="idApellidoStudent" eventoCambio={changeApellido} texto="Apellidos"></LabelInputEdit>
+            <Select id="idTipoDocumentoStudent" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
             <LabelInputEdit id="idDocumentStudent" eventoCambio={changeDocumento} tipo="number" texto="Documento"></LabelInputEdit>
+            <Select id="idGeneroStudent" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
             <LabelInputEdit id="idMailStudent" eventoCambio={changeCorreo} tipo="email" texto="Correo"></LabelInputEdit>
             <LabelInputEdit id="idDateStudent" eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento"></LabelInputEdit>
             <div>
@@ -162,8 +183,11 @@ function CreateStudent() {
             </div>
           </div>
           <br />
-          <Button eventoClick={validate} clase="Button">Crear</Button>
-          <ButtonLink destino="/PrincipalStudent" clase="Button">Regresar</ButtonLink>
+          <div className="mallaBotones">
+            <Button eventoClick={validate} clase="Button">Crear</Button>
+            <ButtonLink destino="/PrincipalStudent" clase="Button">Regresar</ButtonLink>
+          </div>
+          
         </ContenedorForms>
     </motion.div>
   )

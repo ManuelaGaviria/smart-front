@@ -1,13 +1,18 @@
 function Select({titulo, opciones, eventoCambio}) {
     return (
-      <div>
-          <label>{titulo}</label>
-          <select onChange={eventoCambio}>
-              <option>Seleccione uno</option>
-              {opciones.map((item) => (
-                  <option value={item.nombre} key={item.id}>{item.nombre}</option>
-              ))}
-          </select>
+      <div className="malla">
+        <div className="columnaIzquierda">
+            <label className="label">{titulo}</label>
+        </div>
+        <div className="columnaDerecha">
+            <select className="select" onChange={eventoCambio}>
+                <option className="opcion">Seleccione uno</option>
+                {opciones.map((item) => (
+                    <option value={item.nombre} key={item.id}>{item.nombre}</option>
+                ))}
+            </select>
+        </div>
+          
       </div>
     )
   }

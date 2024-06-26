@@ -14,6 +14,7 @@ import ButtonLink from '../components/ButtonLink';
 import LabelInputEdit from '../components/LabelInputEdit';
 import { useNavigate } from 'react-router-dom';
 import RadioButton from '../components/RadioButton';
+import SelectEdit from '../components/SelectEdit';
 
 function ActionsStudent() {
   const navigate = useNavigate();
@@ -27,11 +28,22 @@ function ActionsStudent() {
         verificar();
     }, [])
 
-  const { changeName, changeDocumento, changeCorreo, changeNacimiento } = useContext(GeneralContext);
+  const { changeName, changeApellido, changeTipoDocumento, changeDocumento, changeCorreo, changeGenero, changeNacimiento } = useContext(GeneralContext);
   const [students, setStudents] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [backgroundOpacity] = useState(0.5);
+
+  const opcionesDocumento = [
+    { nombre: 'TI', id: 1 },
+    { nombre: 'CC', id: 2 },
+    { nombre: 'CE', id: 3 }
+  ];
+
+  const opcionesGenero = [
+    { nombre: 'Femenino', id: 1 },
+    { nombre: 'Masculino', id: 2 }
+  ];
 
   const [selectedLevels, setSelectedLevels] = useState({});
 
@@ -115,10 +127,13 @@ function ActionsStudent() {
 
   async function editStudent(id) {
     const name = document.getElementById('studentName').value;
+    const apellido = document.getElementById('studentApellido').value;
+    const tipoDocumento = document.getElementById('studentTipoDocumento').value;
     const documento = document.getElementById('studentDocument').value;
     const correo = document.getElementById('studentMail').value;
+    const genero = document.getElementById('studentGenero').value;
     const nacimiento = document.getElementById('studentDate').value;
-    if (name === "" || documento === "" || correo === "" || nacimiento === "") {
+    if (name === "" || apellido === "" || tipoDocumento === "" || documento === "" || correo === "" || genero === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -167,8 +182,11 @@ function ActionsStudent() {
         const data = {
           id: id,
           nombre: name,
+          apellido: apellido,
+          tipoDocumento: tipoDocumento,
           documento: documento,
           correo: correo,
+          genero: genero,
           nacimiento: nacimiento,
           rol: "estudiante",
           niveles: selectedLevels
@@ -282,8 +300,11 @@ function ActionsStudent() {
               <thead>
                 <tr>
                   <th style={{ width: '200px' }}>Nombre</th>
+                  <th style={{ width: '200px' }}>Apellidos</th>
+                  <th style={{ width: '200px' }}>Tipo Documento</th>
                   <th style={{ width: '200px' }}>Documento</th>
                   <th style={{ width: '200px' }}>Correo</th>
+                  <th style={{ width: '200px' }}>Sexo</th>
                   <th style={{ width: '200px' }}>Fecha de Nacimiento</th>
                   <th style={{ width: '200px' }}>Niveles Matriculados</th>
                   <th style={{ width: '200px' }}>Acciones</th>
@@ -293,8 +314,11 @@ function ActionsStudent() {
                 {students.map((student) => (
                   <tr key={student.id}>
                     <td>{student.nombre}</td>
+                    <td>{student.apellido}</td>
+                    <td>{student.tipoDocumento}</td>
                     <td>{student.documento}</td>
                     <td>{student.correo}</td>
+                    <td>{student.genero}</td>
                     <td>{student.nacimiento}</td>
                     <td>
                       {Object.keys(student.niveles).map((nivel) => (
@@ -322,8 +346,11 @@ function ActionsStudent() {
           <h1>Editar Estudiante</h1>
           <div className="InputContainer">
             <LabelInputEdit id="studentName" texto="Nombre" eventoCambio={changeName} valorInicial={selectedStudent.nombre}></LabelInputEdit>
+            <LabelInputEdit id="studentApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedStudent.apellido}></LabelInputEdit>
+            <SelectEdit id="studentTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedStudent.tipoDocumento}></SelectEdit>
             <LabelInputEdit id="studentDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedStudent.documento}></LabelInputEdit>
             <LabelInputEdit id="studentMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedStudent.correo}></LabelInputEdit>
+            <SelectEdit id="studentGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedStudent.genero}></SelectEdit>
             <LabelInputEdit id="studentDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedStudent.nacimiento}></LabelInputEdit>
             <label>Niveles Matriculados</label>
                 <div className='niveles'>
