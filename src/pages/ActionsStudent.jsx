@@ -84,6 +84,7 @@ function ActionsStudent() {
       const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "estudiante"}) 
       if (respuesta.exito) {
         setStudents(respuesta.lista);
+        console.log(respuesta.lista);
       } else {
         Swal.fire({
           icon: "error",
@@ -248,7 +249,7 @@ function ActionsStudent() {
     
     // Verificar si el usuario confirmó la eliminación
     if (confirmacion.isConfirmed) {
-      const data = { id: id };
+      const data = { id: id, rol: "estudiante"};
       try {
         const respuesta = await fetchBody('/usuarios/eliminar', 'DELETE', data );
         if (respuesta.exito){

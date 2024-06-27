@@ -226,7 +226,7 @@ function ActionsTeacher() {
     
     // Verificar si el usuario confirmó la eliminación
     if (confirmacion.isConfirmed) {
-      const data = { id: id };
+      const data = { id: id, rol: "profesor"};
       try {
         const respuesta = await fetchBody('/usuarios/eliminar', 'DELETE', data );
         if (respuesta.exito){
