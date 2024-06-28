@@ -71,23 +71,41 @@ function Teacher() {
             })
           } else {
             try {
-              const idUsuario = JSON.parse(atob(localStorage.getItem("token").split('.')[1])).id;
-              const data = {
-                id: idUsuario,
-                newPassword: password
-              }             
-              const respuesta = await fetchBody('/usuarios/newPassword', 'PUT', data);
-              if (respuesta.exito) {
-                Swal.fire({
-                  icon: "success",
-                  title: "Contraseña cambiada con éxito!",
-                  customClass: {
-                    confirmButton: 'btn-color'
-                  },
-                  buttonsStyling: false
-                });
+              const token = localStorage.getItem("token");
+
+              if (token) {
+                  // Decodificar el payload del token (segundo segmento)
+                  const payload = JSON.parse(atob(token.split('.')[1]));
+
+                  // Acceder al id y rol del usuario
+                  const idUsuario = payload.id;
+                  const rolUsuario = payload.rol;
+
+                  console.log(`ID del usuario: ${idUsuario}`);
+                  console.log(`Rol del usuario: ${rolUsuario}`);
+
+                  const data = {
+                    id: idUsuario,
+                    newPassword: password,
+                    rol: rolUsuario
+                  }        
+                  console.log(data);     
+                  const respuesta = await fetchBody('/usuarios/newPassword', 'PUT', data);
+                  if (respuesta.exito) {
+                    Swal.fire({
+                      icon: "success",
+                      title: "Contraseña cambiada con éxito!",
+                      customClass: {
+                        confirmButton: 'btn-color'
+                      },
+                      buttonsStyling: false
+                    });
+                  }
+                  setShowPasswordModal(false);
+              } else {
+                  console.error("Token no encontrado en el localStorage");
               }
-              setShowPasswordModal(false);
+              
             } catch (error) {
               Swal.fire({
                 icon: "error",
