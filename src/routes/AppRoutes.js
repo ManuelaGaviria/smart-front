@@ -42,6 +42,11 @@ import ProgramarExamenB2 from "../pages/PagesStudents/Niveles/B2/ProgramarExamen
 import ProgramarClaseC1 from "../pages/PagesStudents/Niveles/C1/ProgramarClaseC1";
 import ProgramarExamenC1 from "../pages/PagesStudents/Niveles/C1/ProgramarExamenC1";
 import HorarioA1 from "../pages/PagesStudents/Niveles/A1/HorarioA1";
+import PrincipalSuperAdmin from "../pages/PagesSuperAdmin/PrincipalSuperAdmin";
+import GestionarAdmin from "../pages/PagesSuperAdmin/GestionarAdmin";
+import GestionarNiveles from "../pages/PagesSuperAdmin/GestionarNiveles";
+import CreateAdmin from "../pages/PagesSuperAdmin/CreateAdmin";
+import ActionsAdmin from "../pages/PagesSuperAdmin/ActionsAdmin";
 
 function AppRoutes() {
     const location = useLocation();
@@ -58,7 +63,13 @@ function AppRoutes() {
                 <Route exact path="/CreateStudent" element={<CreateStudent></CreateStudent>}></Route>
                 <Route exact path="/ActionsTeacher" element={<ActionsTeacher></ActionsTeacher>}></Route>
                 <Route exact path="/ActionsStudent" element={<ActionsStudent></ActionsStudent>}></Route>
-                
+
+                <Route exact path="/Administrador" element={<PrincipalSuperAdmin></PrincipalSuperAdmin>}></Route>
+                <Route exact path="/GestionarAdmins" element={<GestionarAdmin></GestionarAdmin>}></Route>
+                <Route exact path="/GestionarNiveles" element={<GestionarNiveles></GestionarNiveles>}></Route>
+                <Route exact path="/CreateAdmin" element={<CreateAdmin></CreateAdmin>}></Route>
+                <Route exact path="/ActionsAdmin" element={<ActionsAdmin></ActionsAdmin>}></Route>
+
                 <Route exact path="/Teacher" element={<Teacher></Teacher>}></Route>
 
 

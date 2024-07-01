@@ -47,6 +47,8 @@ function Login() {
           const rolUsuario = JSON.parse(atob(localStorage.getItem("token").split('.')[1])).rol;
           if (rolUsuario === "administrador") {
             navigate("/Admin")
+          } else if (rolUsuario === "superadministrador") {
+            navigate("/Administrador")
           } else if (rolUsuario === "profesor") {
             navigate("/Teacher")
           } else if (rolUsuario === "estudiante") {

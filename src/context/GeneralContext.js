@@ -54,6 +54,11 @@ export const GeneralProvider = ({children}) => {
         setNiveles(e.target.value)
     }
 
+    const [administrador, setAdministrador] = useState([])
+    const changeAdministrador = (e) => {
+        setAdministrador(e.target.value)
+    }
+
     return <GeneralContext.Provider value={{
         name,changeName, 
         apellido, changeApellido,
@@ -64,7 +69,8 @@ export const GeneralProvider = ({children}) => {
         nacimiento, changeNacimiento, 
         password, changePassword,
         niveles, changeNiveles,
-        confirmationPassword, changeConfirmationPassword
+        confirmationPassword, changeConfirmationPassword,
+        administrador, changeAdministrador
     }}>
         {children}
     </GeneralContext.Provider>
