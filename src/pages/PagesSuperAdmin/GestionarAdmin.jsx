@@ -41,7 +41,7 @@ function GestionarAdmin() {
           <div className='ButtonContainer'>
             <ButtonLink destino="/CreateAdmin" clase="Button2">Crear Administrador</ButtonLink>
             <ButtonLink destino="/ActionsAdmin" clase="Button2">Ver administradores</ButtonLink>
-            <ButtonLink destino="/Admin" clase="Button2">Regresar</ButtonLink>
+            <ButtonLink destino="/PrincipalSuperAdmin" clase="Button2">Regresar</ButtonLink>
           </div>
         </div>
       </motion.div>

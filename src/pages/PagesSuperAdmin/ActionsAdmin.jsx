@@ -27,10 +27,11 @@ function ActionsAdmin() {
         verificar();
     }, [])
 
-  const { administrador, changeName, changeApellido, changeTipoDocumento, changeDocumento, changeCorreo, changeGenero, changeNacimiento, changeAdministrador } = useContext(GeneralContext);
+  const { changeName, changeApellido, changeTipoDocumento, changeDocumento, changeCorreo, changeGenero, changeNacimiento, changeAdministrador } = useContext(GeneralContext);
   const [admins, setAdmin] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [nuevoRol, setNuevoRol] = useState(""); // Nuevo estado para el nuevo rol
   const [backgroundOpacity] = useState(0.5);
 
   const opcionesDocumento = [
@@ -54,7 +55,8 @@ function ActionsAdmin() {
 
   const openEditModal = (admin) => {
     setSelectedAdmin(admin);
-    setEditModalOpen(true);
+    setNuevoRol(admin.rol); // Establecer el rol actual como valor inicial del nuevo rol
+    setEditModalOpen(true); 
   };
 
   const handleCloseModal = () => {
@@ -66,6 +68,7 @@ function ActionsAdmin() {
       const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: ['administrador', 'superadministrador']}) 
       if (respuesta.exito) {
         setAdmin(respuesta.lista)
+        console.log(respuesta.lista);
       } else {
         Swal.fire({
           icon: "error",
@@ -115,8 +118,7 @@ function ActionsAdmin() {
     const correo = document.getElementById('adminEmail').value;
     const genero = document.getElementById('adminGenero').value;
     const nacimiento = document.getElementById('adminDate').value;
-    const rol = document.getElementById("adminRol")
-    if (name === "" || apellido === "" || tipoDocumento === "" || documento === "" || correo === "" || genero === "" || nacimiento === "" || rol === "") {
+    if (name === "" || apellido === "" || tipoDocumento === "" || documento === "" || correo === "" || genero === "" || nacimiento === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -171,7 +173,9 @@ function ActionsAdmin() {
           correo: correo,
           genero: genero,
           nacimiento: nacimiento,
-          rol: rol
+          status: selectedAdmin.status,
+          rol: selectedAdmin.rol, // Rol actual
+          nuevoRol: nuevoRol // Nuevo rol
         };
         console.log(data);
         try {
@@ -334,7 +338,14 @@ function ActionsAdmin() {
             <LabelInputEdit id='adminEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedAdmin.correo}></LabelInputEdit>
             <SelectEdit id="adminGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedAdmin.genero}></SelectEdit>
             <LabelInputEdit id='adminDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedAdmin.nacimiento}></LabelInputEdit>
-            <SelectEdit id="adminRol" titulo="Rol" opciones={opcionesAdmin} eventoCambio={changeAdministrador} valorInicial={selectedAdmin.rol}></SelectEdit>
+            <SelectEdit
+              id="adminRol"
+              titulo="Rol"
+              opciones={opcionesAdmin}
+              eventoCambio={(e) => setNuevoRol(e.target.value)}
+              valorInicial={selectedAdmin.rol} // Aquí debería ser selectedAdmin.rol
+            ></SelectEdit>
+
           </div>
           <br />
           <Button clase="Button" eventoClick={() => editAdmin(selectedAdmin.id)}>Editar</Button>

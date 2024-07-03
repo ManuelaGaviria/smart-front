@@ -1,9 +1,20 @@
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 function SelectEdit({ titulo, opciones, eventoCambio, valorInicial, id }) {
+    // Estado local para el valor seleccionado
+    const [valor, setValor] = useState(valorInicial);
+
+    // Actualizar el estado local cuando el valor inicial cambie
     useEffect(() => {
-        document.getElementById(id).value = valorInicial;
-    }, [valorInicial, id]);
+        setValor(valorInicial);
+    }, [valorInicial]);
+
+    // Manejar el cambio de selección
+    const handleChange = (event) => {
+        const newValue = event.target.value;
+        setValor(newValue); // Actualizar el estado local
+        eventoCambio(event); // Llamar al evento de cambio pasado como prop
+    };
 
     return (
         <div className="malla">
@@ -14,8 +25,8 @@ function SelectEdit({ titulo, opciones, eventoCambio, valorInicial, id }) {
                 <select
                     id={id}
                     className="select"
-                    onChange={eventoCambio}
-                    value={valorInicial} // Establecer el valor inicial aquí
+                    onChange={handleChange}
+                    value={valor} // Establecer el valor del estado local aquí
                 >
                     <option value="" disabled>Seleccione uno</option>
                     {opciones.map((item) => (
