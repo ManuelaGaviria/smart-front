@@ -4,12 +4,9 @@ import { motion} from 'framer-motion';
 import LogoutButton from '../../components/LogoutButton';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../components/Button';
-import ContenedorForms from '../../components/ContenedorForms';
-import LabelInputIcon from '../../components/LabelInputIcon';
 import ButtonLink from '../../components/ButtonLink';
 
-function GestionarNiveles() {
+function PrincipalNiveles() {
   const navigate = useNavigate();
     useEffect(() => {
         const verificar = async () => {
@@ -43,11 +40,11 @@ function GestionarNiveles() {
           <h1>Niveles</h1>
           <p>Selecciona el nivel a gestionar</p>
           <div className=''>
-            <ButtonLink destino="/GestionarA1" clase="circleLevels">A1</ButtonLink>
-            <ButtonLink destino="/GestionarA2" clase="circleLevels">A2</ButtonLink>
-            <ButtonLink destino="/GestionarB1" clase="circleLevels">B1</ButtonLink>
-            <ButtonLink destino="/GestionarB2" clase="circleLevels">B2</ButtonLink>
-            <ButtonLink destino="/GestionarC1" clase="circleLevels">C1</ButtonLink>
+            <ButtonLink destino="/A1" clase="circleLevels">A1</ButtonLink>
+            <ButtonLink destino="/A2" clase="circleLevels">A2</ButtonLink>
+            <ButtonLink destino="/B1" clase="circleLevels">B1</ButtonLink>
+            <ButtonLink destino="/B2" clase="circleLevels">B2</ButtonLink>
+            <ButtonLink destino="/C1" clase="circleLevels">C1</ButtonLink>
           </div>
         </div> 
       </motion.div>
@@ -55,4 +52,4 @@ function GestionarNiveles() {
   )
 }
 
-export default GestionarNiveles
+export default PrincipalNiveles

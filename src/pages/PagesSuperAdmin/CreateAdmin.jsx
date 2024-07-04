@@ -121,7 +121,7 @@ function CreateAdmin() {
               },
               buttonsStyling: false
             });
-            navigate("/GestionarAdmin");
+            navigate("/GestionarAdmins");
           } else {
             Swal.fire({
               icon: "error",
@@ -169,7 +169,7 @@ function CreateAdmin() {
         <br />
         <Button eventoClick={validate} clase="Button">Crear</Button>
 
-        <ButtonLink destino="/PrincipalTeacher" clase="Button">Regresar</ButtonLink>
+        <ButtonLink destino="/GestionarAdmins" clase="Button">Regresar</ButtonLink>
       </ContenedorForms>
     </motion.div>
   );

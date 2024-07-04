@@ -113,9 +113,18 @@ h1 {
   height: 100px;
   color: white;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.3s;
+}
+
+.circleLevels:hover{
+  background-color: #c11612;
+  font-size: 40px;
+  transition: 0.3s;
+  width: 150px;
+  height: 150px;
 }
 
 .malla {

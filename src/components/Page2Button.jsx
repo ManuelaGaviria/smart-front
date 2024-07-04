@@ -1,15 +1,13 @@
-import React, { useEffect } from 'react'
-import Logo2 from '../../components/Logo2';
+import Logo2 from './Logo2';
 import { motion} from 'framer-motion';
-import LogoutButton from '../../components/LogoutButton';
-import { fetchBody } from '../../utils/fetch';
+import { FaChalkboardTeacher } from "react-icons/fa";
+import CircleImage from './CircleImage';
+import ButtonLink from './ButtonLink';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../components/Button';
-import ContenedorForms from '../../components/ContenedorForms';
-import LabelInputIcon from '../../components/LabelInputIcon';
-import ButtonLink from '../../components/ButtonLink';
+import { fetchBody } from '../utils/fetch';
 
-function GestionarNiveles() {
+function Page2Button({titulo, tituloBoton1, tituloBoton2, destinoBoton1, destinoBoton2, destinoRegreso, children}) {
   const navigate = useNavigate();
     useEffect(() => {
         const verificar = async () => {
@@ -20,7 +18,6 @@ function GestionarNiveles() {
         }
         verificar();
     }, [])
-
   return (
     <motion.div 
     className='AdminContainer'
@@ -28,7 +25,7 @@ function GestionarNiveles() {
     animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
     exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
     transition={{ duration: 1 }}>
-      <LogoutButton></LogoutButton>
+      <CircleImage icon={FaChalkboardTeacher}></CircleImage>
       <div className='logoAdminContainer'>
         <Logo2></Logo2>
       </div>
@@ -37,22 +34,20 @@ function GestionarNiveles() {
       initial={{ opacity: 0, y: -500 }} // Inicia desde abajo (puedes ajustar la distancia según tus necesidades)
       animate={{ opacity: 1, y: -50 }} // Animación de arriba hacia abajo
       exit={{ opacity: 0, y: 500 }} // Sale hacia abajo
-      transition={{ duration: 1 }}
+      transition={{ duration: 2 }}
       > 
         <div className='ButtonsAdminContainer'>
-          <h1>Niveles</h1>
-          <p>Selecciona el nivel a gestionar</p>
-          <div className=''>
-            <ButtonLink destino="/GestionarA1" clase="circleLevels">A1</ButtonLink>
-            <ButtonLink destino="/GestionarA2" clase="circleLevels">A2</ButtonLink>
-            <ButtonLink destino="/GestionarB1" clase="circleLevels">B1</ButtonLink>
-            <ButtonLink destino="/GestionarB2" clase="circleLevels">B2</ButtonLink>
-            <ButtonLink destino="/GestionarC1" clase="circleLevels">C1</ButtonLink>
+          <h1 className='tituloPrincipal'>{titulo}</h1>
+          <div className='ButtonContainer'>
+            <ButtonLink destino={destinoBoton1} clase="Button2">{tituloBoton1}</ButtonLink>
+            <ButtonLink destino={destinoBoton2} clase="Button2">{tituloBoton2}</ButtonLink>
+            {children}
+            <ButtonLink destino={destinoRegreso} clase="Button2">Regresar</ButtonLink>
           </div>
-        </div> 
+        </div>
       </motion.div>
     </motion.div>
   )
 }
 
-export default GestionarNiveles
+export default Page2Button
