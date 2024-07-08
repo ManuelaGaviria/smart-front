@@ -101,7 +101,7 @@ function CrearExamenA1() {
         </div>
         <br />
         <Button eventoClick={validate} clase="Button">Crear</Button>
-        <ButtonLink destino="/GestionarClaseA1" clase="Button">Regresar</ButtonLink>
+        <ButtonLink destino="/GestionarExamenA1" clase="Button">Regresar</ButtonLink>
       </ContenedorForms>
     </motion.div>
   );

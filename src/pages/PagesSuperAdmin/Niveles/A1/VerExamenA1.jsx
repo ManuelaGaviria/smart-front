@@ -8,6 +8,7 @@ import { fetchBody } from '../../../../utils/fetch';
 import ContenedorForms from '../../../../components/ContenedorForms';
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import { IoCloudUpload } from "react-icons/io5";
 
 function VerExamenA1() {
     const navigate = useNavigate();
@@ -62,10 +63,11 @@ function VerExamenA1() {
                                 <td>Pasado Simple</td>
                                 <td>Clase 3</td>
                                 <td>
-                                    <ButtonLink destino="">Ver</ButtonLink>
+                                    <ButtonLink clase="btn-ver" destino="/VerExamenEscritoA1">Ver</ButtonLink>
                                 </td>
                                 <td>
-                                    <ButtonLink destino="">Ver</ButtonLink>
+                                    <button className='btn-upload'><IoCloudUpload /></button>
+                                    <ButtonLink clase="btn-ver" destino="/VerExamenOralA1">Ver</ButtonLink>
                                 </td>
                                 <td>
                                     <button className='btn-edit'><MdModeEdit /></button>
@@ -75,7 +77,7 @@ function VerExamenA1() {
                         </tbody>
                     </table>
                 </div>
-                <ButtonLink destino="/ProgramarA1" clase="ButtonRegresar">Regresar</ButtonLink>
+                <ButtonLink destino="/GestionarExamenA1" clase="ButtonRegresar">Regresar</ButtonLink>
             </FullscreenCard>
 
             {asignModalOpen && (
