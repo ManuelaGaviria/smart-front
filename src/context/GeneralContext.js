@@ -69,6 +69,11 @@ export const GeneralProvider = ({children}) => {
         setDescripcion(e.target.value)
     }
 
+    const [unidades, setUnidades] = useState([])
+    const changeUnidades = (e) => {
+        setUnidades(e.target.value)
+    }
+
     return <GeneralContext.Provider value={{
         name,changeName, 
         apellido, changeApellido,
@@ -82,7 +87,8 @@ export const GeneralProvider = ({children}) => {
         confirmationPassword, changeConfirmationPassword,
         administrador, changeAdministrador,
         numero, changeNumero,
-        descripcion, changeDescripcion
+        descripcion, changeDescripcion,
+        unidades, changeUnidades
     }}>
         {children}
     </GeneralContext.Provider>

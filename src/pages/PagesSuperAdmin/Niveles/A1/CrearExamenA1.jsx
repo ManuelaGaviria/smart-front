@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Swal from 'sweetalert2';
 import { motion } from 'framer-motion';
 import ContenedorForms from "../../../../components/ContenedorForms";
@@ -9,6 +9,7 @@ import { fetchBody } from '../../../../utils/fetch';
 import GeneralContext from '../../../../context/GeneralContext';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Select from "../../../../components/Select";
 
 function CrearExamenA1() {
   const navigate = useNavigate();
@@ -22,12 +23,56 @@ function CrearExamenA1() {
         verificar();
     }, [])
   
-  const { name } = useContext(GeneralContext);
+  const { numero, descripcion, unidades, changeNumero, changeDescripcion, changeUnidades } = useContext(GeneralContext);
+  const [clases, setClases] = useState([]);
+  const [claseSeleccionada, setClaseSeleccionada] = useState("");
 
+  useEffect(() => {
+    const listClases = async () => {
+      console.log("holi desde listar");
+      try {
+        console.log("1");
+        const respuesta = await fetchBody('/niveles/obtenerClase', 'POST', {nivel: "A1"});
+        if (respuesta.exito) {
+          const clasesFormateadas = respuesta.lista.map(clase => ({
+            nombre: clase.id,
+            id: clase.id
+          }));
+          setClases(clasesFormateadas);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para listar las clases',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
+    }
+    listClases();
+  }, []);
+
+  const handleChange = (e) => {
+    setClaseSeleccionada(e.target.value); // Actualizar el estado con la clase seleccionada
+    console.log('Clase seleccionada:', e.target.value);
+  };
 
 
   async function validate() {
-    if (name === "" ) {
+    if (numero === "" || unidades === "" || descripcion ==="" || claseSeleccionada === "" ) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -39,27 +84,29 @@ function CrearExamenA1() {
       });
     } else {
         const data = {
-          nombre: name
+          numero: numero,
+          unidades: unidades,
+          tematica: descripcion,
+          clase: claseSeleccionada,
+          nivel: "A1"
         };
         console.log(data);
         try {
-          const respuesta = await fetchBody('/superadmin/niveles', 'POST', data);
+          const respuesta = await fetchBody('/niveles/agregarExamen', 'POST', data);
           console.log(respuesta);
           if (respuesta.exito) {
-            document.getElementById("idName").value = "";
-            document.getElementById("idApellido").value = "";
-            document.getElementById("idDocument").value = "";
-            document.getElementById("idMail").value = "";
-            document.getElementById("idDate").value = "";
+            document.getElementById("idExamen").value = "";
+            document.getElementById("idUnidades").value = "";
+            document.getElementById("idTematica").value = "";
             Swal.fire({
               icon: "success",
-              title: "Administrador creado con éxito!",
+              title: "Examen creado con éxito!",
               customClass: {
                 confirmButton: 'btn-color'
               },
               buttonsStyling: false
             });
-            navigate("/GestionarAdmins");
+            navigate("/GestionarExamenA1");
           } else {
             Swal.fire({
               icon: "error",
@@ -75,7 +122,7 @@ function CrearExamenA1() {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: 'Error al procesar la solicitud para crear un Administrador',
+            text: 'Error al procesar la solicitud para crear un examen',
             customClass: {
               confirmButton: 'btn-color'
             },
@@ -94,10 +141,13 @@ function CrearExamenA1() {
       <ContenedorForms>
         <h1>Crear Examen A1</h1>
         <div className="InputContainer">
-          <LabelInputEdit id="idExamen" texto="Examen #" eventoCambio={name} ></LabelInputEdit>
-          <LabelInputEdit id="idUnidades" eventoCambio={name} texto="Unidades"></LabelInputEdit>
-          <LabelInputEdit id="idTematica" texto="Temática" eventoCambio={name}></LabelInputEdit>
-          <LabelInputEdit id="idClase" texto="Clase que lo desbloquea" eventoCambio={name}></LabelInputEdit>
+          <LabelInputEdit id="idExamen" tipo="number" texto="Examen #" eventoCambio={changeNumero} ></LabelInputEdit>
+          <LabelInputEdit id="idUnidades" eventoCambio={changeUnidades} texto="Unidades"></LabelInputEdit>
+          <LabelInputEdit id="idTematica" texto="Temática" eventoCambio={changeDescripcion}></LabelInputEdit>
+          <Select titulo="Clase que lo desbloquea"
+                opciones={clases}
+                eventoCambio={handleChange}>
+          </Select>
         </div>
         <br />
         <Button eventoClick={validate} clase="Button">Crear</Button>
