@@ -29,7 +29,6 @@ function CrearExamenA1() {
 
   useEffect(() => {
     const listClases = async () => {
-      console.log("holi desde listar");
       try {
         console.log("1");
         const respuesta = await fetchBody('/niveles/obtenerClase', 'POST', {nivel: "A1"});

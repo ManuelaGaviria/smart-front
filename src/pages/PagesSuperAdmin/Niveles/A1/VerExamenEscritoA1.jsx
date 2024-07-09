@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Logo3 from '../../../../components/Logo3';
 import { motion } from 'framer-motion';
 import FullscreenCard from '../../../../components/FullScreenCard';
@@ -23,6 +24,9 @@ function VerExamenEscritoA1() {
         }
         verificar();
     }, [navigate]);
+
+    const location = useLocation();
+    const { examenId } = location.state || {};
 
     const [asignModalOpen, setAsignModalOpen] = useState(false);
     const [cancelModalOpen, setCancelModalOpen] = useState(false);
@@ -59,6 +63,7 @@ function VerExamenEscritoA1() {
                 <br />
                 <div className='CenterTable'>
                     <table className='Table'>
+                        <h1>ID del examen: {examenId}</h1>
                         <thead>
                             <tr>
                                 <th style={{ width: '200px' }}># Pregunta</th>
