@@ -28,4 +28,20 @@ async function fetchBody (route, method, data) {
 
 }
 
-module.exports = { fetchGet, fetchBody }
+async function fetchFormData (route, method, data) {
+
+    const response = await fetch(`${server}${route}`, {
+        method: method,
+        headers: {
+            Authorization: 'Bearer '  + localStorage.getItem("token")
+        },
+        body: data
+    });
+
+    const responseReceived = await response.json();
+
+    return responseReceived;
+
+}
+
+module.exports = { fetchGet, fetchBody, fetchFormData }
