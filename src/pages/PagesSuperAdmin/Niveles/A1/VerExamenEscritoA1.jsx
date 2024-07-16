@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import Logo3 from '../../../../components/Logo3';
@@ -11,6 +11,12 @@ import DateSelect from '../../../../components/DateSelect';
 import Checkbox from '../../../../components/Checkbox';
 import { MdModeEdit } from "react-icons/md";
 import { MdDelete } from "react-icons/md";
+import LabelInputEdit from '../../../../components/LabelInputEdit';
+import GeneralContext from '../../../../context/GeneralContext';
+import Select from '../../../../components/Select';
+import Button from '../../../../components/Button';
+import Swal from 'sweetalert2';
+import SelectEdit from '../../../../components/SelectEdit';
 
 function VerExamenEscritoA1() {
     const navigate = useNavigate();
@@ -28,9 +34,24 @@ function VerExamenEscritoA1() {
     const location = useLocation();
     const { examenId } = location.state || {};
 
+    const { pregunta, respuesta1, respuesta2, respuesta3, respuesta4, respuestaCorrecta, changePregunta, changeRespuesta1, changeRespuesta2, changeRespuesta3, changeRespuesta4, changeRespuestaCorrecta } = useContext(GeneralContext);
+
+    const opcionesRespuesta = [
+        { nombre: 'respuesta1', id: 1 },
+        { nombre: 'respuesta2', id: 2 },
+        { nombre: 'respuesta3', id: 3 },
+        { nombre: 'respuesta4', id: 4 },
+      ];
+
     const [asignModalOpen, setAsignModalOpen] = useState(false);
-    const [cancelModalOpen, setCancelModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [examenes, setExamen] = useState([]);
+    const [selectedExamen, setSelectedExamen] = useState(null);
     const [backgroundOpacity] = useState(0.5);
+
+    useEffect(() => {
+        listExamenes();
+      }, []);
 
     const openAsignModal = () => {
         setAsignModalOpen(true);
@@ -38,15 +59,263 @@ function VerExamenEscritoA1() {
 
     const handleCloseModal = () => {
         setAsignModalOpen(false);
+        setEditModalOpen(false);
     };
 
-    const openCancelModal = () => {
-        setCancelModalOpen(true);
-    };
+    const openEditModal = (examen) => {
+        setSelectedExamen(examen);
+        setEditModalOpen(true); 
+      };
 
-    const handleCloseCancelModal = () => {
-        setCancelModalOpen(false);
-    };
+
+    async function listExamenes() {
+        try {
+            const data = {
+                nivel: "A1",
+                examenId: examenId
+            }
+          const respuesta = await fetchBody ('/niveles/listarExamenEscrito','POST', data) 
+          if (respuesta.exito) {
+            setExamen(respuesta.lista)
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: respuesta.error,
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+          }
+        } catch (error) {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: 'Error al procesar la solicitud para listar los examenes',
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        }
+      }
+
+    async function validate() {
+        if (pregunta === "" || respuesta1 === "" || respuesta2 === "" || respuesta3 === "" || respuesta4 === "") {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Por favor llena todos los campos.",
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+        } else {
+            const data = {
+                nivel: "A1",
+              examenId: examenId,
+              pregunta: pregunta,
+              respuesta1: respuesta1,
+              respuesta2: respuesta2,
+              respuesta3: respuesta3,
+              respuesta4: respuesta4,
+              respuestaCorrecta: respuestaCorrecta
+            };
+            console.log(data);
+            try {
+              const respuesta = await fetchBody('/niveles/agregarExamenEscrito', 'POST', data);
+              if (respuesta.exito) {
+                changePregunta({ target: { value: '' } });
+                changeRespuesta1({ target: { value: '' } });
+                changeRespuesta2({ target: { value: '' } });
+                changeRespuesta3({ target: { value: '' } });
+                changeRespuesta4({ target: { value: '' } });
+                document.getElementById("pregunta").value = "";
+                document.getElementById("respuesta1").value = "";
+                document.getElementById("respuesta2").value = "";
+                document.getElementById("respuesta3").value = "";
+                document.getElementById("respuesta4").value = "";
+                Swal.fire({
+                  icon: "success",
+                  title: "Examen creado con éxito!",
+                  customClass: {
+                    confirmButton: 'btn-color'
+                  },
+                  buttonsStyling: false
+                });
+                navigate("/VerExamenA1");
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: respuesta.error,
+                  customClass: {
+                    confirmButton: 'btn-color'
+                  },
+                  buttonsStyling: false
+                });
+              }
+            } catch (error) {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: 'Error al procesar la solicitud para crear un estudiante',
+                customClass: {
+                  confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+              });
+            }
+          }
+    }
+
+    async function handleEdit(id) {
+        const examenToEdit = examenes.find(examen => examen.id === id);
+        if (examenToEdit) {
+          openEditModal(examenToEdit);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: 'Examen no encontrado',
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        }
+      }
+
+      async function editExamen(id) {
+        const pregunta = document.getElementById('idpregunta').value;
+        const respuesta1 = document.getElementById('idrespuesta1').value;
+        const respuesta2 = document.getElementById('idrespuesta2').value;
+        const respuesta3 = document.getElementById('idrespuesta3').value;
+        const respuesta4 = document.getElementById('idrespuesta4').value;
+
+        if (pregunta === "" || respuesta1 === "" || respuesta2 === "" || respuesta3 === "" || respuesta4 === "") {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Por favor llena todos los campos.",
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        } else {
+            const data = {
+              id:id,
+              examenId, examenId,
+              pregunta: pregunta,
+              respuesta1: respuesta1,
+              respuesta2: respuesta2,
+              respuesta3: respuesta3,
+              respuesta4: respuesta4,
+              respuestaCorrecta: respuestaCorrecta,
+              nivel: "A1"
+            };
+            console.log(data);
+            try {
+              const respuesta = await fetchBody ('/niveles/editarExamenEscrito','PUT',data) 
+              if (respuesta.exito){
+                  Swal.fire({
+                    icon: "success",
+                    title: "Se actualizó la pregunta con éxito!",
+                    customClass: {
+                      confirmButton: 'btn-color'
+                    },
+                    buttonsStyling: false
+                  });
+                  handleCloseModal();
+                  await listExamenes();
+              }
+              else {
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: respuesta.error,
+                  customClass: {
+                    confirmButton: 'btn-color'
+                  },
+                  buttonsStyling: false
+                });
+              }
+          } catch (error) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: 'Error al procesar la solicitud para editar una pregunta',
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+          }
+          }
+      }
+
+      async function handleDelete(id) {
+        // Mostrar una alerta de confirmación antes de eliminar al profesor
+        const confirmacion = await Swal.fire({
+          title: '¿Estás seguro de eliminar esta pregunta?',
+          text: "Esta acción no se puede revertir",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sí, eliminar',
+          customClass: {
+            confirmButton: 'btn-color',
+            cancelButton: 'btn-color-cancel'
+          },
+          buttonsStyling: false
+      });
+        
+        // Verificar si el usuario confirmó la eliminación
+        if (confirmacion.isConfirmed) {
+          const data = { 
+            id: id, 
+            nivel: "A1",
+            examenId: examenId
+        };
+          try {
+            const respuesta = await fetchBody('/niveles/eliminarExamenEscrito', 'DELETE', data );
+            console.log(respuesta);
+            if (respuesta.exito){
+              Swal.fire({
+                icon: "success",
+                title: "Pregunta eliminada con éxito!",
+                customClass: {
+                  confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+              });
+              await listExamenes();
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: respuesta.error,
+                customClass: {
+                  confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+              });
+            }
+          } catch (error) {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: 'Error al procesar la solicitud para eliminar una pregunta',
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+          }
+        }
+      }
 
     return (
         <motion.div
@@ -63,10 +332,8 @@ function VerExamenEscritoA1() {
                 <br />
                 <div className='CenterTable'>
                     <table className='Table'>
-                        <h1>ID del examen: {examenId}</h1>
                         <thead>
                             <tr>
-                                <th style={{ width: '200px' }}># Pregunta</th>
                                 <th style={{ width: '200px' }}>Pregunta</th>
                                 <th style={{ width: '200px' }}>Respuesta 1</th>
                                 <th style={{ width: '200px' }}>Respuesta 2</th>
@@ -77,19 +344,20 @@ function VerExamenEscritoA1() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>What's your favorite color?</td>
-                                <td>Red</td>
-                                <td>Cow</td>
-                                <td>Chair</td>
-                                <td>Moon</td>
-                                <td>Respuesta 1: Red</td>
-                                <td>
-                                    <button className='btn-edit'><MdModeEdit /></button>
-                                    <button className='btn-delete'><MdDelete /></button>
+                        {examenes.map((examen) => (
+                            <tr key={examen.id}>
+                                <td>{examen.pregunta}</td>
+                                <td>{examen.respuesta1}</td>
+                                <td>{examen.respuesta2}</td>
+                                <td>{examen.respuesta3}</td>
+                                <td>{examen.respuesta4}</td>
+                                <td>{examen.respuestaCorrecta}</td>
+                                <td className='Actions'>
+                                    <button className='btn-edit' onClick={() => handleEdit(examen.id)}><MdModeEdit /></button>
+                                    <button className='btn-delete' onClick={() => handleDelete(examen.id)}><MdDelete /></button>
                                 </td>
                             </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
@@ -105,73 +373,48 @@ function VerExamenEscritoA1() {
                     <ContenedorForms>
                         <h1>Crear Pregunta</h1>
                         <div className="InputContainer">
-                            <div>
-                                <div className='CenterTable'>
-                                    
-                                </div>
-                            </div>
-                            <button onClick={handleCloseModal} className="ButtonRegresar">Regresar</button>
-                            <ButtonLink destino="/VerExamenA1" clase="ButtonRegresar">Terminar</ButtonLink>
-                            <br />
-                            <br />
+                            <LabelInputEdit id="pregunta" texto="Pregunta" eventoCambio={changePregunta}></LabelInputEdit>
+                            <LabelInputEdit id="respuesta1" texto="Respuesta 1" eventoCambio={changeRespuesta1}></LabelInputEdit>
+                            <LabelInputEdit id="respuesta2" texto="Respuesta 2" eventoCambio={changeRespuesta2}></LabelInputEdit>
+                            <LabelInputEdit id="respuesta3" texto="Respuesta 3" eventoCambio={changeRespuesta3}></LabelInputEdit>
+                            <LabelInputEdit id="respuesta4" texto="Respuesta 4" eventoCambio={changeRespuesta4}></LabelInputEdit> 
+                            <Select id="opcionesRespuesta" titulo="Respuesta Correcta" opciones={opcionesRespuesta} eventoCambio={changeRespuestaCorrecta}></Select>   
                         </div>
+                        <button onClick={handleCloseModal} className="ButtonRegresar">Regresar</button>
+                        <Button eventoClick={validate} clase="ButtonRegresar">Terminar</Button>
+                        <br />
+                        <br />
+                        
                     </ContenedorForms>
                 </>
             )}
 
-            {cancelModalOpen && (
+            {editModalOpen && (
                 <>
                     <div
                     className="BackgroundOverlay"
                     style={{ opacity: backgroundOpacity }}
                     />
                     <ContenedorForms>
-                        <h1>Cancelar clase</h1>
+                        <h1>Editar Examen</h1>
                         <div className="InputContainer">
-                            <label className='labelFecha'>Fecha</label>
-                            <DateSelect></DateSelect>
-                            <br />
-                            <br />
-                            <div>
-                                <div className='CenterTable'>
-                                    <table className='Table'>
-                                        <thead>
-                                            <tr>
-                                                <th style={{ width: '200px' }}>Clase #</th>
-                                                <th style={{ width: '200px' }}>Hora Inicial</th>
-                                                <th style={{ width: '200px' }}>Hora Final</th>
-                                                <th style={{ width: '200px' }}>Cupos</th>
-                                                <th style={{ width: '200px' }}>Seleccionar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>10:30</td>
-                                                <td>12:00</td>
-                                                <td>3/6</td>
-                                                <td>
-                                                    <Checkbox id="checkbox1"></Checkbox>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>13:30</td>
-                                                <td>15:00</td>
-                                                <td>1/6</td>
-                                                <td>
-                                                    <Checkbox id="checkbox2"></Checkbox>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            <div className="InputContainer">
+                                <LabelInputEdit id="idpregunta" texto="Pregunta" eventoCambio={changePregunta} valorInicial={selectedExamen.pregunta}></LabelInputEdit>
+                                <LabelInputEdit id="idrespuesta1" texto="Respuesta 1" eventoCambio={changeRespuesta1} valorInicial={selectedExamen.respuesta1}></LabelInputEdit>
+                                <LabelInputEdit id="idrespuesta2" texto="Respuesta 2" eventoCambio={changeRespuesta2} valorInicial={selectedExamen.respuesta2}></LabelInputEdit>
+                                <LabelInputEdit id="idrespuesta3" texto="Respuesta 3" eventoCambio={changeRespuesta3} valorInicial={selectedExamen.respuesta3}></LabelInputEdit>
+                                <LabelInputEdit id="idrespuesta4" texto="Respuesta 4" eventoCambio={changeRespuesta4} valorInicial={selectedExamen.respuesta4}></LabelInputEdit> 
+                                <SelectEdit titulo="Respuesta correcta"
+                                    opciones={opcionesRespuesta}
+                                    valorInicial={selectedExamen.respuestaCorrecta}
+                                    eventoCambio={changeRespuestaCorrecta}
+                                ></SelectEdit>
+                                
                             </div>
-                            <button onClick={handleCloseCancelModal} className="ButtonRegresar">Regresar</button>
-                            <ButtonLink destino="/ProgramarClaseA1" clase="ButtonRegresar">Terminar</ButtonLink>
-                            <br />
-                            <br />
                         </div>
+                        <br />
+                        <Button clase="Button" eventoClick={() => editExamen(selectedExamen.id)}>Editar</Button>
+                        <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
                     </ContenedorForms>
                 </>
             )}

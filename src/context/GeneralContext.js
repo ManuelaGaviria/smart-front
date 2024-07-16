@@ -74,6 +74,36 @@ export const GeneralProvider = ({children}) => {
         setUnidades(e.target.value)
     }
 
+    const [pregunta, setPregunta] = useState([])
+    const changePregunta = (e) => {
+        setPregunta(e.target.value)
+    }
+
+    const [respuesta1, setRespuesta1] = useState([])
+    const changeRespuesta1 = (e) => {
+        setRespuesta1(e.target.value)
+    }
+
+    const [respuesta2, setRespuesta2] = useState([])
+    const changeRespuesta2 = (e) => {
+        setRespuesta2(e.target.value)
+    }
+
+    const [respuesta3, setRespuesta3] = useState([])
+    const changeRespuesta3 = (e) => {
+        setRespuesta3(e.target.value)
+    }
+
+    const [respuesta4, setRespuesta4] = useState([])
+    const changeRespuesta4 = (e) => {
+        setRespuesta4(e.target.value)
+    }
+
+    const [respuestaCorrecta, setRespuestaCorrecta] = useState([])
+    const changeRespuestaCorrecta = (e) => {
+        setRespuestaCorrecta(e.target.value)
+    }
+
     return <GeneralContext.Provider value={{
         name,changeName, 
         apellido, changeApellido,
@@ -88,7 +118,13 @@ export const GeneralProvider = ({children}) => {
         administrador, changeAdministrador,
         numero, changeNumero,
         descripcion, changeDescripcion,
-        unidades, changeUnidades
+        unidades, changeUnidades,
+        pregunta, changePregunta,
+        respuesta1, changeRespuesta1,
+        respuesta2, changeRespuesta2,
+        respuesta3, changeRespuesta3,
+        respuesta4, changeRespuesta4,
+        respuestaCorrecta, changeRespuestaCorrecta
     }}>
         {children}
     </GeneralContext.Provider>
