@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDropzone } from 'react-dropzone';
-import { Dropzone } from 'react-dropzone'; // Asegúrate de tener esta línea
 import Logo3 from '../../../../components/Logo3';
 import { motion } from 'framer-motion';
 import FullscreenCard from '../../../../components/FullScreenCard';
@@ -16,8 +14,8 @@ import SelectEdit from '../../../../components/SelectEdit';
 import LabelInputEdit from '../../../../components/LabelInputEdit';
 import Button from '../../../../components/Button';
 import ButtonLinkState from '../../../../components/ButtonLinkState';
-import MyDropzone from '../../../../components/MyDropzone';
 const FormData = require('form-data');
+
 
 function VerExamenA1() {
   const navigate = useNavigate();
@@ -81,6 +79,8 @@ function VerExamenA1() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [uploadEditModalOpen, setUploadEditModalOpen] = useState(false);
+  const [editUploadModalOpen, setEditUploadModalOpen] = useState(false);
+
   const [selectedExamen, setSelectedExamen] = useState(null);
   const [backgroundOpacity] = useState(0.5);
 
@@ -99,14 +99,23 @@ function VerExamenA1() {
   };
 
   const openUploadEditModal = (examen) => {
+    console.log("Examen en openUploadEditModal:", examen);
     setSelectedExamen(examen);
     setUploadEditModalOpen(true);
+  }
+
+  const openEditUploadModal = (examen) => {
+    console.log("Examen en openEditUploadModal:", examen);
+    setSelectedExamen(examen);
+    setEditUploadModalOpen(true);
+    setUploadEditModalOpen(false);
   }
 
   const handleCloseModal = () => {
     setEditModalOpen(false);
     setUploadModalOpen(false);
     setUploadEditModalOpen(false);
+    setEditUploadModalOpen(false);
   };
 
   async function listExamenes() {
@@ -206,6 +215,58 @@ function VerExamenA1() {
       });
     }
   }
+
+  async function uploadEditExamen(id) {
+    console.log("ID en uploadEditExamen" + id);
+    if (fileUpload === null) {
+      console.log("Archivo vacío");
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('nuevoArchivo', fileUpload);
+      formData.append('id', id); // Agregar el ID
+      formData.append('nivel', "A1"); // Agregar el nivel
+      console.log(formData);
+
+      const respuesta = await fetchFormData('/niveles/editarExamenOral', 'PUT', formData);
+      console.log(respuesta);
+      if (respuesta.exito) {
+        Swal.fire({
+          icon: "success",
+          title: "Se editó el examen con éxito!",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+        handleCloseModal();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Error subiendo el archivo",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
+    } catch (error) {
+      console.error("Error al subir el archivo:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al subir el archivo",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
+    }
+  }
+
 
   async function handleUploadModal(id) {
     const examenToEdit = examenes.find(examen => examen.id === id);
@@ -360,12 +421,7 @@ function VerExamenA1() {
       console.log(respuesta);
       if (respuesta.exito) {
         const url = respuesta.archivoUrl;
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'examen'); // Aquí puedes establecer el nombre del archivo
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        window.open(url, '_blank');
       } else {
         Swal.fire({
           icon: "error",
@@ -482,6 +538,27 @@ function VerExamenA1() {
         </>
       )}
 
+      {editUploadModalOpen && (
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Subir Archivo</h1>
+            <div className="InputContainer">
+              <input type="file" onChange={(event) => { setFileUpload(event.target.files[0]) }} />
+            </div>
+            <br />
+            <Button clase="Button" eventoClick={() => {
+              console.log("selectedExamen antes de subir: ", selectedExamen);
+              uploadEditExamen(selectedExamen);
+            }}>Subir</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
+
       {uploadEditModalOpen && (
         <>
           <div
@@ -491,7 +568,7 @@ function VerExamenA1() {
           <ContenedorForms>
             <h1>Gestionar Archivo</h1>
             <Button clase="Button" eventoClick={() => downloadExamen(selectedExamen.id)}>Descargar</Button>
-            
+            <Button clase="Button" eventoClick={() => openEditUploadModal(selectedExamen.id)}>Editar</Button>
             <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
           </ContenedorForms>
         </>
