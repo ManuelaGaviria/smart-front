@@ -410,6 +410,61 @@ function VerExamenA1() {
       }
     }
   }
+  
+  async function handleDeleteUpload(id) {
+    // Mostrar una alerta de confirmación antes de eliminar al profesor
+    const confirmacion = await Swal.fire({
+      title: '¿Estás seguro de eliminar este archivo?',
+      text: "Esta acción no se puede revertir",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      customClass: {
+        confirmButton: 'btn-color',
+        cancelButton: 'btn-color-cancel'
+      },
+      buttonsStyling: false
+    });
+
+    // Verificar si el usuario confirmó la eliminación
+    if (confirmacion.isConfirmed) {
+      const data = { id: id, nivel: "A1" };
+      try {
+        const respuesta = await fetchBody('/niveles/eliminarExamenOral', 'DELETE', data);
+        if (respuesta.exito) {
+          Swal.fire({
+            icon: "success",
+            title: "Examen eliminado con éxito!",
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+          await listExamenes();
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para eliminar un examen',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
+    }
+  }
 
   const downloadExamen = async (id) => {
     const data = {
@@ -569,6 +624,7 @@ function VerExamenA1() {
             <h1>Gestionar Archivo</h1>
             <Button clase="Button" eventoClick={() => downloadExamen(selectedExamen.id)}>Descargar</Button>
             <Button clase="Button" eventoClick={() => openEditUploadModal(selectedExamen.id)}>Editar</Button>
+            <Button clase="Button" eventoClick={() => handleDeleteUpload(selectedExamen.id)}>Eliminar</Button>
             <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
           </ContenedorForms>
         </>

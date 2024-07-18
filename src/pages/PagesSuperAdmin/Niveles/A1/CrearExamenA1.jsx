@@ -30,7 +30,6 @@ function CrearExamenA1() {
   useEffect(() => {
     const listClases = async () => {
       try {
-        console.log("1");
         const respuesta = await fetchBody('/niveles/obtenerClase', 'POST', {nivel: "A1"});
         if (respuesta.exito) {
           const clasesFormateadas = respuesta.lista.map(clase => ({

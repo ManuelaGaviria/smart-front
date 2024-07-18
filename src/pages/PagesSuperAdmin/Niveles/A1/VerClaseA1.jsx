@@ -117,6 +117,7 @@ function VerClaseA1() {
             console.log(data);
             try {
               const respuesta = await fetchBody ('/niveles/editarClase','PUT',data) 
+              console.log(respuesta);
               if (respuesta.exito){
                   Swal.fire({
                     icon: "success",

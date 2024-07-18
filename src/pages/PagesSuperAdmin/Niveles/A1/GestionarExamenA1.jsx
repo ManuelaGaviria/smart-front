@@ -6,7 +6,7 @@ function GestionarExamenA1() {
     <Page2Button titulo="Gestionar Examenes A1"
     tituloBoton1="Crear examen"
     destinoBoton1="/CrearExamenA1"
-    tituloBoton2="Gestionar Examenes"
+    tituloBoton2="Ver Examenes"
     destinoBoton2="/VerExamenA1"
     destinoRegreso="/GestionarA1"
     >
