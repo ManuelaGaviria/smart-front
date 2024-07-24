@@ -55,6 +55,7 @@ import CrearClaseA1 from "../pages/PagesSuperAdmin/Niveles/A1/CrearClaseA1";
 import VerClaseA1 from "../pages/PagesSuperAdmin/Niveles/A1/VerClaseA1";
 import CrearExamenA1 from "../pages/PagesSuperAdmin/Niveles/A1/CrearExamenA1";
 import VerExamenEscritoA1 from "../pages/PagesSuperAdmin/Niveles/A1/VerExamenEscritoA1";
+import NivelesCulminados from "../pages/PagesStudents/NivelesCulminados";
 
 function AppRoutes() {
     const location = useLocation();
@@ -90,6 +91,7 @@ function AppRoutes() {
 
 
                 <Route exact path="/Student" element={<Student></Student>}></Route>
+                <Route exact path="/NivelesCulminados" element={<NivelesCulminados></NivelesCulminados>}></Route>
 
                 <Route exact path="/A1" element={<A1></A1>}></Route>
                 <Route exact path="/ProgramarA1" element={<Programar></Programar>}></Route>

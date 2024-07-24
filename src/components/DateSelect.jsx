@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { format, addDays, isSunday } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-const DateSelect = () => {
+const DateSelect = ({ onDateChange }) => {
     const [dates, setDates] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(null);
 
     useEffect(() => {
         const today = new Date();
@@ -26,8 +27,14 @@ const DateSelect = () => {
         return format(date, 'EEEE dd MMMM yyyy', { locale: es });
     };
 
+    const handleDateChange = (event) => {
+        const selectedDate = new Date(event.target.value);
+        setSelectedDate(selectedDate);
+        onDateChange(selectedDate);
+    };
+
     return (
-        <select className="date-select">
+        <select className="date-select" onChange={handleDateChange}>
             {dates.map((date, index) => (
                 <option key={index} value={date}>
                     {formatDate(date)}
