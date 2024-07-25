@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Checkbox = ({ id, label }) => {
-    const [isChecked, setIsChecked] = useState(false);
+const Checkbox = ({ id, label, onChange, checked }) => {
+    const [isChecked, setIsChecked] = useState(checked);
+
+    useEffect(() => {
+        setIsChecked(checked);
+    }, [checked]);
 
     const handleCheckboxChange = () => {
-        setIsChecked(!isChecked);
+        const newChecked = !isChecked;
+        setIsChecked(newChecked);
+        if (onChange) {
+            onChange(newChecked); // Notificar al padre sobre el cambio
+        }
     };
 
     return (
