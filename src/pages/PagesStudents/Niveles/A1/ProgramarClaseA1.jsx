@@ -22,6 +22,7 @@ function ProgramarClaseA1() {
             } else {
                 listClases();
                 listClasesDisponibles();
+                listClasesProgramadas();
                 listHoras(new Date());
             }
         }
@@ -32,6 +33,7 @@ function ProgramarClaseA1() {
     const [cancelModalOpen, setCancelModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [clases, setClase] = useState([]);
+    const [clasesProgramadas, setClaseProgramada] = useState([]);
     const [horas, setHoras] = useState([]);
     const [clasesSelect, setClaseSelect] = useState([]);
     const [claseSeleccionada, setClaseSeleccionada] = useState("");
@@ -93,20 +95,46 @@ function ProgramarClaseA1() {
 
     async function listClases() {
         try {
-            const respuesta = await fetchBody('/niveles/listarClase', 'POST', { nivel: "A1" })
-            if (respuesta.exito) {
-                setClase(respuesta.lista)
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: respuesta.error,
-                    customClass: {
-                        confirmButton: 'btn-color'
-                    },
-                    buttonsStyling: false
-                });
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const idEst = payload.id;
+
+                // Obtener la lista de clases disponibles
+                const respuestaClases = await fetchBody('/niveles/listarClase', 'POST', { nivel: 'A1' });
+
+                // Obtener el estado de las clases programadas
+                const respuestaEstado = await fetchBody('/estudiantes/actualizarEstadoClases', 'POST', { idEstudiante: idEst, nivel: 'A1' });
+
+                if (respuestaClases.exito && respuestaEstado.exito) {
+                    const clasesDisponibles = respuestaClases.lista;
+                    const clasesProgramadas = respuestaEstado.estadoClases;
+
+                    // Combinar ambas listas
+                    const clasesCombinadas = clasesDisponibles.map(clase => {
+                        const claseProgramada = clasesProgramadas.find(c => c.id === clase.id);
+                        return {
+                            ...clase,
+                            estado: claseProgramada ? claseProgramada.data.estado : 'pendiente'
+                        };
+                    });
+
+                    setClase(clasesCombinadas);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: respuestaClases.error || respuestaEstado.error,
+                        customClass: {
+                            confirmButton: 'btn-color'
+                        },
+                        buttonsStyling: false
+                    });
+                }
+
             }
+
         } catch (error) {
             Swal.fire({
                 icon: "error",
@@ -120,6 +148,64 @@ function ProgramarClaseA1() {
         }
     }
 
+    async function listClasesProgramadas() {
+        try {
+            const token = localStorage.getItem("token");
+
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                const idEst = payload.id;
+
+                // Obtener la lista de clases disponibles
+                const respuesta = await fetchBody('/estudiantes/listarClaseProgramada', 'POST', { idEstudiante: idEst, nivel: 'A1' });
+
+                if (respuesta.exito) {
+                    const clasesProgramadas = respuesta.lista;
+
+                    // Filtrar las clases programadas que no han pasado
+                    const clasesValidas = clasesProgramadas.filter(clase => {
+                        const fechaHoraClase = new Date(`${clase.fecha}T${clase.horaFinal}`);
+                        const fechaHoraActual = new Date();
+                        return fechaHoraClase > fechaHoraActual;
+                    });
+
+                    setClaseProgramada(clasesValidas);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: respuesta.error,
+                        customClass: {
+                            confirmButton: 'btn-color'
+                        },
+                        buttonsStyling: false
+                    });
+                }
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se encontró el usuario",
+                    customClass: {
+                        confirmButton: 'btn-color'
+                    },
+                    buttonsStyling: false
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: 'Error al procesar la solicitud para listar las clases programadas',
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
+        }
+    }
+
+
     async function listClasesDisponibles() {
         try {
             const respuestaClasesDisponibles = await fetchBody('/niveles/listarClase', 'POST', { nivel: "A1" });
@@ -130,13 +216,16 @@ function ProgramarClaseA1() {
                     const payload = JSON.parse(atob(token.split('.')[1]));
                     const idEst = payload.id;
 
-                    const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', { id: idEst });
+                    const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', { id: idEst, nivel: 'A1' });
 
                     if (respuestaClasesProgramadas.exito) {
                         const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
 
                         const clasesDisponibles = respuestaClasesDisponibles.lista.filter(clase => !clasesProgramadas.includes(clase.id));
-                        const clasesFormateadas = clasesDisponibles.map(clase => ({
+                        // Obtener la próxima clase no programada
+                        const siguienteClase = clasesDisponibles.length > 0 ? [clasesDisponibles[0]] : [];
+
+                        const clasesFormateadas = siguienteClase.map(clase => ({
                             nombre: clase.id,
                             id: clase.id
                         }));
@@ -179,7 +268,9 @@ function ProgramarClaseA1() {
     }
 
     async function listHoras(date) {
+        console.log('Fecha seleccionada:', date);
         try {
+            // Obtener las horas disponibles
             const respuesta = await fetchGet('/estudiantes/obtenerHora');
             if (respuesta.exito) {
                 let { horasIniciales, horasFinales } = respuesta;
@@ -190,13 +281,70 @@ function ProgramarClaseA1() {
                     horaFinal: horasFinales[index]
                 }));
 
-                // Filtrar horas si la fecha seleccionada es hoy
-                if (isToday(date)) {
-                    const now = new Date();
-                    horas = horas.filter(hora => new Date(`${date.toDateString()} ${hora.horaInicial}`) > now);
-                }
+                console.log('Horas disponibles iniciales:', horas);
 
-                setHoras(horas);
+                // Obtener ID del estudiante desde el token
+                const token = localStorage.getItem("token");
+                if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const idEst = payload.id;
+
+                    // Obtener horas agendadas
+                    const respuestaHorasAgendadas = await fetchBody('/estudiantes/obtenerHorasAgendadas', 'POST', { idEstudiante: idEst, nivel: 'A1' });
+
+                    if (respuestaHorasAgendadas.exito) {
+                        const horasAgendadas = respuestaHorasAgendadas.horasAgendadas;
+                        console.log('Horas Agendadas:', horasAgendadas);
+
+                        // Crear una nueva lista de horas disponibles filtrando horas agendadas
+                        let horasDisponibles = horas.filter(hora => {
+                            // Fecha seleccionada en formato YYYY-MM-DD
+                            const seleccionadaFecha = date.toISOString().split('T')[0];
+
+                            // Filtrar horas agendadas para la fecha seleccionada
+                            const esHoraDisponible = !horasAgendadas.some(agendada => {
+                                const agendadaFecha = agendada.fecha;
+
+                                // Comparar horas agendadas con horas disponibles
+                                const esMismaFecha = agendadaFecha === seleccionadaFecha;
+                                const esMismaHoraInicial = agendada.horaInicial === hora.horaInicial;
+                                const esMismaHoraFinal = agendada.horaFinal === hora.horaFinal;
+
+                                console.log(`Comparando hora agendada: ${agendada.horaInicial} - ${agendada.horaFinal} en ${agendadaFecha} con hora disponible: ${hora.horaInicial} - ${hora.horaFinal} en ${seleccionadaFecha}`);
+                                console.log(`Es misma fecha: ${esMismaFecha}, es misma hora inicial: ${esMismaHoraInicial}, es misma hora final: ${esMismaHoraFinal}`);
+
+                                return esMismaFecha && esMismaHoraInicial && esMismaHoraFinal;
+                            });
+
+                            return esHoraDisponible;
+                        });
+
+                        console.log('Horas Disponibles después de filtrar horas agendadas:', horasDisponibles);
+
+                        // Filtrar horas si la fecha seleccionada es hoy
+                        if (isToday(date)) {
+                            const now = new Date();
+                            horasDisponibles = horasDisponibles.filter(hora => {
+                                const horaDisponible = new Date(`${date.toDateString()} ${hora.horaInicial}`);
+                                return horaDisponible > now;
+                            });
+                        }
+
+                        console.log('Horas Disponibles después de filtrar horas pasadas:', horasDisponibles);
+
+                        setHoras(horasDisponibles);
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: respuestaHorasAgendadas.error,
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
+                }
             } else {
                 Swal.fire({
                     icon: "error",
@@ -220,6 +368,10 @@ function ProgramarClaseA1() {
             });
         }
     }
+
+
+
+
 
     const isToday = (date) => {
         const today = new Date();
@@ -268,65 +420,81 @@ function ProgramarClaseA1() {
                 buttonsStyling: false
             });
         } else {
-
             const token = localStorage.getItem("token");
 
             if (token) {
-                // Decodificar el payload del token (segundo segmento)
                 const payload = JSON.parse(atob(token.split('.')[1]));
-
-                // Acceder al id y rol del usuario
                 const idUsuario = payload.id;
 
-                console.log(`ID del usuario: ${idUsuario}`);
+                // Validar que la clase seleccionada sea la próxima en la secuencia
+                const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', { id: idUsuario, nivel: 'A1' });
+                if (respuestaClasesProgramadas.exito) {
+                    const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
+                    const siguienteClase = clasesProgramadas.length + 1; // La siguiente clase debería ser la próxima en la secuencia
+                    const claseSiguienteId = `Clase${siguienteClase}`;
 
-                // Suponiendo que `data` es el objeto que contiene la fecha y otros datos
-                const data = {
-                    clase: claseSeleccionada,
-                    fecha: selectedDate, // Aquí deberías tener la fecha original
-                    horaInicial: selectedTime.horaInicial,
-                    horaFinal: selectedTime.horaFinal
-                };
+                    if (claseSeleccionada !== claseSiguienteId) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                        return;
+                    }
 
-                const formattedDate = formatDate(data.fecha);
+                    const data = {
+                        clase: claseSeleccionada,
+                        fecha: selectedDate, // Aquí deberías tener la fecha original
+                        horaInicial: selectedTime.horaInicial,
+                        horaFinal: selectedTime.horaFinal
+                    };
 
-                const requestData = {
-                    nivel: 'A1',
-                    clase: data.clase,
-                    fecha: formattedDate, // Usar la fecha formateada
-                    horaInicial: data.horaInicial,
-                    horaFinal: data.horaFinal,
-                    idEstudiante: idUsuario
-                };
+                    const formattedDate = formatDate(data.fecha);
 
-                const respuesta = await fetchBody('/estudiantes/programarClase', 'POST', requestData);
+                    const requestData = {
+                        nivel: 'A1',
+                        clase: data.clase,
+                        fecha: formattedDate,
+                        horaInicial: data.horaInicial,
+                        horaFinal: data.horaFinal,
+                        idEstudiante: idUsuario
+                    };
 
-                if (respuesta.exito) {
-                    Swal.fire({
-                        icon: "success",
-                        title: "Clase programada con exito!",
-                        customClass: {
-                            confirmButton: 'btn-color'
-                        },
-                        buttonsStyling: false
-                    });
-                    handleCloseModal();
-                } else {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: 'Error al programar una clase',
-                        customClass: {
-                            confirmButton: 'btn-color'
-                        },
-                        buttonsStyling: false
-                    });
+                    const respuesta = await fetchBody('/estudiantes/programarClase', 'POST', requestData);
+
+                    if (respuesta.exito) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Clase programada con exito!",
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                        window.location.reload();
+                        listClases();
+                        listClasesDisponibles();
+                        handleCloseModal();
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: 'Error al programar una clase',
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
                 }
-
             }
-
         }
     }
+
 
     const handleCheckboxChange = (index, horaInicial, horaFinal, checked) => {
         console.log(index);
@@ -344,6 +512,10 @@ function ProgramarClaseA1() {
             }
         }
     };
+
+    async function handleCancelClass (id) {
+
+    }
 
     return (
         <motion.div
@@ -378,7 +550,7 @@ function ProgramarClaseA1() {
                                     <td>Clase {clase.numero}</td>
                                     <td>{clase.descripcion}</td>
                                     <td>❌</td>
-                                    <td>Pendiente</td>
+                                    <td>{clase.estado}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -409,7 +581,6 @@ function ProgramarClaseA1() {
                                             <tr>
                                                 <th style={{ width: '200px' }}>Hora Inicial</th>
                                                 <th style={{ width: '200px' }}>Hora Final</th>
-                                                <th style={{ width: '200px' }}>Cupos</th>
                                                 <th style={{ width: '200px' }}>Seleccionar</th>
                                             </tr>
                                         </thead>
@@ -418,7 +589,6 @@ function ProgramarClaseA1() {
                                                 <tr key={index}>
                                                     <td>{hora.horaInicial}</td>
                                                     <td>{hora.horaFinal}</td>
-                                                    <td>3/6</td>
                                                     <td>
                                                         <Checkbox
                                                             id={index}
@@ -459,37 +629,34 @@ function ProgramarClaseA1() {
                             <br />
                             <div>
                                 <div className='CenterTable'>
-                                    <table className='Table'>
-                                        <thead>
-                                            <tr>
-                                                <th style={{ width: '200px' }}>Clase #</th>
-                                                <th style={{ width: '200px' }}>Hora Inicial</th>
-                                                <th style={{ width: '200px' }}>Hora Final</th>
-                                                <th style={{ width: '200px' }}>Cupos</th>
-                                                <th style={{ width: '200px' }}>Seleccionar</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>10:30</td>
-                                                <td>12:00</td>
-                                                <td>3/6</td>
-                                                <td>
-                                                    <Checkbox id="checkbox1"></Checkbox>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>13:30</td>
-                                                <td>15:00</td>
-                                                <td>1/6</td>
-                                                <td>
-                                                    <Checkbox id="checkbox2"></Checkbox>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    {clasesProgramadas.length === 0 ? (
+                                        <p>No hay clases disponibles para cancelar</p>
+                                    ) : (
+                                        <table className='Table'>
+                                            <thead>
+                                                <tr>
+                                                    <th style={{ width: '200px' }}>Clase #</th>
+                                                    <th style={{ width: '200px' }}>Fecha</th>
+                                                    <th style={{ width: '200px' }}>Hora Inicial</th>
+                                                    <th style={{ width: '200px' }}>Hora Final</th>
+                                                    <th style={{ width: '200px' }}>Cancelar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {clasesProgramadas.map((claseProgramada, index) => (
+                                                    <tr key={claseProgramada.id}>
+                                                        <td>{claseProgramada.id}</td>
+                                                        <td>{claseProgramada.fecha}</td>
+                                                        <td>{claseProgramada.horaInicial}</td>
+                                                        <td>{claseProgramada.horaFinal}</td>
+                                                        <td>
+                                                            <button className='btn-cancel' onClick={() => handleCancelClass(claseProgramada.id)}>Cancelar</button>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    )}
                                 </div>
                             </div>
                             <button onClick={handleCloseCancelModal} className="ButtonRegresar">Regresar</button>
