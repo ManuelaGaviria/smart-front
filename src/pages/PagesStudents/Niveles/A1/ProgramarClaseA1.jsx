@@ -513,9 +513,88 @@ function ProgramarClaseA1() {
         }
     };
 
-    async function handleCancelClass (id) {
-
+    async function handleCancelClass(id) {
+        try {
+            // Obtener la lista actual de clases programadas
+            const clases = [...clasesProgramadas];
+    
+            // Verificar si la clase a cancelar es la primera en la lista
+            if (clases[0].id !== id) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Debe cancelar primero la última clase agendada.",
+                    customClass: {
+                        confirmButton: 'btn-color'
+                    },
+                    buttonsStyling: false
+                });
+                return;
+            }
+    
+            // Mostrar alerta de confirmación
+            const confirmacion = await Swal.fire({
+                title: '¿Estás seguro de eliminar esta clase?',
+                text: "Esta acción no se puede revertir",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                customClass: {
+                    confirmButton: 'btn-color',
+                    cancelButton: 'btn-color-cancel'
+                },
+                buttonsStyling: false
+            });
+    
+            // Verificar si el usuario confirmó la eliminación
+            if (confirmacion.isConfirmed) {
+                const token = localStorage.getItem("token");
+    
+                if (token) {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const idEst = payload.id;
+    
+                    // Realizar la solicitud para cancelar la clase
+                    const respuesta = await fetchBody('/estudiantes/cancelarClase', 'POST', { idEstudiante: idEst, idClase: id, nivel: 'A1' });
+    
+                    if (respuesta.exito) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Éxito",
+                            text: "La clase ha sido cancelada correctamente.",
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                        listClasesProgramadas();
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: respuesta.error,
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                    }
+                }
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: 'Error al procesar la solicitud para cancelar la clase.',
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
+        }
     }
+    
+
 
     return (
         <motion.div
