@@ -739,7 +739,6 @@ function ProgramarClaseA1() {
                                 </div>
                             </div>
                             <button onClick={handleCloseCancelModal} className="ButtonRegresar">Regresar</button>
-                            <ButtonLink destino="/ProgramarClaseA1" clase="ButtonRegresar">Terminar</ButtonLink>
                             <br />
                             <br />
                         </div>
