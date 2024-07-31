@@ -103,10 +103,8 @@ function ProgramarClaseA1() {
 
                 // Obtener la lista de clases disponibles
                 const respuestaClases = await fetchBody('/niveles/listarClase', 'POST', { nivel: 'A1' });
-
                 // Obtener el estado de las clases programadas
                 const respuestaEstado = await fetchBody('/estudiantes/actualizarEstadoClases', 'POST', { idEstudiante: idEst, nivel: 'A1' });
-
                 if (respuestaClases.exito && respuestaEstado.exito) {
                     const clasesDisponibles = respuestaClases.lista;
                     const clasesProgramadas = respuestaEstado.estadoClases;
@@ -220,7 +218,6 @@ function ProgramarClaseA1() {
 
                     if (respuestaClasesProgramadas.exito) {
                         const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
-
                         const clasesDisponibles = respuestaClasesDisponibles.lista.filter(clase => !clasesProgramadas.includes(clase.id));
                         // Obtener la próxima clase no programada
                         const siguienteClase = clasesDisponibles.length > 0 ? [clasesDisponibles[0]] : [];
@@ -229,7 +226,6 @@ function ProgramarClaseA1() {
                             nombre: clase.id,
                             id: clase.id
                         }));
-
                         setClaseSelect(clasesFormateadas);
                     } else {
                         Swal.fire({
@@ -268,7 +264,6 @@ function ProgramarClaseA1() {
     }
 
     async function listHoras(date) {
-        console.log('Fecha seleccionada:', date);
         try {
             // Obtener las horas disponibles
             const respuesta = await fetchGet('/estudiantes/obtenerHora');
@@ -281,8 +276,6 @@ function ProgramarClaseA1() {
                     horaFinal: horasFinales[index]
                 }));
 
-                console.log('Horas disponibles iniciales:', horas);
-
                 // Obtener ID del estudiante desde el token
                 const token = localStorage.getItem("token");
                 if (token) {
@@ -294,7 +287,6 @@ function ProgramarClaseA1() {
 
                     if (respuestaHorasAgendadas.exito) {
                         const horasAgendadas = respuestaHorasAgendadas.horasAgendadas;
-                        console.log('Horas Agendadas:', horasAgendadas);
 
                         // Crear una nueva lista de horas disponibles filtrando horas agendadas
                         let horasDisponibles = horas.filter(hora => {
@@ -310,16 +302,11 @@ function ProgramarClaseA1() {
                                 const esMismaHoraInicial = agendada.horaInicial === hora.horaInicial;
                                 const esMismaHoraFinal = agendada.horaFinal === hora.horaFinal;
 
-                                console.log(`Comparando hora agendada: ${agendada.horaInicial} - ${agendada.horaFinal} en ${agendadaFecha} con hora disponible: ${hora.horaInicial} - ${hora.horaFinal} en ${seleccionadaFecha}`);
-                                console.log(`Es misma fecha: ${esMismaFecha}, es misma hora inicial: ${esMismaHoraInicial}, es misma hora final: ${esMismaHoraFinal}`);
-
                                 return esMismaFecha && esMismaHoraInicial && esMismaHoraFinal;
                             });
 
                             return esHoraDisponible;
                         });
-
-                        console.log('Horas Disponibles después de filtrar horas agendadas:', horasDisponibles);
 
                         // Filtrar horas si la fecha seleccionada es hoy
                         if (isToday(date)) {
@@ -329,8 +316,6 @@ function ProgramarClaseA1() {
                                 return horaDisponible > now;
                             });
                         }
-
-                        console.log('Horas Disponibles después de filtrar horas pasadas:', horasDisponibles);
 
                         setHoras(horasDisponibles);
                     } else {
@@ -429,22 +414,45 @@ function ProgramarClaseA1() {
                 // Validar que la clase seleccionada sea la próxima en la secuencia
                 const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', { id: idUsuario, nivel: 'A1' });
                 if (respuestaClasesProgramadas.exito) {
-                    const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
-                    const siguienteClase = clasesProgramadas.length + 1; // La siguiente clase debería ser la próxima en la secuencia
-                    const claseSiguienteId = `Clase${siguienteClase}`;
+                    
+                    const respuestaBD = await fetchGet('/niveles/obtenerBD');
+                    if (respuestaBD.bd === 'oracle') {
+                        const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
+                        const siguienteClase = (clasesProgramadas.length + 1).toString(); // La siguiente clase debería ser la próxima en la secuencia
+                        console.log(claseSeleccionada);
+                        console.log("vs");
+                        console.log(siguienteClase);
+                        if (claseSeleccionada !== siguienteClase) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: `Debes seleccionar la clase en orden. Por favor selecciona ${siguienteClase}.`,
+                                customClass: {
+                                    confirmButton: 'btn-color'
+                                },
+                                buttonsStyling: false
+                            });
+                            return;
+                        }
+                    } else {
+                        const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
+                        const siguienteClase = clasesProgramadas.length + 1; // La siguiente clase debería ser la próxima en la secuencia
+                        const claseSiguienteId = `Clase${siguienteClase}`;
 
-                    if (claseSeleccionada !== claseSiguienteId) {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
-                            buttonsStyling: false
-                        });
-                        return;
+                        if (claseSeleccionada !== claseSiguienteId) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Oops...",
+                                text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
+                                customClass: {
+                                    confirmButton: 'btn-color'
+                                },
+                                buttonsStyling: false
+                            });
+                            return;
+                        }
                     }
+                    
 
                     const data = {
                         clase: claseSeleccionada,
@@ -497,13 +505,9 @@ function ProgramarClaseA1() {
 
 
     const handleCheckboxChange = (index, horaInicial, horaFinal, checked) => {
-        console.log(index);
-        console.log(horaInicial);
-        console.log(horaFinal);
         if (checked) {
             setSelectedCheckbox(index);
             setSelectedTime({ horaInicial, horaFinal });
-            console.log(selectedTime);
         } else {
             // Aquí, al desmarcar, se limpia la selección solo si el índice coincide
             if (selectedCheckbox === index) {
