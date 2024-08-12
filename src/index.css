@@ -667,5 +667,41 @@ th{
   grid-template-columns: 50% 50%;
 }
 
+/*NavPage*/
+.doubleColumnMain {
+  display: grid;
+  grid-template-columns: 10% 90%;
+  width: 100vw;
+}
 
+.menuDivAdmin {
+  background: linear-gradient(to top right, rgb(21, 116, 116), rgb(40, 162, 146));
+  height: 103vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
 
+.mainContainer {
+  background-size: 30%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f4f4f4;
+  height: 103vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: linear-gradient(to bottom, rgb(255,255,255), rgb(255,255,255), rgba(255,255,255, 0.5)), url('./images/fondoContenedor2.png');
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  border-radius: 5px;
+  text-align: center;
+  width: 60vw;
+  max-height: 70vh;
+  overflow-y: auto;
+  margin-top: 8vh;
+}

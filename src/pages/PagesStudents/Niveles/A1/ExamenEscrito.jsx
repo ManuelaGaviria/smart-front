@@ -26,7 +26,7 @@ function ExamenEscrito() {
           <h1>Examen Escrito A1</h1>
           <p>Selecciona el examen a realizar</p>
           <div className=''>
-            <ButtonLink destino="/Unit1&2" clase="circleLevels">Units 1&2</ButtonLink>
+            <ButtonLink destino="/NavPage" clase="circleLevels">Units 1&2</ButtonLink>
             <ButtonLink destino="/Unit3&4" clase="circleLevels">Units 3&4</ButtonLink>
             <ButtonLink destino="/Unit5&6" clase="circleLevels">Units 5&6</ButtonLink>
             <br />
