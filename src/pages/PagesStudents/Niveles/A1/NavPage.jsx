@@ -1,38 +1,56 @@
-import { useState } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 import NavMenu from "../../../../components/NavMenu";
 import ContentCard from "../../../../components/ContentCard";
+import { useLocation } from 'react-router-dom';
+import { fetchBody } from "../../../../utils/fetch";
+import Swal from 'sweetalert2';
 
 function NavPage() {
 
-  const data = [
-    {
-      id: 0,
-      navText: 'Pregunta 1',
-      text: 'Enunciado de prueba',
-      option1: 'Opción 1',
-      option2: 'Opción 2',
-      state: false,
-      answer: ''
-    },
-    {
-      id: 1,
-      navText: 'Pregunta 2',
-      text: 'Enunciado de prueba diferente',
-      option1: 'Opción A',
-      option2: 'Opción B',
-      state: false,
-      answer: ''
-    },
-    {
-      id: 2,
-      navText: 'Pregunta 3',
-      text: 'Enunciado de prueba aún más distinto',
-      option1: 'Opción A1',
-      option2: 'Opción B1',
-      state: false,
-      answer: ''
+  const location = useLocation();
+  const { examenId } = location.state || {}; // Obteniendo el examenId del estado
+
+  // Puedes utilizar examenId en tu lógica
+  console.log("Examen ID:", examenId);
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const obtenerPreguntas = async () => {
+      try {
+        const respuesta = await fetchBody('/estudiantes/getPreguntasExamen', 'POST', { nivel: "A1", examenId: examenId });
+        if (respuesta.exito) {
+          const preguntas = respuesta.examen;
+          console.log("holi");
+          console.log(preguntas);
+          setData(preguntas); // Guardar las preguntas en el estado
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para listar los examenes',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
     }
-  ];
+    obtenerPreguntas();
+  }, [examenId]);
+
+
 
   const [currentElement, setCurrentElement] = useState(0);
 

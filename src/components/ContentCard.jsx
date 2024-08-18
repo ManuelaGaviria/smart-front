@@ -9,10 +9,14 @@ function ContentCard({ data }) {
         animate={{opacity: 1, x: 0}}
         exit={{opacity: 0, x: -1000, transition:{duration: 0.5, delay: 0}}}
         transition={{duration: 0.5}}>
-        <h2>{data.text}</h2>
-        <label>{data.option1}</label>
+        <h2>{data.pregunta}</h2>
+        <label>{data.respuesta1}</label>
         <br />
-        <label>{data.option2}</label>
+        <label>{data.respuesta2}</label>
+        <br />
+        <label>{data.respuesta3}</label>
+        <br />
+        <label>{data.respuesta4}</label>
         <br />
     </motion.div>
   )

@@ -3,7 +3,7 @@ function NavMenu({data, navState}) {
       <div>
           {data.map((item) => (
               <div key={item.id} onClick={() => navState(item.id)}>
-                  <label>{item.navText}</label>
+                  <label className="labelNavMenu">Pregunta {item.navText}</label>
                   <br />
               </div>
           ))}

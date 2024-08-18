@@ -127,6 +127,30 @@ h1 {
   height: 150px;
 }
 
+.circleLevelsExamen{
+  margin: 3px;
+  justify-content: center;
+  align-items: center;
+  background-color: #72b9a9;
+  border-radius: 100px;
+  width: 100px;
+  height: 100px;
+  color: white;
+  text-decoration: none;
+  font-size: 19px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.circleLevelsExamen:hover{
+  background-color: #c11612;
+  font-size: 25px;
+  transition: 0.3s;
+  width: 150px;
+  height: 150px;
+}
+
 .malla {
   display: grid;
   grid-template-columns: 45% 10% 45%;
@@ -675,7 +699,10 @@ th{
 }
 
 .menuDivAdmin {
-  background: linear-gradient(to top right, rgb(21, 116, 116), rgb(40, 162, 146));
+  background: linear-gradient(to top right, rgb(116, 21, 21), rgb(162, 40, 40));
+  color: white;
+  font-family: "Madimi One", sans-serif;
+  font-size: 25px;
   height: 103vh;
   display: flex;
   justify-content: center;
@@ -683,7 +710,16 @@ th{
   z-index: 3;
 }
 
+.labelNavMenu{
+  cursor: pointer;
+}
+
+.labelNavMenu:hover{
+  font-size: 27px;
+}
+
 .mainContainer {
+  border: 10px 10px 10px #72b9a9;
   background-size: 30%;
   background-position: center;
   background-repeat: no-repeat;
@@ -695,8 +731,8 @@ th{
 }
 
 .card {
-  background: linear-gradient(to bottom, rgb(255,255,255), rgb(255,255,255), rgba(255,255,255, 0.5)), url('./images/fondoContenedor2.png');
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.2);
+  
+  box-shadow: 10px 10px 10px 10px #72b9a9;
   padding: 30px;
   border-radius: 5px;
   text-align: center;

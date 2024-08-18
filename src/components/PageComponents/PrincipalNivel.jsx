@@ -1,16 +1,12 @@
 import LogoutButton from "../../../../components/LogoutButton";
 import Logo2 from "../../../../components/Logo2";
 import { motion} from 'framer-motion';
-import { MdOutlineClass } from "react-icons/md";
-import { SiTestcafe } from "react-icons/si";
-import ImageButton from "../../../../components/ImageButton";
 import ButtonLink from "../../../../components/ButtonLink";
-import { FaCalendarAlt } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState, useContext } from 'react';
 import { fetchBody } from "../../../../utils/fetch";
 
-function Programar() {
+function PrincipalNivel({nivel}) {
   const navigate = useNavigate();
   useEffect(() => {
     const verificar = async () => {
@@ -21,7 +17,7 @@ function Programar() {
     }
     verificar();
   }, [])
-  
+
   return (
     <motion.div 
     className='AdminContainer'
@@ -41,18 +37,13 @@ function Programar() {
       transition={{ duration: 1 }}
       > 
         <div className='ButtonsAdminContainer'>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <h1>Programación</h1>
+          <h1>Nivel {nivel}</h1>
           <div className=''>
-            <ImageButton icon={MdOutlineClass} texto="Programar clases" destino="/ProgramarClaseA1"></ImageButton>
-            <ImageButton icon={SiTestcafe} texto="Programar examen" destino="/ProgramarExamenA1"></ImageButton>
-            <ImageButton icon={FaCalendarAlt} texto="Horario" destino="/HorarioA1"></ImageButton>
-            <br></br>
-            <br></br>
-            <ButtonLink destino="/A1" clase="Button2">Regresar</ButtonLink>
+            <ButtonLink destino="/Programar{nivel}" clase="Button2">Programar</ButtonLink>
+            <ButtonLink destino="/ExamenEscrito{nivel}" clase="Button2">Realizar examen</ButtonLink>
+            <ButtonLink destino="/Notas{nivel}" clase="Button2">Ver notas</ButtonLink>
+            <ButtonLink destino="https://www.cambridgeone.org/login" clase="Button2">Ir a cambridge</ButtonLink>
+            <ButtonLink destino="/Student" clase="Button2">Regresar</ButtonLink>
           </div>
         </div> 
       </motion.div>
@@ -60,4 +51,4 @@ function Programar() {
   )
 }
 
-export default Programar
+export default PrincipalNivel

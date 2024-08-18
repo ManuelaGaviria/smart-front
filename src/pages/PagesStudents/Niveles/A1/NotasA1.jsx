@@ -3,8 +3,22 @@ import Logo3 from '../../../../components/Logo3';
 import { motion } from 'framer-motion';
 import FullscreenCard from '../../../../components/FullScreenCard';
 import ButtonLink from '../../../../components/ButtonLink';
+import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { fetchBody } from "../../../../utils/fetch";
 
 function NotasA1() {
+    const navigate = useNavigate();
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+      if (respuesta.exito === false) {
+        navigate("/")
+      }
+    }
+    verificar();
+  }, [])
+  
     return (
         <motion.div
             className='ContainerFull'
