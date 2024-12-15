@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import NavMenu from "../../../../components/NavMenu";
 import ContentCard from "../../../../components/ContentCard";
 import { useLocation } from 'react-router-dom';
@@ -14,10 +14,23 @@ function NavPage() {
   console.log("Examen ID:", examenId);
 
   const [data, setData] = useState([]);
-
+  const solicitudRealizada = useRef(false);
+  console.log("Antes del useEffect: examenId =", examenId);
   useEffect(() => {
+    if (!examenId) {
+      console.warn("Examen ID no disponible, evitando la ejecución del efecto.");
+      return;
+    }
+    if (solicitudRealizada.current) {
+      console.log("La solicitud ya se realizó, evitando ejecución redundante.");
+      return;
+    }
+    solicitudRealizada.current = true;
+    console.log("Entrando al useEffect con examenId:", examenId);
     const obtenerPreguntas = async () => {
+      console.log("Payload enviado a fetchBody:", { nivel: "A1", examenId });
       try {
+        console.log("Payload enviado a fetchBody:", { nivel: "A1", examenId });
         const respuesta = await fetchBody('/estudiantes/getPreguntasExamen', 'POST', { nivel: "A1", examenId: examenId });
         if (respuesta.exito) {
           const preguntas = respuesta.examen;
@@ -60,7 +73,11 @@ function NavPage() {
           <NavMenu data={data} navState={setCurrentElement} />
         </div>
         <div className='mainContainer'>
+        {data.length > 0 && data[currentElement] ? (
           <ContentCard data={data[currentElement]} />
+        ) : (
+          <p>Cargando preguntas...</p>
+        )}
         </div>
     </div>
   )
