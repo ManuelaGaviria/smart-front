@@ -81,72 +81,104 @@ function NavPage() {
   };
 
   const finalizarExamen = async () => {
-    const confirmacion = await Swal.fire({
-      title: '¿Estás seguro de terminar el examen?',
-      text: "Esta acción no se puede revertir",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Terminar',
-      customClass: {
-        confirmButton: 'btn-color',
-        cancelButton: 'btn-color-cancel'
-      },
-      buttonsStyling: false
-    });
-
-    if (confirmacion.isConfirmed) {
-
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const idEstudiante = payload.id;
-
-        // Mapear las preguntas con sus respuestas seleccionadas
-        const respuestasFinales = data.map((pregunta) => ({
-          idPregunta: pregunta.idPregunta,
-          respuestaDada: answers[pregunta.pregunta] || "", // Usar respuesta si existe, o vacío
-        }));
-
-        console.log("Respuestas que se enviarán al backend:", respuestasFinales);
-
-        const dataExamen = {
-          examenId: examenId,
-          idEstudiante: idEstudiante,
-          nivel: "A1",
-          preguntaRespuesta: respuestasFinales
-        }
-
-        const respuesta = await fetchBody('/estudiantes/realizarExamenEscrito', 'POST', dataExamen);
-
-        if (respuesta.exito) {
-          console.log(respuesta.examenEscrito)
-          const respuestasCorrectas = respuesta.examenEscrito.respuestasCorrectas;
-          const totalPreguntas = respuesta.examenEscrito.totalPreguntas;
-          Swal.fire({
-            icon: "success",
-            title: "Terminaste el examen con éxito!",
-            text: "Sacaste " + respuestasCorrectas +  "/" + totalPreguntas + " correctas",
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-          navigate("/NotasA1");
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Error, vuelve a intentar",
-            text: respuesta.error,
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-        }
-      }
+    // Validar que todas las preguntas estén respondidas
+    if (Object.keys(answers).length !== data.length) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Faltan preguntas por responder',
+        text: 'Por favor, responde todas las preguntas antes de finalizar el examen.',
+        customClass: {
+          confirmButton: 'btn-color',
+        },
+        buttonsStyling: false,
+      });
+      return; // Salir del método si no se han respondido todas las preguntas
     }
-  };
+  
+    try {
+      // Confirmación del usuario
+      const confirmacion = await Swal.fire({
+        title: '¿Estás seguro de terminar el examen?',
+        text: 'Esta acción no se puede revertir',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Terminar',
+        customClass: {
+          confirmButton: 'btn-color',
+          cancelButton: 'btn-color-cancel',
+        },
+        buttonsStyling: false,
+      });
+  
+      if (!confirmacion.isConfirmed) return;
+  
+      const token = localStorage.getItem('token');
+  
+      if (!token) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se encontró un token de autenticación. Inicia sesión nuevamente.',
+          customClass: {
+            confirmButton: 'btn-color',
+          },
+          buttonsStyling: false,
+        });
+        return;
+      }
+  
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const idEstudiante = payload.id;
+  
+      // Mapear las preguntas con sus respuestas seleccionadas
+      const respuestasFinales = data.map((pregunta) => ({
+        idPregunta: pregunta.idPregunta,
+        respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
+      }));
+  
+      console.log('Respuestas que se enviarán al backend:', respuestasFinales);
+  
+      const dataExamen = {
+        examenId,
+        idEstudiante,
+        nivel: 'A1',
+        preguntaRespuesta: respuestasFinales,
+      };
+  
+      const respuesta = await fetchBody('/estudiantes/realizarExamenEscrito', 'POST', dataExamen);
+  
+      if (respuesta.exito) {
+        console.log(respuesta.examenEscrito);
+        const { respuestasCorrectas, totalPreguntas } = respuesta.examenEscrito;
+  
+        Swal.fire({
+          icon: 'success',
+          title: '¡Terminaste el examen con éxito!',
+          text: `Sacaste ${respuestasCorrectas}/${totalPreguntas} correctas.`,
+          customClass: {
+            confirmButton: 'btn-color',
+          },
+          buttonsStyling: false,
+        });
+  
+        navigate('/NotasA1');
+      } else {
+        throw new Error(respuesta.error || 'Error desconocido al procesar el examen.');
+      }
+    } catch (error) {
+      console.error('Error al finalizar el examen:', error);
+  
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al finalizar el examen. Intenta nuevamente.',
+        customClass: {
+          confirmButton: 'btn-color',
+        },
+        buttonsStyling: false,
+      });
+    }
+  };  
 
   // Verificar si todas las preguntas han sido respondidas
   const allQuestionsAnswered = Object.keys(answers).length === data.length;
