@@ -720,14 +720,43 @@ th{
 
 .mainContainer {
   border: 10px 10px 10px #72b9a9;
-  background-size: 30%;
   background-position: center;
   background-repeat: no-repeat;
   background-color: #f4f4f4;
-  height: 103vh;
+  height: 83vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 800px;
+  margin-left: 280px;
+}
+
+.preguntasContainer{
+  background-color: #f4f4f4;
+}
+
+.finalizarExamen{
+  display: flex;
+  justify-content: right;
+  margin: 10px;
+}
+
+.nextButton{
+  margin-left: 30px;
+  cursor: pointer;
+  background-color: #72b9a9;
+  border-radius: 10px;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.nextButton:hover{
+  font-size: 26px;
+  transition: 0.3s;
 }
 
 .card {
@@ -741,3 +770,16 @@ th{
   overflow-y: auto;
   margin-top: 8vh;
 }
+
+.navItem {
+  cursor: pointer;
+}
+
+.navItem.current {
+  text-decoration: underline;
+}
+
+.navItem.answered {
+  text-decoration: line-through;
+}
+
