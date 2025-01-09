@@ -285,6 +285,27 @@ h1 {
     width: 40%;
 }
 
+.ButtonFinalizar{
+  cursor: pointer;
+  background-color: #c11612;
+  padding: 10px;
+  border-radius: 50px;
+  border-color: #c11612;
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  width: 10%;
+  transition: 0.3s;
+  margin-bottom: 20px;
+}
+
+.ButtonFinalizar:hover{
+  background-color: #c11612;
+  color: white;
+  width: 12%;
+  transition: 0.3s;
+}
+
 .ButtonRegresar{
   cursor: pointer;
   background-color: #72b9a9;

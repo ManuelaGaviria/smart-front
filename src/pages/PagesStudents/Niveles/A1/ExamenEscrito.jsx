@@ -60,37 +60,119 @@ function ExamenEscrito() {
   }, []);
 
   async function accederExamen(id) {
-    const token = localStorage.getItem("token");
-
-    if (token) {
+    try {
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Token no encontrado. Por favor, inicia sesión nuevamente.",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+        return;
+      }
+  
       const payload = JSON.parse(atob(token.split('.')[1]));
       const idUsuario = payload.id;
-      // Validar que el examen seleccionado si lo pueda agendar
-      const respuestaExamenesProgramados = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: id, nivel: 'A1' });
-      if (respuestaExamenesProgramados.exito) {
-
-        const estado = respuestaExamenesProgramados.estado;
-
-
-        if (estado !== "tomado") {
-
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Aún no puedes presentar este examen porque no has visto todas las clases para desbloquearlo",
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-          return;
-        } else {
-          navigate('/NavPage', { state: { examenId: id } });
-        }
+  
+      // Validar si el examen ya fue presentado
+      const yaPresentado = await verificarExamenPresentado(idUsuario, id);
+      console.log("yaPresentado");
+      console.log(yaPresentado);
+      if (yaPresentado) {
+        Swal.fire({
+          icon: "info",
+          title: "Examen ya presentado",
+          text: "Ya has presentado este examen.",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+        return;
       }
-    }
+  
+      // Validar el estado del examen
+      const estadoValido = await verificarEstadoExamen(idUsuario, id);
+      if (!estadoValido) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Aún no puedes presentar este examen porque no has visto todas las clases para desbloquearlo.",
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+        return;
+      }
+  
+      // Mostrar alerta de confirmación antes de redirigir
+    const resultado = await Swal.fire({
+      title: "¿Estás seguro de presentar el examen?",
+      text: "Una vez entres deberás completarlo.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, presentar",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: 'btn-color',
+        cancelButton: 'btn-color-cancel'
+      },
+      buttonsStyling: false
+    });
 
+    if (resultado.isConfirmed) {
+      // Redirigir al examen
+      navigate('/NavPage', { state: { examenId: id } });
+    }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Ocurrió un error al intentar acceder al examen.",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
+      console.error("Error en accederExamen:", error);
+    }
   }
+  
+  // Función para verificar si el examen ya fue presentado
+  async function verificarExamenPresentado(idUsuario, idExamen) {
+    try {
+      const respuesta = await fetchBody('/estudiantes/verificarPresentado', 'POST', { idEstudiante: idUsuario, examenId: idExamen, nivel: 'A1' });
+      if (respuesta.exito) {
+        return respuesta.presentado; // true si ya fue presentado
+      } else {
+        throw new Error(respuesta.error || "Error al verificar si el examen fue presentado.");
+      }
+    } catch (error) {
+      console.error("Error en verificarExamenPresentado:", error);
+      return false;
+    }
+  }
+  
+  // Función para verificar el estado del examen
+  async function verificarEstadoExamen(idUsuario, idExamen) {
+    try {
+      const respuesta = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: idExamen, nivel: 'A1' });
+      if (respuesta.exito) {
+        return respuesta.estado === "tomado"; // Validar si el estado permite tomar el examen
+      } else {
+        throw new Error(respuesta.error || "Error al verificar el estado del examen.");
+      }
+    } catch (error) {
+      console.error("Error en verificarEstadoExamen:", error);
+      return false;
+    }
+  }  
 
   return (
     <motion.div

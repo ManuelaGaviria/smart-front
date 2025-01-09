@@ -6,7 +6,50 @@ import { fetchBody } from "../../../../utils/fetch";
 import Swal from 'sweetalert2';
 
 function NavPage() {
-  const navigate = useNavigate();
+ const navigate = useNavigate();
+ 
+     useEffect(() => {
+         const verificar = async () => {
+             const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+             if (respuesta.exito === false) {
+                navigate("/", { replace: true });
+             }
+         }
+         verificar();
+     }, [navigate]);
+
+     useEffect(() => {
+      // Bloquear el botón de retroceso
+      const bloquearRetroceso = () => {
+        window.history.pushState(null, document.title, window.location.href);
+        Swal.fire({
+          icon: "warning",
+          title: "Acción no permitida",
+          text: "No puedes regresar mientras realizas el examen.",
+          customClass: {
+            confirmButton: 'btn-color',
+          },
+          buttonsStyling: false,
+        });
+      };
+  
+      // Bloquear recarga de página
+      const bloquearRecarga = (event) => {
+        event.preventDefault();
+        event.returnValue = ''; // Requerido para mostrar la alerta de confirmación del navegador
+      };
+  
+      // Agregar un estado al historial y bloquear retroceso
+      window.history.pushState(null, document.title, window.location.href);
+      window.addEventListener("popstate", bloquearRetroceso);
+      window.addEventListener("beforeunload", bloquearRecarga);
+  
+      return () => {
+        window.removeEventListener("popstate", bloquearRetroceso); // Limpiar evento al desmontar
+        window.removeEventListener("beforeunload", bloquearRecarga); // Limpiar evento al desmontar
+      };
+    }, []);
+
   const location = useLocation();
   const { examenId } = location.state || {}; // Obteniendo el examenId del estado
 
@@ -197,7 +240,7 @@ function NavPage() {
         </div>
         <div className='preguntasContainer'>
           <div className='finalizarExamen'>
-            <button className="finalizeButton" onClick={finalizarExamen}>
+            <button className="ButtonFinalizar" onClick={finalizarExamen}>
               Finalizar
             </button>
           </div>
