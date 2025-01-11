@@ -414,45 +414,24 @@ function ProgramarClaseA1() {
                 // Validar que la clase seleccionada sea la próxima en la secuencia
                 const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', { id: idUsuario, nivel: 'A1' });
                 if (respuestaClasesProgramadas.exito) {
-                    
-                    const respuestaBD = await fetchGet('/niveles/obtenerBD');
-                    if (respuestaBD.bd === 'oracle') {
-                        const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
-                        const siguienteClase = (clasesProgramadas.length + 1).toString(); // La siguiente clase debería ser la próxima en la secuencia
-                        console.log(claseSeleccionada);
-                        console.log("vs");
-                        console.log(siguienteClase);
-                        if (claseSeleccionada !== siguienteClase) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: `Debes seleccionar la clase en orden. Por favor selecciona ${siguienteClase}.`,
-                                customClass: {
-                                    confirmButton: 'btn-color'
-                                },
-                                buttonsStyling: false
-                            });
-                            return;
-                        }
-                    } else {
-                        const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
-                        const siguienteClase = clasesProgramadas.length + 1; // La siguiente clase debería ser la próxima en la secuencia
-                        const claseSiguienteId = `Clase${siguienteClase}`;
+                    const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
+                    const siguienteClase = clasesProgramadas.length + 1; // La siguiente clase debería ser la próxima en la secuencia
+                    const claseSiguienteId = `Clase${siguienteClase}`;
 
-                        if (claseSeleccionada !== claseSiguienteId) {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Oops...",
-                                text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
-                                customClass: {
-                                    confirmButton: 'btn-color'
-                                },
-                                buttonsStyling: false
-                            });
-                            return;
-                        }
+                    if (claseSeleccionada !== claseSiguienteId) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
+                            customClass: {
+                                confirmButton: 'btn-color'
+                            },
+                            buttonsStyling: false
+                        });
+                        return;
                     }
-                    
+
+
 
                     const data = {
                         clase: claseSeleccionada,
@@ -521,7 +500,7 @@ function ProgramarClaseA1() {
         try {
             // Obtener la lista actual de clases programadas
             const clases = [...clasesProgramadas];
-    
+
             // Verificar si la clase a cancelar es la primera en la lista
             if (clases[0].id !== id) {
                 Swal.fire({
@@ -535,7 +514,7 @@ function ProgramarClaseA1() {
                 });
                 return;
             }
-    
+
             // Mostrar alerta de confirmación
             const confirmacion = await Swal.fire({
                 title: '¿Estás seguro de eliminar esta clase?',
@@ -549,18 +528,18 @@ function ProgramarClaseA1() {
                 },
                 buttonsStyling: false
             });
-    
+
             // Verificar si el usuario confirmó la eliminación
             if (confirmacion.isConfirmed) {
                 const token = localStorage.getItem("token");
-    
+
                 if (token) {
                     const payload = JSON.parse(atob(token.split('.')[1]));
                     const idEst = payload.id;
-    
+
                     // Realizar la solicitud para cancelar la clase
                     const respuesta = await fetchBody('/estudiantes/cancelarClase', 'POST', { idEstudiante: idEst, idClase: id, nivel: 'A1' });
-    
+
                     if (respuesta.exito) {
                         Swal.fire({
                             icon: "success",
@@ -597,7 +576,7 @@ function ProgramarClaseA1() {
             });
         }
     }
-    
+
 
 
     return (

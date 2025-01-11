@@ -57,6 +57,8 @@ import CrearExamenA1 from "../pages/PagesSuperAdmin/Niveles/A1/CrearExamenA1";
 import VerExamenEscritoA1 from "../pages/PagesSuperAdmin/Niveles/A1/VerExamenEscritoA1";
 import NivelesCulminados from "../pages/PagesStudents/NivelesCulminados";
 import NavPage from "../pages/PagesStudents/Niveles/A1/NavPage";
+import ProgramacionTeacher from "../pages/PagesTeachers/ProgramacionTeacher";
+import CalificarExamen from "../pages/PagesTeachers/CalificarExamen";
 
 function AppRoutes() {
     const location = useLocation();
@@ -89,7 +91,8 @@ function AppRoutes() {
                 <Route exact path="/VerExamenEscritoA1" element={<VerExamenEscritoA1></VerExamenEscritoA1>}></Route>
 
                 <Route exact path="/Teacher" element={<Teacher></Teacher>}></Route>
-
+                <Route exact path="/ProgramacionTeacher" element={<ProgramacionTeacher></ProgramacionTeacher>}></Route>
+                <Route exact path="/CalificarExamen" element={<CalificarExamen></CalificarExamen>}></Route>
 
                 <Route exact path="/Student" element={<Student></Student>}></Route>
                 <Route exact path="/NivelesCulminados" element={<NivelesCulminados></NivelesCulminados>}></Route>

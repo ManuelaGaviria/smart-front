@@ -502,210 +502,164 @@ function VerExamenA1() {
       nivel: "A1"
     }
     try {
-      const respuestaBD = await fetchGet('/niveles/obtenerBD');
-      console.log(respuestaBD);
-      if (respuestaBD.exito) {
-        console.log("holiwi");
-        if (respuestaBD.bd === 'oracle') {
-          console.log("holi");
-          try {
-            const response = await fetch('http://localhost:5000/niveles/obtenerExamenOral', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
-            });
-            console.log(response);
-            if (!response.ok) {
-              throw new Error('Error al obtener el examen oral');
-            }
-
-            const blob = await response.blob();
-            const urlBlob = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = urlBlob;
-            const contentDisposition = response.headers.get('Content-Disposition');
-            const filename = contentDisposition ? contentDisposition.split('filename=')[1] : 'downloaded.pdf';
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(urlBlob);
-          } catch (error) {
-            console.error('Error al descargar el examen oral:', error);
-          }
-        } else {
-          const respuesta = await fetchBody('/niveles/obtenerExamenOral', 'POST', data);
-          if (respuesta.exito){
-            const url = respuesta.archivoUrl;
-            window.open(url, '_blank');
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: respuesta.error,
-              customClass: {
-                confirmButton: 'btn-color'
-              },
-              buttonsStyling: false
-            });
-          }
-        }
+      const respuesta = await fetchBody('/niveles/obtenerExamenOral', 'POST', data);
+      if (respuesta.exito) {
+        const url = respuesta.archivoUrl;
+        window.open(url, '_blank');
       } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: respuesta.error,
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
+    } catch (error) {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Error",
+        text: 'Error al procesar la solicitud para descargar el examen oral',
         customClass: {
           confirmButton: 'btn-color'
         },
         buttonsStyling: false
       });
     }
-  } catch (error) {
-    Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: 'Error al procesar la solicitud para descargar el examen oral',
-      customClass: {
-        confirmButton: 'btn-color'
-      },
-      buttonsStyling: false
-    });
   }
-}
 
-return (
-  <motion.div
-    className='ContainerFull'
-    initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
-    animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
-    exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
-    transition={{ duration: 1 }}>
-    <Logo3 />
-    <FullscreenCard>
-      <div className='CenterTable'>
-        <table className='Table'>
-          <thead>
-            <tr>
-              <th style={{ width: '200px' }}>Examen #</th>
-              <th style={{ width: '200px' }}>Unidades</th>
-              <th style={{ width: '200px' }}>Temática</th>
-              <th style={{ width: '200px' }}>Clase que lo desbloquea</th>
-              <th style={{ width: '200px' }}>Examen Escrito</th>
-              <th style={{ width: '200px' }}>Examen Oral</th>
-              <th style={{ width: '200px' }}>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {examenes.map((examen) => (
-              <tr key={examen.id}>
-                <td>{examen.examen}</td>
-                <td>{examen.unidades}</td>
-                <td>{examen.tematica}</td>
-                <td>{examen.clase}</td>
-                <td>
-                  <ButtonLinkState clase="btn-ver" destino="/VerExamenEscritoA1" estado={{ examenId: examen.id }}>Ver</ButtonLinkState>
-                </td>
-                <td>
-                  <button className='btn-upload' onClick={() => handleUpload(examen.id)}><IoCloudUpload /></button>
-                  <button className='btn-ver' onClick={() => handleUploadModal(examen.id)}>Ver</button>
-
-                </td>
-                <td className='Actions'>
-                  <button className='btn-edit' onClick={() => handleEdit(examen.id)}><MdModeEdit /></button>
-                  <button className='btn-delete' onClick={() => handleDelete(examen.id)}><MdDelete /></button>
-                </td>
+  return (
+    <motion.div
+      className='ContainerFull'
+      initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
+      animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
+      exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
+      transition={{ duration: 1 }}>
+      <Logo3 />
+      <FullscreenCard>
+        <div className='CenterTable'>
+          <table className='Table'>
+            <thead>
+              <tr>
+                <th style={{ width: '200px' }}>Examen #</th>
+                <th style={{ width: '200px' }}>Unidades</th>
+                <th style={{ width: '200px' }}>Temática</th>
+                <th style={{ width: '200px' }}>Clase que lo desbloquea</th>
+                <th style={{ width: '200px' }}>Examen Escrito</th>
+                <th style={{ width: '200px' }}>Examen Oral</th>
+                <th style={{ width: '200px' }}>Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <ButtonLink destino="/GestionarExamenA1" clase="ButtonRegresar">Regresar</ButtonLink>
-    </FullscreenCard>
+            </thead>
+            <tbody>
+              {examenes.map((examen) => (
+                <tr key={examen.id}>
+                  <td>{examen.examen}</td>
+                  <td>{examen.unidades}</td>
+                  <td>{examen.tematica}</td>
+                  <td>{examen.clase}</td>
+                  <td>
+                    <ButtonLinkState clase="btn-ver" destino="/VerExamenEscritoA1" estado={{ examenId: examen.id }}>Ver</ButtonLinkState>
+                  </td>
+                  <td>
+                    <button className='btn-upload' onClick={() => handleUpload(examen.id)}><IoCloudUpload /></button>
+                    <button className='btn-ver' onClick={() => handleUploadModal(examen.id)}>Ver</button>
 
-    {editModalOpen && (
-      <>
-        <div
-          className="BackgroundOverlay"
-          style={{ opacity: backgroundOpacity }}
-        />
-        <ContenedorForms>
-          <h1>Editar Examen</h1>
-          <div className="InputContainer">
-            <LabelInputEdit id="idExamen" tipo="number" texto="Examen #" eventoCambio={changeNumero} valorInicial={selectedExamen.examen}></LabelInputEdit>
-            <LabelInputEdit id="idUnidades" eventoCambio={changeUnidades} texto="Unidades" valorInicial={selectedExamen.unidades}></LabelInputEdit>
-            <LabelInputEdit id="idTematica" texto="Temática" eventoCambio={changeDescripcion} valorInicial={selectedExamen.tematica}></LabelInputEdit>
-            <SelectEdit titulo="Clase que lo desbloquea"
-              opciones={clases}
-              eventoCambio={handleChange}
-              valorInicial={selectedExamen.clase}>
-            </SelectEdit>
-          </div>
-          <br />
-          <Button clase="Button" eventoClick={() => editExamen(selectedExamen.id)}>Editar</Button>
-          <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
-        </ContenedorForms>
-      </>
-    )}
+                  </td>
+                  <td className='Actions'>
+                    <button className='btn-edit' onClick={() => handleEdit(examen.id)}><MdModeEdit /></button>
+                    <button className='btn-delete' onClick={() => handleDelete(examen.id)}><MdDelete /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <ButtonLink destino="/GestionarExamenA1" clase="ButtonRegresar">Regresar</ButtonLink>
+      </FullscreenCard>
 
-    {uploadModalOpen && (
-      <>
-        <div
-          className="BackgroundOverlay"
-          style={{ opacity: backgroundOpacity }}
-        />
-        <ContenedorForms>
-          <h1>Subir Archivo</h1>
-          <div className="InputContainer">
-            <input type="file" onChange={(event) => { setFileUpload(event.target.files[0]) }} />
-          </div>
-          <br />
-          <Button clase="Button" eventoClick={() => uploadExamen(selectedExamen.id)}>Subir</Button>
-          <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
-        </ContenedorForms>
-      </>
-    )}
+      {editModalOpen && (
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Editar Examen</h1>
+            <div className="InputContainer">
+              <LabelInputEdit id="idExamen" tipo="number" texto="Examen #" eventoCambio={changeNumero} valorInicial={selectedExamen.examen}></LabelInputEdit>
+              <LabelInputEdit id="idUnidades" eventoCambio={changeUnidades} texto="Unidades" valorInicial={selectedExamen.unidades}></LabelInputEdit>
+              <LabelInputEdit id="idTematica" texto="Temática" eventoCambio={changeDescripcion} valorInicial={selectedExamen.tematica}></LabelInputEdit>
+              <SelectEdit titulo="Clase que lo desbloquea"
+                opciones={clases}
+                eventoCambio={handleChange}
+                valorInicial={selectedExamen.clase}>
+              </SelectEdit>
+            </div>
+            <br />
+            <Button clase="Button" eventoClick={() => editExamen(selectedExamen.id)}>Editar</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
 
-    {editUploadModalOpen && (
-      <>
-        <div
-          className="BackgroundOverlay"
-          style={{ opacity: backgroundOpacity }}
-        />
-        <ContenedorForms>
-          <h1>Subir Archivo</h1>
-          <div className="InputContainer">
-            <input type="file" onChange={(event) => { setFileUpload(event.target.files[0]) }} />
-          </div>
-          <br />
-          <Button clase="Button" eventoClick={() => {
-            console.log("selectedExamen antes de subir: ", selectedExamen);
-            uploadEditExamen(selectedExamen);
-          }}>Subir</Button>
-          <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
-        </ContenedorForms>
-      </>
-    )}
+      {uploadModalOpen && (
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Subir Archivo</h1>
+            <div className="InputContainer">
+              <input type="file" onChange={(event) => { setFileUpload(event.target.files[0]) }} />
+            </div>
+            <br />
+            <Button clase="Button" eventoClick={() => uploadExamen(selectedExamen.id)}>Subir</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
 
-    {uploadEditModalOpen && (
-      <>
-        <div
-          className="BackgroundOverlay"
-          style={{ opacity: backgroundOpacity }}
-        />
-        <ContenedorForms>
-          <h1>Gestionar Archivo</h1>
-          <Button clase="Button" eventoClick={() => downloadExamen(selectedExamen.id)}>Descargar</Button>
-          <Button clase="Button" eventoClick={() => openEditUploadModal(selectedExamen.id)}>Editar</Button>
-          <Button clase="Button" eventoClick={() => handleDeleteUpload(selectedExamen.id)}>Eliminar</Button>
-          <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
-        </ContenedorForms>
-      </>
-    )}
-  </motion.div>
-);
+      {editUploadModalOpen && (
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Subir Archivo</h1>
+            <div className="InputContainer">
+              <input type="file" onChange={(event) => { setFileUpload(event.target.files[0]) }} />
+            </div>
+            <br />
+            <Button clase="Button" eventoClick={() => {
+              console.log("selectedExamen antes de subir: ", selectedExamen);
+              uploadEditExamen(selectedExamen);
+            }}>Subir</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
+
+      {uploadEditModalOpen && (
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Gestionar Archivo</h1>
+            <Button clase="Button" eventoClick={() => downloadExamen(selectedExamen.id)}>Descargar</Button>
+            <Button clase="Button" eventoClick={() => openEditUploadModal(selectedExamen.id)}>Editar</Button>
+            <Button clase="Button" eventoClick={() => handleDeleteUpload(selectedExamen.id)}>Eliminar</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
+    </motion.div>
+  );
 }
 
 export default VerExamenA1;

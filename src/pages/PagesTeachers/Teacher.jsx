@@ -144,7 +144,7 @@ function Teacher() {
         <div className='ButtonsAdminContainer'>
           <h1>Bienvenido Profesor</h1>
           <div className=''>
-            <ImageButton icon={FaChalkboardTeacher} texto="Asistencia" destino="/"></ImageButton>
+            <ImageButton icon={FaChalkboardTeacher} texto="Ver programación" destino="/ProgramacionTeacher"></ImageButton>
             <ImageButton icon={PiStudentBold} texto="Calificar Examen" destino="/"></ImageButton>
           </div>
         </div> 
