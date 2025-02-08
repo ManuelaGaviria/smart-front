@@ -450,9 +450,9 @@ function ProgramarClaseA1() {
                         horaFinal: data.horaFinal,
                         idEstudiante: idUsuario
                     };
-
+                    
                     const respuesta = await fetchBody('/estudiantes/programarClase', 'POST', requestData);
-
+                   
                     if (respuesta.exito) {
                         Swal.fire({
                             icon: "success",

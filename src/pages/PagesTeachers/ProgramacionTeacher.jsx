@@ -79,11 +79,13 @@ function ProgramacionTeacher() {
         try {
             setLoadingEstudiantes(true);
             const respuesta = await fetchBody('/profesores/listarNombres', 'POST', { ids: estudiantesIds });
+
             if (respuesta.exito) {
-                setEstudiantesSeleccionados(respuesta.nombres); // Actualizar con nombres
-                // Inicializar estado de asistencia
-                const asistenciasIniciales = respuesta.nombres.reduce((acc, nombre) => {
-                    acc[nombre] = false; // Todos comienzan sin asistencia marcada
+                setEstudiantesSeleccionados(respuesta.lista); // Actualizar con los datos completos
+
+                // Inicializar estado de asistencia con `estudianteId`
+                const asistenciasIniciales = respuesta.lista.reduce((acc, estudiante) => {
+                    acc[estudiante.estudianteId] = false; // Todos comienzan sin asistencia marcada
                     return acc;
                 }, {});
                 setAsistencias(asistenciasIniciales);
@@ -93,9 +95,7 @@ function ProgramacionTeacher() {
                     icon: "error",
                     title: "Error",
                     text: respuesta.error,
-                    customClass: {
-                        confirmButton: 'btn-color'
-                    },
+                    customClass: { confirmButton: 'btn-color' },
                     buttonsStyling: false
                 });
             }
@@ -104,9 +104,7 @@ function ProgramacionTeacher() {
                 icon: "error",
                 title: "Error",
                 text: 'Error al obtener los nombres de los estudiantes',
-                customClass: {
-                    confirmButton: 'btn-color'
-                },
+                customClass: { confirmButton: 'btn-color' },
                 buttonsStyling: false
             });
         } finally {
@@ -143,6 +141,7 @@ function ProgramacionTeacher() {
                             <tr>
                                 <th style={{ width: '250px' }}>Fecha (yyyy-mm-dd)</th>
                                 <th style={{ width: '250px' }}>Hora Inicial</th>
+                                <th style={{ width: '250px' }}>Nivel</th>
                                 <th style={{ width: '250px' }}>Estudiantes</th>
                                 <th style={{ width: '250px' }}>Tipo</th>
                             </tr>
@@ -152,6 +151,7 @@ function ProgramacionTeacher() {
                                 <tr key={programacion.id}>
                                     <td>{programacion.fecha}</td>
                                     <td>{programacion.hora}</td>
+                                    <td>{programacion.nivel}</td>
                                     <td>
                                         <button
                                             className="btn-ver"
@@ -184,18 +184,20 @@ function ProgramacionTeacher() {
                                 <thead>
                                     <tr>
                                         <th>Nombre</th>
+                                        <th>Clase</th>
                                         <th>Asistencia</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {estudiantesSeleccionados.map((nombreEstudiante, index) => (
+                                    {estudiantesSeleccionados.map(({ estudianteId, nombreCompleto, idEvento }, index) => (
                                         <tr key={index}>
-                                            <td>{nombreEstudiante}</td>
+                                            <td>{nombreCompleto}</td>
+                                            <td>{idEvento}</td>
                                             <td>
                                                 <input
                                                     type="checkbox"
-                                                    checked={asistencias[nombreEstudiante]}
-                                                    onChange={() => toggleAsistencia(nombreEstudiante)}
+                                                    checked={asistencias[estudianteId]} // Usar estudianteId como clave
+                                                    onChange={() => toggleAsistencia(estudianteId)}
                                                 />
                                             </td>
                                         </tr>
