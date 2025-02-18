@@ -125,6 +125,45 @@ function ProgramacionTeacher() {
         }));
     };
 
+    const handleGuardarAsistencia = async () => {
+        try {
+            const asistenciasArray = Object.entries(asistencias).map(([estudianteId, asistencia]) => ({
+                estudianteId,
+                asistencia, // true o false
+                idEvento: estudiantesSeleccionados.find(e => e.estudianteId === estudianteId)?.idEvento || null
+            }));
+            
+            const respuesta = await fetchBody('/profesores/guardarAsistencias', 'POST', { asistencias: asistenciasArray });
+    
+            if (respuesta.exito) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Éxito",
+                    text: "Asistencias guardadas correctamente",
+                    customClass: { confirmButton: 'btn-color' },
+                    buttonsStyling: false
+                });
+                setModalOpen(false); // Cerrar el modal después de guardar
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: respuesta.error,
+                    customClass: { confirmButton: 'btn-color' },
+                    buttonsStyling: false
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: 'Error al guardar la asistencia',
+                customClass: { confirmButton: 'btn-color' },
+                buttonsStyling: false
+            });
+        }
+    };    
+
     return (
         <motion.div
             className='ContainerFull'
@@ -209,7 +248,7 @@ function ProgramacionTeacher() {
                         <ButtonLink destino="#" clase="Button" eventoClick={handleCloseModal}>
                             Cerrar
                         </ButtonLink>
-                        <ButtonLink destino="#" clase="Button" eventoClick={() => console.log(asistencias)}>
+                        <ButtonLink clase="Button" eventoClick={handleGuardarAsistencia}>
                             Guardar
                         </ButtonLink>
                     </ContenedorForms>
