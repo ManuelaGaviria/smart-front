@@ -74,14 +74,16 @@ function ProgramacionTeacher() {
         }
     }
 
-    // Abrir modal, obtener estudiantes y mostrar nombres
-    const handleVerEstudiantes = async (estudiantesIds) => {
+    const [nivelSeleccionado, setNivelSeleccionado] = useState(null); // Nuevo estado para almacenar el nivel
+
+    const handleVerEstudiantes = async (programacion) => {
         try {
             setLoadingEstudiantes(true);
-            const respuesta = await fetchBody('/profesores/listarNombres', 'POST', { ids: estudiantesIds });
+            const respuesta = await fetchBody('/profesores/listarNombres', 'POST', { ids: programacion.estudiantes });
 
             if (respuesta.exito) {
                 setEstudiantesSeleccionados(respuesta.lista); // Actualizar con los datos completos
+                setNivelSeleccionado(programacion.nivel); // Guardar el nivel de la programación
 
                 // Inicializar estado de asistencia con `estudianteId`
                 const asistenciasIniciales = respuesta.lista.reduce((acc, estudiante) => {
@@ -127,12 +129,25 @@ function ProgramacionTeacher() {
 
     const handleGuardarAsistencia = async () => {
         try {
+            if (!nivelSeleccionado) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se pudo determinar el nivel",
+                    customClass: { confirmButton: 'btn-color' },
+                    buttonsStyling: false
+                });
+                return;
+            }
+    
             const asistenciasArray = Object.entries(asistencias).map(([estudianteId, asistencia]) => ({
                 estudianteId,
                 asistencia, // true o false
-                idEvento: estudiantesSeleccionados.find(e => e.estudianteId === estudianteId)?.idEvento || null
+                idEvento: estudiantesSeleccionados.find(e => e.estudianteId === estudianteId)?.idEvento || null,
+                nivel: nivelSeleccionado, // Usamos el nivel almacenado en el estado
             }));
-            
+            console.log(asistenciasArray);
+    
             const respuesta = await fetchBody('/profesores/guardarAsistencias', 'POST', { asistencias: asistenciasArray });
     
             if (respuesta.exito) {
@@ -162,8 +177,8 @@ function ProgramacionTeacher() {
                 buttonsStyling: false
             });
         }
-    };    
-
+    };
+    
     return (
         <motion.div
             className='ContainerFull'
@@ -194,11 +209,12 @@ function ProgramacionTeacher() {
                                     <td>
                                         <button
                                             className="btn-ver"
-                                            onClick={() => handleVerEstudiantes(programacion.estudiantes)}
-                                            disabled={loadingEstudiantes} // Bloquear si está cargando
+                                            onClick={() => handleVerEstudiantes(programacion)}
+                                            disabled={loadingEstudiantes}
                                         >
                                             {loadingEstudiantes ? 'Cargando...' : 'Ver'}
                                         </button>
+
                                     </td>
                                     <td>{programacion.tipo}</td>
                                 </tr>
@@ -248,7 +264,7 @@ function ProgramacionTeacher() {
                         <ButtonLink destino="#" clase="Button" eventoClick={handleCloseModal}>
                             Cerrar
                         </ButtonLink>
-                        <ButtonLink clase="Button" eventoClick={handleGuardarAsistencia}>
+                        <ButtonLink destino="#" clase="Button" eventoClick={handleGuardarAsistencia}>
                             Guardar
                         </ButtonLink>
                     </ContenedorForms>
