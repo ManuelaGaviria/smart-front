@@ -219,6 +219,13 @@ h1 {
   transition: 0.3s;
 }
 
+.input.readonly {
+  background-color: #f0f0f0; /* Fondo gris claro */
+  color: #888; /* Texto gris */
+  border-color: #b3b3b3; /* Borde más tenue */
+  cursor: not-allowed; /* Indica que no se puede editar */
+}
+
 .input:hover{
   border-color: #72b9a9;
 }
@@ -651,6 +658,13 @@ th{
   border-radius: 50px;
   outline: none;
   transition: 0.3s;
+}
+
+.select.readonly {
+  background-color: #f0f0f0; /* Fondo gris claro */
+  color: #888; /* Texto gris */
+  border-color: #b3b3b3; /* Borde más tenue */
+  cursor: not-allowed; /* Indica que no se puede editar */
 }
 
 .select:hover{

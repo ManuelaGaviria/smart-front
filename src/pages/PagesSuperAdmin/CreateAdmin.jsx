@@ -102,17 +102,6 @@ function CreateAdmin() {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
           console.log(respuesta);
           if (respuesta.exito) {
-            
-            changeName({ target: { value: '' } });
-            changeApellido({ target: { value: '' } });
-            changeDocumento({ target: { value: '' } });
-            changeCorreo({ target: { value: '' } });
-            changeNacimiento({ target: { value: '' } });
-            document.getElementById("idName").value = "";
-            document.getElementById("idApellido").value = "";
-            document.getElementById("idDocument").value = "";
-            document.getElementById("idMail").value = "";
-            document.getElementById("idDate").value = "";
             Swal.fire({
               icon: "success",
               title: "Administrador creado con éxito!",
@@ -157,14 +146,14 @@ function CreateAdmin() {
       <ContenedorForms>
         <h1>Crear Administrador</h1>
         <div className="InputContainer">
-          <LabelInputEdit id="idName" texto="Nombre" eventoCambio={changeName} ></LabelInputEdit>
-          <LabelInputEdit id="idApellido" eventoCambio={changeApellido} texto="Apellidos"></LabelInputEdit>
-          <Select id="idTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
-          <LabelInputEdit id="idDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento}></LabelInputEdit>
-          <LabelInputEdit id="idMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} ></LabelInputEdit>
-          <Select id="idGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
-          <LabelInputEdit id="idDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento}></LabelInputEdit>
-          <Select id="idRol" titulo="Rol" opciones={opcionesAdmin} eventoCambio={changeAdministrador}></Select>
+          <LabelInputEdit id="idName" texto="Nombre *" eventoCambio={changeName} ></LabelInputEdit>
+          <LabelInputEdit id="idApellido" eventoCambio={changeApellido} texto="Apellidos *"></LabelInputEdit>
+          <Select id="idTipoDocumento" titulo="Tipo Documento *" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
+          <LabelInputEdit id="idDocument" tipo="number" texto="Documento *" eventoCambio={changeDocumento}></LabelInputEdit>
+          <LabelInputEdit id="idMail" tipo="email" texto="Correo *" eventoCambio={changeCorreo} ></LabelInputEdit>
+          <Select id="idGenero" titulo="Género *" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
+          <LabelInputEdit id="idDate" tipo="date" texto="Fecha Nacimiento *" eventoCambio={changeNacimiento}></LabelInputEdit>
+          <Select id="idRol" titulo="Rol *" opciones={opcionesAdmin} eventoCambio={changeAdministrador}></Select>
         </div>
         <br />
         <Button eventoClick={validate} clase="Button">Crear</Button>

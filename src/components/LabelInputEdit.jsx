@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 
-function LabelInputEdit({texto,tipo,eventoCambio, valorInicial, id}) {
+function LabelInputEdit({texto,tipo,eventoCambio, valorInicial, id, readOnly = false}) {
 
     useEffect(() => {
         document.getElementById(id).value = valorInicial;
@@ -13,7 +13,7 @@ function LabelInputEdit({texto,tipo,eventoCambio, valorInicial, id}) {
               <label className="label">{texto}</label>
           </div>
           <div className="columnaDerecha">
-              <input id={id} className="input" type={tipo} onChange={eventoCambio} />
+              <input id={id} className={`input ${readOnly ? "readonly" : ""}`} type={tipo} onChange={eventoCambio} readOnly={readOnly}/>
           </div>
       </div>
     )

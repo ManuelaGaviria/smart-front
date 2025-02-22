@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function SelectEdit({ titulo, opciones, eventoCambio, valorInicial, id }) {
+function SelectEdit({ titulo, opciones, eventoCambio, valorInicial, id, readOnly = false }) {
     // Estado local para el valor seleccionado
     const [valor, setValor] = useState(valorInicial);
 
@@ -24,9 +24,10 @@ function SelectEdit({ titulo, opciones, eventoCambio, valorInicial, id }) {
             <div className="columnaDerecha">
                 <select
                     id={id}
-                    className="select"
+                    className={`select ${readOnly ? "readonly" : ""}`}
                     onChange={handleChange}
                     value={valor} // Establecer el valor del estado local aquí
+                    disabled={readOnly} // ← Evita que el usuario edite la selección
                 >
                     <option value="" disabled>Seleccione uno</option>
                     {opciones.map((item) => (

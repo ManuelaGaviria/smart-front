@@ -333,8 +333,8 @@ function ActionsAdmin() {
           <div className="InputContainer">
             <LabelInputEdit id='adminName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedAdmin.nombre}></LabelInputEdit>
             <LabelInputEdit id="adminApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedAdmin.apellido}></LabelInputEdit>
-            <SelectEdit id="adminTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedAdmin.tipoDocumento}></SelectEdit>
-            <LabelInputEdit id='adminDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedAdmin.documento}></LabelInputEdit>
+            <SelectEdit id="adminTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedAdmin.tipoDocumento} readOnly={true}></SelectEdit>
+            <LabelInputEdit id='adminDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedAdmin.documento} readOnly={true}></LabelInputEdit>
             <LabelInputEdit id='adminEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedAdmin.correo}></LabelInputEdit>
             <SelectEdit id="adminGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedAdmin.genero}></SelectEdit>
             <LabelInputEdit id='adminDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedAdmin.nacimiento}></LabelInputEdit>
