@@ -321,8 +321,8 @@ function ActionsTeacher() {
           <div className="InputContainer">
             <LabelInputEdit id='teacherName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedTeacher.nombre}></LabelInputEdit>
             <LabelInputEdit id="teacherApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedTeacher.apellido}></LabelInputEdit>
-            <SelectEdit id="teacherTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedTeacher.tipoDocumento}></SelectEdit>
-            <LabelInputEdit id='teacherDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedTeacher.documento}></LabelInputEdit>
+            <SelectEdit id="teacherTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedTeacher.tipoDocumento} readOnly={true}></SelectEdit>
+            <LabelInputEdit id='teacherDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedTeacher.documento} readOnly={true}></LabelInputEdit>
             <LabelInputEdit id='teacherEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedTeacher.correo}></LabelInputEdit>
             <SelectEdit id="teacherGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedTeacher.genero}></SelectEdit>
             <LabelInputEdit id='teacherDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedTeacher.nacimiento}></LabelInputEdit>

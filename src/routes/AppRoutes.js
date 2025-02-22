@@ -48,10 +48,8 @@ import GestionarNiveles from "../pages/PagesSuperAdmin/GestionarNiveles";
 import CreateAdmin from "../pages/PagesSuperAdmin/CreateAdmin";
 import ActionsAdmin from "../pages/PagesSuperAdmin/ActionsAdmin";
 import GestionarA1 from "../pages/PagesSuperAdmin/Niveles/A1/GestionarA1";
-import GestionarClaseA1 from "../pages/PagesSuperAdmin/Niveles/A1/GestionarClaseA1";
 import GestionarExamenA1 from "../pages/PagesSuperAdmin/Niveles/A1/GestionarExamenA1";
 import VerExamenA1 from "../pages/PagesSuperAdmin/Niveles/A1/VerExamenA1";
-import CrearClaseA1 from "../pages/PagesSuperAdmin/Niveles/A1/CrearClaseA1";
 import VerClaseA1 from "../pages/PagesSuperAdmin/Niveles/A1/VerClaseA1";
 import CrearExamenA1 from "../pages/PagesSuperAdmin/Niveles/A1/CrearExamenA1";
 import VerExamenEscritoA1 from "../pages/PagesSuperAdmin/Niveles/A1/VerExamenEscritoA1";
@@ -82,8 +80,6 @@ function AppRoutes() {
                 <Route exact path="/ActionsAdmin" element={<ActionsAdmin></ActionsAdmin>}></Route>
                 <Route exact path="/GestionarNiveles" element={<GestionarNiveles></GestionarNiveles>}></Route>
                 <Route exact path="/GestionarA1" element={<GestionarA1></GestionarA1>}></Route>
-                <Route exact path="/GestionarClaseA1" element={<GestionarClaseA1></GestionarClaseA1>}></Route>
-                <Route exact path="/CrearClaseA1" element={<CrearClaseA1></CrearClaseA1>}></Route>
                 <Route exact path="/VerClasesA1" element={<VerClaseA1></VerClaseA1>}></Route>
                 <Route exact path="/GestionarExamenA1" element={<GestionarExamenA1></GestionarExamenA1>}></Route>
                 <Route exact path="/CrearExamenA1" element={<CrearExamenA1></CrearExamenA1>}></Route>

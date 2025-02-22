@@ -164,15 +164,15 @@ function CreateStudent() {
         <ContenedorForms>
             <h1>Crear Estudiante</h1>
           <div className="InputContainer">
-            <LabelInputEdit id="idNameStudent" eventoCambio={changeName} texto="Nombre"></LabelInputEdit>
-            <LabelInputEdit id="idApellidoStudent" eventoCambio={changeApellido} texto="Apellidos"></LabelInputEdit>
-            <Select id="idTipoDocumentoStudent" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
-            <LabelInputEdit id="idDocumentStudent" eventoCambio={changeDocumento} tipo="number" texto="Documento"></LabelInputEdit>
-            <Select id="idGeneroStudent" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
-            <LabelInputEdit id="idMailStudent" eventoCambio={changeCorreo} tipo="email" texto="Correo"></LabelInputEdit>
-            <LabelInputEdit id="idDateStudent" eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento"></LabelInputEdit>
+            <LabelInputEdit id="idNameStudent" eventoCambio={changeName} texto="Nombre *"></LabelInputEdit>
+            <LabelInputEdit id="idApellidoStudent" eventoCambio={changeApellido} texto="Apellidos *"></LabelInputEdit>
+            <Select id="idTipoDocumentoStudent" titulo="Tipo Documento *" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
+            <LabelInputEdit id="idDocumentStudent" eventoCambio={changeDocumento} tipo="number" texto="Documento *"></LabelInputEdit>
+            <Select id="idGeneroStudent" titulo="Género *" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
+            <LabelInputEdit id="idMailStudent" eventoCambio={changeCorreo} tipo="email" texto="Correo *"></LabelInputEdit>
+            <LabelInputEdit id="idDateStudent" eventoCambio={changeNacimiento} tipo="date" texto="Fecha Nacimiento *"></LabelInputEdit>
             <div>
-                <label>Niveles Matriculados</label>
+                <label>Niveles Matriculados *</label>
                 <div className='niveles'>
                     <RadioButton id="A1" label="A1" onChange={handleLevelChange} checked={selectedLevels.includes("A1")}/>
                     <RadioButton id="A2" label="A2" onChange={handleLevelChange} checked={selectedLevels.includes("A2")}/>

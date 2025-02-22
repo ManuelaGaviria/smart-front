@@ -348,8 +348,8 @@ function ActionsStudent() {
           <div className="InputContainer">
             <LabelInputEdit id="studentName" texto="Nombre" eventoCambio={changeName} valorInicial={selectedStudent.nombre}></LabelInputEdit>
             <LabelInputEdit id="studentApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedStudent.apellido}></LabelInputEdit>
-            <SelectEdit id="studentTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedStudent.tipoDocumento}></SelectEdit>
-            <LabelInputEdit id="studentDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedStudent.documento}></LabelInputEdit>
+            <SelectEdit id="studentTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedStudent.tipoDocumento} readOnly={true}></SelectEdit>
+            <LabelInputEdit id="studentDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedStudent.documento} readOnly={true}></LabelInputEdit>
             <LabelInputEdit id="studentMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedStudent.correo}></LabelInputEdit>
             <SelectEdit id="studentGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedStudent.genero}></SelectEdit>
             <LabelInputEdit id="studentDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedStudent.nacimiento}></LabelInputEdit>

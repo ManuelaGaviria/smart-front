@@ -5,7 +5,7 @@ function GestionarA1() {
   return (
     <Page2Button titulo="Gestionar A1"
         tituloBoton1="Gestionar Clases"
-        destinoBoton1="/GestionarClaseA1"
+        destinoBoton1="/VerClasesA1"
         tituloBoton2="Gestionar Examenes"
         destinoBoton2="/GestionarExamenA1"
         destinoRegreso="/GestionarNiveles"

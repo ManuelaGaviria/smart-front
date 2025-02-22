@@ -152,13 +152,13 @@ function CreateTeacher() {
       <ContenedorForms>
         <h1>Crear Profesor</h1>
         <div className="InputContainer">
-          <LabelInputEdit id="idName" texto="Nombre" eventoCambio={changeName} ></LabelInputEdit>
-          <LabelInputEdit id="idApellido" eventoCambio={changeApellido} texto="Apellidos"></LabelInputEdit>
-          <Select id="idTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
-          <LabelInputEdit id="idDocument" tipo="number" texto="Documento" eventoCambio={changeDocumento}></LabelInputEdit>
-          <LabelInputEdit id="idMail" tipo="email" texto="Correo" eventoCambio={changeCorreo} ></LabelInputEdit>
-          <Select id="idGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
-          <LabelInputEdit id="idDate" tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento}></LabelInputEdit>
+          <LabelInputEdit id="idName" texto="Nombre *" eventoCambio={changeName} ></LabelInputEdit>
+          <LabelInputEdit id="idApellido" eventoCambio={changeApellido} texto="Apellidos *"></LabelInputEdit>
+          <Select id="idTipoDocumento" titulo="Tipo Documento *" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento}></Select>
+          <LabelInputEdit id="idDocument" tipo="number" texto="Documento *" eventoCambio={changeDocumento}></LabelInputEdit>
+          <LabelInputEdit id="idMail" tipo="email" texto="Correo *" eventoCambio={changeCorreo} ></LabelInputEdit>
+          <Select id="idGenero" titulo="Género *" opciones={opcionesGenero} eventoCambio={changeGenero}></Select>
+          <LabelInputEdit id="idDate" tipo="date" texto="Fecha Nacimiento *" eventoCambio={changeNacimiento}></LabelInputEdit>
         </div>
         <br />
         <Button eventoClick={validate} clase="Button">Crear</Button>
