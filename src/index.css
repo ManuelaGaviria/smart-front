@@ -19,6 +19,12 @@ h1 {
   color: #c11612
 }
 
+.center{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .login-container {
   background-image: url('./images/fondo.jpg');
   background-size: cover; 
@@ -493,7 +499,10 @@ h1 {
 .Table{
   background-color: white;
   border-radius: 20px;
-  
+}
+
+.TablePreguntas{
+  width: 100vh
 }
 
 th{

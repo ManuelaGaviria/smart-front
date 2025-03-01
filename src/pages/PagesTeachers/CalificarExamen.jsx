@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import FullScreenCard from '../../components/FullScreenCard';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
+import Button from '../../components/Button';
 import ButtonLink from '../../components/ButtonLink';
 import ContenedorForms from '../../components/ContenedorForms';
 import LabelInput from '../../components/LabelInput';
@@ -22,11 +23,20 @@ function CalificarExamen() {
 
   const [niveles, setNiveles] = useState("");
 
+  const [resultados, setResultados] = useState([]);
+  const [modalData, setModalData] = useState({ tipo: '', contenido: '' });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [backgroundOpacity] = useState(0.5);
+  const [editModalOpen, setExamenModalOpen] = useState(false);
+  const [intentos, setIntentos] = useState([]);
+  const [intentoSeleccionado, setIntentoSeleccionado] = useState(null);
+  const [nota, setNota] = useState("");
+  const [comentario, setComentario] = useState("");
+
   const changeNiveles = (nivel) => {
     console.log('nivel :>> ', nivel);
     setNiveles(nivel); // Se asigna el valor directamente
   };
-
 
   const opcionesNiveles = [
     { nombre: 'A1', id: 1 },
@@ -70,11 +80,102 @@ function CalificarExamen() {
     }
   };
 
+  const handleBuscar = async () => {
+    if (!documento || !niveles || !examenSeleccionado) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Debe completar todos los campos antes de continuar.',
+      });
+      return;
+    }
+
+    try {
+      const respuesta = await fetchBody('/profesores/buscarExamen', 'POST', { documento, nivel: niveles, examen: examenSeleccionado });
+      if (respuesta.exito) {
+        console.log(respuesta);
+        console.log('respuesta.examenEncontrado :>> ', respuesta.examenEncontrado);
+        setResultados(respuesta.examenEncontrado);
+      } else {
+        setResultados([]);
+        Swal.fire({
+          icon: 'info',
+          title: 'No hay datos',
+          text: 'No se encontraron registros para los criterios seleccionados.',
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error al procesar la solicitud.',
+      });
+    }
+  };
+
+  async function handleVerExamenEscrito(examenEscrito) {
+    console.log(examenEscrito);
+    setIntentos(Object.entries(examenEscrito));
+    openExamenEscritoModal(examenEscrito);
+  }
+
+  const openExamenEscritoModal = (examen) => {
+    setExamenModalOpen(true);
+  };
+
+  const handleCloseModalExamen = () => {
+    setExamenModalOpen(false);
+  };
 
   const handleChangeNivel = (e) => {
     const nivelSeleccionado = e.target.value;
     setNiveles(nivelSeleccionado); // Actualiza el estado de niveles correctamente
     obtenerExamenesPorNivel(nivelSeleccionado); // Llama a la API para obtener exámenes
+  };
+
+  const abrirModal = (tipo, contenido) => {
+    setModalData({ tipo, contenido });
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleGuardarCalificacion = async () => {
+    if (!nota) {
+      Swal.fire({ icon: 'warning', title: 'Campo vacío', text: 'Debe ingresar una nota antes de guardar.' });
+      return;
+    }
+    try {
+      const respuesta = await fetchBody('/profesores/calificarExamen', 'POST', { documento, nivel:niveles, examen: examenSeleccionado, nota });
+      if (respuesta.exito) {
+        Swal.fire({ icon: 'success', title: 'Guardado', text: 'Nota guardada exitosamente.' });
+        setModalVisible(false);
+      } else {
+        Swal.fire({ icon: 'error', title: 'Error', text: respuesta.error });
+      }
+    } catch (error) {
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Error al procesar la solicitud.' });
+    }
+  };
+
+  const handleGuardarComentario = async () => {
+    if (!comentario) {
+      Swal.fire({ icon: 'warning', title: 'Campo vacío', text: 'Debe ingresar un comentario antes de guardar.' });
+      return;
+    }
+    try {
+      const respuesta = await fetchBody('/profesores/guardarComentario', 'POST', { documento, nivel:niveles, examen: examenSeleccionado, comentario });
+      if (respuesta.exito) {
+        Swal.fire({ icon: 'success', title: 'Guardado', text: 'Comentario guardado exitosamente.' });
+        setModalVisible(false);
+      } else {
+        Swal.fire({ icon: 'error', title: 'Error', text: respuesta.error });
+      }
+    } catch (error) {
+      Swal.fire({ icon: 'error', title: 'Error', text: 'Error al procesar la solicitud.' });
+    }
   };
 
   return (
@@ -104,7 +205,7 @@ function CalificarExamen() {
 
             {/* Fila del botón */}
             <div className="button-container">
-              <button onClick={() => console.log("Filtrando examen...")} className="ButtonBuscar">
+              <button onClick={handleBuscar} className="ButtonBuscar">
                 Buscar
               </button>
             </div>
@@ -123,7 +224,14 @@ function CalificarExamen() {
               </tr>
             </thead>
             <tbody>
-              {/* Aquí se llenarán los datos dinámicamente */}
+              {resultados && (
+                <tr>
+                  <td>{resultados.examen}</td>
+                  <td><Button clase="Button" eventoClick={() => handleVerExamenEscrito(resultados.examenEscrito)}>Ver</Button></td>
+                  <td><Button clase="Button" eventoClick={() => { setModalData({ tipo: 'calificar' }); setModalVisible(true); }}>Calificar</Button></td>
+                  <td><Button clase="Button" eventoClick={() => { setModalData({ tipo: 'comentarios' }); setModalVisible(true); }}>Comentarios</Button></td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
@@ -131,6 +239,74 @@ function CalificarExamen() {
         <ButtonLink destino="/Teacher" clase="ButtonRegresar">Regresar</ButtonLink>
 
       </FullScreenCard>
+      {modalVisible && (
+        <>
+          <div className="BackgroundOverlay" style={{ opacity: backgroundOpacity }} />
+          <ContenedorForms>
+            <h1>{modalData.tipo === 'calificar' ? 'Calificar Examen Oral' : 'Retroalimentación'}</h1>
+            {modalData.tipo === 'calificar' ? (
+              <>
+                <label>Nota:</label>
+                <input type="number" value={nota} onChange={(e) => setNota(e.target.value)} />
+                <Button clase="Button" eventoClick={handleGuardarCalificacion}>Guardar</Button>
+              </>
+            ) : (
+              <>
+                <label>Comentarios:</label>
+                <textarea value={comentario} onChange={(e) => setComentario(e.target.value)} />
+                <Button clase="Button" eventoClick={handleGuardarComentario}>Guardar</Button>
+              </>
+            )}
+            <Button clase="Button" eventoClick={() => setModalVisible(false)}>Cerrar</Button>
+          </ContenedorForms>
+        </>
+      )}
+      {editModalOpen && (
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Examen Escrito</h1>
+            {intentoSeleccionado === null ? (
+              intentos.map(([id, preguntas]) => (
+                <div key={id}>
+                  <label>{id}</label>
+                  <Button clase="Button" eventoClick={() => setIntentoSeleccionado(preguntas)}>Ver</Button>
+                  <Button clase="Button" eventoClick={handleCloseModalExamen}>Regresar</Button>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className='center'>
+                  <table className="TablePreguntas">
+                    <thead>
+                      <tr>
+                        <th>Pregunta</th>
+                        <th>Check</th>
+                        <th>Respuesta Correcta</th>
+                        <th>Respuesta Dada</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {intentoSeleccionado.map((pregunta, index) => (
+                        <tr key={index}>
+                          <td>{pregunta.enunciado}</td>
+                          <td>{pregunta.esCorrecta ? '✅' : '❌'}</td>
+                          <td>{pregunta.respuestaCorrecta}</td>
+                          <td>{pregunta.respuestaDada}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <Button clase="Button" eventoClick={() => setIntentoSeleccionado(null)}>Regresar</Button>
+              </>
+            )}
+          </ContenedorForms>
+        </>
+      )}
     </motion.div>
 
   );
