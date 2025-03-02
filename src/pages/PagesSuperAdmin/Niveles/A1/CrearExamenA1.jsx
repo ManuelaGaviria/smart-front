@@ -10,6 +10,7 @@ import GeneralContext from '../../../../context/GeneralContext';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Select from "../../../../components/Select";
+import SelectEdit from "../../../../components/SelectEdit";
 
 function CrearExamenA1() {
   const navigate = useNavigate();
@@ -26,6 +27,15 @@ function CrearExamenA1() {
   const { numero, descripcion, unidades, changeNumero, changeDescripcion, changeUnidades } = useContext(GeneralContext);
   const [clases, setClases] = useState([]);
   const [claseSeleccionada, setClaseSeleccionada] = useState("");
+
+  const opcionesExamen = [
+    { nombre: 'Units1&2', id: 1 },
+    { nombre: 'Units3&4', id: 2 },
+    { nombre: 'Units5&6', id: 3 },
+    { nombre: 'Units7&8', id: 4 },
+    { nombre: 'Units9&10', id: 5 },
+    { nombre: 'Units11&12', id: 6 }
+  ];
 
   useEffect(() => {
     const listClases = async () => {
@@ -93,9 +103,6 @@ function CrearExamenA1() {
           const respuesta = await fetchBody('/niveles/agregarExamen', 'POST', data);
           console.log(respuesta);
           if (respuesta.exito) {
-            document.getElementById("idExamen").value = "";
-            document.getElementById("idUnidades").value = "";
-            document.getElementById("idTematica").value = "";
             Swal.fire({
               icon: "success",
               title: "Examen creado con éxito!",
@@ -139,10 +146,10 @@ function CrearExamenA1() {
       <ContenedorForms>
         <h1>Crear Examen A1</h1>
         <div className="InputContainer">
-          <LabelInputEdit id="idExamen" tipo="number" texto="Examen #" eventoCambio={changeNumero} ></LabelInputEdit>
-          <LabelInputEdit id="idUnidades" eventoCambio={changeUnidades} texto="Unidades"></LabelInputEdit>
-          <LabelInputEdit id="idTematica" texto="Temática" eventoCambio={changeDescripcion}></LabelInputEdit>
-          <Select titulo="Clase que lo desbloquea"
+          <LabelInputEdit id="idExamen" tipo="number" texto="Examen # *" eventoCambio={changeNumero} ></LabelInputEdit>
+          <Select titulo="Unidades *" opciones={opcionesExamen} eventoCambio={changeUnidades}></Select>
+          <LabelInputEdit id="idTematica" texto="Temática *" eventoCambio={changeDescripcion}></LabelInputEdit>
+          <Select titulo="Clase que lo desbloquea *"
                 opciones={clases}
                 eventoCambio={handleChange}>
           </Select>

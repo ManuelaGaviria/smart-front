@@ -28,7 +28,6 @@ function ExamenEscrito() {
       try {
         const respuesta = await fetchBody('/niveles/obtenerExamen', 'POST', { nivel: "A1" });
         if (respuesta.exito) {
-
           const examenesFormateados = respuesta.lista;
           console.log("holi");
           console.log(examenesFormateados);
@@ -87,7 +86,7 @@ function ExamenEscrito() {
         Swal.fire({
           icon: "info",
           title: "Examen ya presentado",
-          text: "Ya has presentado este examen.",
+          text: "Si necesitas solicitar otro intento, accede al portal de notas",
           customClass: {
             confirmButton: 'btn-color'
           },

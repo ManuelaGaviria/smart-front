@@ -219,8 +219,8 @@ function CalificarExamen() {
               <tr>
                 <th style={{ width: '250px' }}>Examen</th>
                 <th style={{ width: '250px' }}>Examen Escrito</th>
-                <th style={{ width: '250px' }}>Examen Oral</th>
-                <th style={{ width: '250px' }}>Retroalimentación</th>
+                <th style={{ width: '350px' }}>Examen Oral</th>
+                <th style={{ width: '420px' }}>Retroalimentación</th>
               </tr>
             </thead>
             <tbody>

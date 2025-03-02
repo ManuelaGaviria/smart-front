@@ -891,3 +891,7 @@ th{
 .ButtonBuscar:hover{
   width: 20%;
 }
+
+.timerContainer{
+  margin-right: 20px;
+}

@@ -242,7 +242,7 @@ function VerClaseA1() {
             </tbody>
           </table>
         </div>
-        <ButtonLink destino="/GestionarClaseA1" clase="ButtonRegresar">Regresar</ButtonLink>
+        <ButtonLink destino="/GestionarA1" clase="ButtonRegresar">Regresar</ButtonLink>
       </FullscreenCard>
 
       {editModalOpen && (

@@ -539,6 +539,8 @@ function VerExamenA1() {
       transition={{ duration: 1 }}>
       <Logo3 />
       <FullscreenCard>
+        <p>Recuerda guardar un archivo en el mismo formato de las Unidades</p>
+        <p>Ejemplo: Units1&2.pdf</p>
         <div className='CenterTable'>
           <table className='Table'>
             <thead>

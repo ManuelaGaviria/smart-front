@@ -6,49 +6,124 @@ import { fetchBody } from "../../../../utils/fetch";
 import Swal from 'sweetalert2';
 
 function NavPage() {
- const navigate = useNavigate();
- 
-     useEffect(() => {
-         const verificar = async () => {
-             const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
-             if (respuesta.exito === false) {
-                navigate("/", { replace: true });
-             }
-         }
-         verificar();
-     }, [navigate]);
+  const navigate = useNavigate();
 
-     useEffect(() => {
-      // Bloquear el botón de retroceso
-      const bloquearRetroceso = () => {
-        window.history.pushState(null, document.title, window.location.href);
+  const [timeLeft, setTimeLeft] = useState(100); // ✅ Solo una vez
+
+  // ⏳ UseEffect para el temporizador
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      finalizarExamenTimer();
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]); // ✅ Correcto
+
+  const finalizarExamenTimer = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se encontró un token de autenticación. Inicia sesión nuevamente.',
+        customClass: { confirmButton: 'btn-color' },
+        buttonsStyling: false,
+      });
+      return;
+    }
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const idEstudiante = payload.id;
+
+    // Mapear las preguntas con sus respuestas seleccionadas
+    const respuestasFinales = data.map((pregunta) => ({
+      idPregunta: pregunta.idPregunta,
+      respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
+    }));
+
+    console.log('Respuestas que se enviarán al backend:', respuestasFinales);
+
+    const dataExamen = {
+      examenId,
+      idEstudiante,
+      nivel: 'A1',
+      preguntaRespuesta: respuestasFinales,
+    };
+
+    try {
+      const respuesta = await fetchBody('/estudiantes/realizarExamenEscrito', 'POST', dataExamen);
+
+      if (respuesta.exito) {
         Swal.fire({
-          icon: "warning",
-          title: "Acción no permitida",
-          text: "No puedes regresar mientras realizas el examen.",
-          customClass: {
-            confirmButton: 'btn-color',
-          },
+          icon: 'success',
+          title: 'Tiempo finalizado',
+          text: 'Tu examen ha sido enviado automáticamente.',
+          customClass: { confirmButton: 'btn-color' },
           buttonsStyling: false,
         });
-      };
-  
-      // Bloquear recarga de página
-      const bloquearRecarga = (event) => {
-        event.preventDefault();
-        event.returnValue = ''; // Requerido para mostrar la alerta de confirmación del navegador
-      };
-  
-      // Agregar un estado al historial y bloquear retroceso
+
+        navigate('/ExamenEscritoA1'); // ✅ Redirigir a la página de inicio solo si la respuesta es exitosa
+      } else {
+        throw new Error(respuesta.error || 'Error desconocido al procesar el examen.');
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al finalizar el examen. Intenta nuevamente.',
+        customClass: { confirmButton: 'btn-color' },
+        buttonsStyling: false,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+      if (respuesta.exito === false) {
+        navigate("/", { replace: true });
+      }
+    }
+    verificar();
+  }, [navigate]);
+
+  useEffect(() => {
+    // Bloquear el botón de retroceso
+    const bloquearRetroceso = () => {
       window.history.pushState(null, document.title, window.location.href);
-      window.addEventListener("popstate", bloquearRetroceso);
-      window.addEventListener("beforeunload", bloquearRecarga);
-  
-      return () => {
-        window.removeEventListener("popstate", bloquearRetroceso); // Limpiar evento al desmontar
-        window.removeEventListener("beforeunload", bloquearRecarga); // Limpiar evento al desmontar
-      };
-    }, []);
+      Swal.fire({
+        icon: "warning",
+        title: "Acción no permitida",
+        text: "No puedes regresar mientras realizas el examen.",
+        customClass: {
+          confirmButton: 'btn-color',
+        },
+        buttonsStyling: false,
+      });
+    };
+
+    // Bloquear recarga de página
+    const bloquearRecarga = (event) => {
+      event.preventDefault();
+      event.returnValue = ''; // Requerido para mostrar la alerta de confirmación del navegador
+    };
+
+    // Agregar un estado al historial y bloquear retroceso
+    window.history.pushState(null, document.title, window.location.href);
+    window.addEventListener("popstate", bloquearRetroceso);
+    window.addEventListener("beforeunload", bloquearRecarga);
+
+    return () => {
+      window.removeEventListener("popstate", bloquearRetroceso); // Limpiar evento al desmontar
+      window.removeEventListener("beforeunload", bloquearRecarga); // Limpiar evento al desmontar
+    };
+  }, []);
 
   const location = useLocation();
   const { examenId } = location.state || {}; // Obteniendo el examenId del estado
@@ -137,7 +212,7 @@ function NavPage() {
       });
       return; // Salir del método si no se han respondido todas las preguntas
     }
-  
+
     try {
       // Confirmación del usuario
       const confirmacion = await Swal.fire({
@@ -152,11 +227,11 @@ function NavPage() {
         },
         buttonsStyling: false,
       });
-  
+
       if (!confirmacion.isConfirmed) return;
-  
+
       const token = localStorage.getItem('token');
-  
+
       if (!token) {
         Swal.fire({
           icon: 'error',
@@ -169,31 +244,31 @@ function NavPage() {
         });
         return;
       }
-  
+
       const payload = JSON.parse(atob(token.split('.')[1]));
       const idEstudiante = payload.id;
-  
+
       // Mapear las preguntas con sus respuestas seleccionadas
       const respuestasFinales = data.map((pregunta) => ({
         idPregunta: pregunta.idPregunta,
         respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
       }));
-  
+
       console.log('Respuestas que se enviarán al backend:', respuestasFinales);
-  
+
       const dataExamen = {
         examenId,
         idEstudiante,
         nivel: 'A1',
         preguntaRespuesta: respuestasFinales,
       };
-  
+
       const respuesta = await fetchBody('/estudiantes/realizarExamenEscrito', 'POST', dataExamen);
-  
+
       if (respuesta.exito) {
         console.log(respuesta.examenEscrito);
         const { respuestasCorrectas, totalPreguntas } = respuesta.examenEscrito;
-  
+
         Swal.fire({
           icon: 'success',
           title: '¡Terminaste el examen con éxito!',
@@ -203,14 +278,14 @@ function NavPage() {
           },
           buttonsStyling: false,
         });
-  
+
         navigate('/NotasA1');
       } else {
         throw new Error(respuesta.error || 'Error desconocido al procesar el examen.');
       }
     } catch (error) {
       console.error('Error al finalizar el examen:', error);
-  
+
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -221,7 +296,7 @@ function NavPage() {
         buttonsStyling: false,
       });
     }
-  };  
+  };
 
   // Verificar si todas las preguntas han sido respondidas
   const allQuestionsAnswered = Object.keys(answers).length === data.length;
@@ -239,7 +314,12 @@ function NavPage() {
           />
         </div>
         <div className='preguntasContainer'>
+          {/* ⏳ Temporizador en pantalla */}
+
           <div className='finalizarExamen'>
+            <div className="timerContainer">
+              <p>Tiempo restante: <strong>{Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}</strong></p>
+            </div>
             <button className="ButtonFinalizar" onClick={finalizarExamen}>
               Finalizar
             </button>
