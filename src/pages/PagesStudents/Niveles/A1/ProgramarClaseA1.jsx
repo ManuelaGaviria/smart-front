@@ -108,16 +108,27 @@ function ProgramarClaseA1() {
                 if (respuestaClases.exito && respuestaEstado.exito) {
                     const clasesDisponibles = respuestaClases.lista;
                     const clasesProgramadas = respuestaEstado.estadoClases;
+                    console.log("clases programadas");
+                    console.log(clasesProgramadas);
 
                     // Combinar ambas listas
                     const clasesCombinadas = clasesDisponibles.map(clase => {
+                        console.log('clase :>> ', clase);
                         const claseProgramada = clasesProgramadas.find(c => c.id === clase.id);
+
+                        let asistenciaIcono = "❌";
+                        if (claseProgramada?.data?.asistencia) {
+                            asistenciaIcono = "✅";
+                        }
+
                         return {
                             ...clase,
+                            asistencia: asistenciaIcono,
                             estado: claseProgramada ? claseProgramada.data.estado : 'pendiente'
                         };
                     });
-
+                    console.log("clases combinadas");
+                    console.log(clasesCombinadas);
                     setClase(clasesCombinadas);
                 } else {
                     Swal.fire({
@@ -264,6 +275,9 @@ function ProgramarClaseA1() {
     }
 
     async function listHoras(date) {
+        console.log("Fecha seleccionada:", date);
+        console.log("Hora actual:", new Date().toLocaleString());
+        console.log("Hora actual UTC:", new Date().toISOString());
         try {
             // Obtener las horas disponibles
             const respuesta = await fetchGet('/estudiantes/obtenerHora');
@@ -275,6 +289,7 @@ function ProgramarClaseA1() {
                     horaInicial,
                     horaFinal: horasFinales[index]
                 }));
+                console.log("Horas disponibles antes de filtrar:", horas);
 
                 // Obtener ID del estudiante desde el token
                 const token = localStorage.getItem("token");
@@ -287,6 +302,7 @@ function ProgramarClaseA1() {
 
                     if (respuestaHorasAgendadas.exito) {
                         const horasAgendadas = respuestaHorasAgendadas.horasAgendadas;
+                        console.log("Horas agendadas:", horasAgendadas);
 
                         // Crear una nueva lista de horas disponibles filtrando horas agendadas
                         let horasDisponibles = horas.filter(hora => {
@@ -308,13 +324,18 @@ function ProgramarClaseA1() {
                             return esHoraDisponible;
                         });
 
+                        console.log("Horas disponibles después de filtrar agendadas:", horasDisponibles);
+
                         // Filtrar horas si la fecha seleccionada es hoy
                         if (isToday(date)) {
                             const now = new Date();
                             horasDisponibles = horasDisponibles.filter(hora => {
                                 const horaDisponible = new Date(`${date.toDateString()} ${hora.horaInicial}`);
+                                console.log(`Comparando ${hora.horaInicial} ->`, horaDisponible, "con", now);
                                 return horaDisponible > now;
                             });
+
+                            console.log("Horas disponibles después de filtrar por la hora actual:", horasDisponibles);
                         }
 
                         setHoras(horasDisponibles);
@@ -354,16 +375,16 @@ function ProgramarClaseA1() {
         }
     }
 
-
-
-
-
     const isToday = (date) => {
         const today = new Date();
-        return date.getDate() === today.getDate() &&
-            date.getMonth() === today.getMonth() &&
-            date.getFullYear() === today.getFullYear();
+
+        // Normalizamos ambas fechas a medianoche para evitar problemas con la hora
+        const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        return dateMidnight.getTime() === todayMidnight.getTime();
     };
+
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -450,9 +471,9 @@ function ProgramarClaseA1() {
                         horaFinal: data.horaFinal,
                         idEstudiante: idUsuario
                     };
-                    
+
                     const respuesta = await fetchBody('/estudiantes/programarClase', 'POST', requestData);
-                   
+
                     if (respuesta.exito) {
                         Swal.fire({
                             icon: "success",
@@ -611,7 +632,7 @@ function ProgramarClaseA1() {
                                     <td>{clase.codigo}</td>
                                     <td>Clase {clase.numero}</td>
                                     <td>{clase.descripcion}</td>
-                                    <td>❌</td>
+                                    <td>{clase.asistencia}</td>
                                     <td>{clase.estado}</td>
                                 </tr>
                             ))}

@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 function NavPage() {
   const navigate = useNavigate();
 
-  const [timeLeft, setTimeLeft] = useState(100); // ✅ Solo una vez
+  const [timeLeft, setTimeLeft] = useState(10000); // ✅ Solo una vez
 
   // ⏳ UseEffect para el temporizador
   useEffect(() => {
@@ -47,7 +47,7 @@ function NavPage() {
       respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
     }));
 
-    console.log('Respuestas que se enviarán al backend:', respuestasFinales);
+ 
 
     const dataExamen = {
       examenId,
@@ -128,15 +128,12 @@ function NavPage() {
   const location = useLocation();
   const { examenId } = location.state || {}; // Obteniendo el examenId del estado
 
-  // Puedes utilizar examenId en tu lógica
-  console.log("Examen ID:", examenId);
-
   const [data, setData] = useState([]);
   const [currentElement, setCurrentElement] = useState(0);
   const [answers, setAnswers] = useState({}); // Respuestas seleccionadas por pregunta
   const solicitudRealizada = useRef(false);
 
-  console.log("Antes del useEffect: examenId =", examenId);
+
   useEffect(() => {
     if (!examenId) {
       console.warn("Examen ID no disponible, evitando la ejecución del efecto.");
@@ -147,11 +144,11 @@ function NavPage() {
       return;
     }
     solicitudRealizada.current = true;
-    console.log("Entrando al useEffect con examenId:", examenId);
+   
     const obtenerPreguntas = async () => {
-      console.log("Payload enviado a fetchBody:", { nivel: "A1", examenId });
+     
       try {
-        console.log("Payload enviado a fetchBody:", { nivel: "A1", examenId });
+       
         const respuesta = await fetchBody('/estudiantes/getPreguntasExamen', 'POST', { nivel: "A1", examenId: examenId });
         if (respuesta.exito) {
           const preguntas = respuesta.examen;
@@ -254,7 +251,7 @@ function NavPage() {
         respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
       }));
 
-      console.log('Respuestas que se enviarán al backend:', respuestasFinales);
+   
 
       const dataExamen = {
         examenId,
@@ -266,7 +263,7 @@ function NavPage() {
       const respuesta = await fetchBody('/estudiantes/realizarExamenEscrito', 'POST', dataExamen);
 
       if (respuesta.exito) {
-        console.log(respuesta.examenEscrito);
+      
         const { respuestasCorrectas, totalPreguntas } = respuesta.examenEscrito;
 
         Swal.fire({

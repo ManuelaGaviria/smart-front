@@ -33,7 +33,22 @@ function NotasA1() {
             try {
                 const respuesta = await fetchBody('/estudiantes/listarNotasExamen', 'POST', { idEstudiante: idEstudiante, nivel: "A1" })
                 if (respuesta.exito) {
-                    setNotas(respuesta.lista.notasExamenes)
+                    console.log('respuesta.lista.notasExamenes :>> ', respuesta.lista.notasExamenes);
+
+                    // Agregar el cálculo del promedio a cada examen
+                    const notasConPromedio = respuesta.lista.notasExamenes.map(examen => {
+                        const notaEscrito = parseFloat(examen.notaExamenEscrito) || 0;
+                        const notaOral = parseFloat(examen.notaExamenOral) || 0;
+                        const promedio = ((notaEscrito + notaOral) / 2).toFixed(2); // Redondeamos a 2 decimales
+
+                        return {
+                            ...examen,
+                            promedio: promedio
+                        };
+                    });
+
+                    console.log('Notas con promedio: ', notasConPromedio);
+                    setNotas(notasConPromedio);
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -58,6 +73,14 @@ function NotasA1() {
             }
         }
 
+    }
+
+    async function handleSolicitud(examenId) {
+        //Acá solo se manda una solicitud al administrador para que lo deje presentar el examen otra vez
+        //Primero mira la nota promedio, si la nota promedio es 4 le dice que no puede solicitar intento
+        //Si es menos de 4 le dice que se mando la solicitud y se guarda en la bd
+        //Solicitudes/idEstudiante/nivel/examenId/ -> campos: intentos: 1
+        //Si intentos es mayor a 3, le debe salir una alerta diciendo que debe ir presencial a solicitarla
     }
 
     return (
@@ -86,6 +109,7 @@ function NotasA1() {
                                     <th style={{ width: '200px' }}>Nota examen oral</th>
                                     <th style={{ width: '200px' }}>Nota final</th>
                                     <th style={{ width: '200px' }}>Retroalimentación</th>
+                                    <th style={{ width: '200px' }}>Intento</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,10 +118,13 @@ function NotasA1() {
                                         <td>INGA1</td>
                                         <td>{nota.examen}</td>
                                         <td>{nota.tematica} - {nota.examenId}</td>
-                                        <td>{nota.nota}</td>
-                                        <td>0.00</td>
-                                        <td>x</td>
-                                        <td>x</td>
+                                        <td>{nota.notaExamenEscrito}</td>
+                                        <td>{nota.notaExamenOral}</td>
+                                        <td>{nota.promedio}</td>
+                                        <td>{nota.comentario}</td>
+                                        <td>
+                                            <button className='btn-edit' onClick={() => handleSolicitud(nota.examenId)}>Solicitar</button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
