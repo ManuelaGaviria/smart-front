@@ -44,7 +44,8 @@ function ProgramacionTeacher() {
                 const idProfesor = payload.id;
 
                 const today = new Date();
-                const formattedDate = today.toISOString().split('T')[0];
+                const formattedDate = today.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
+                console.log('formattedDate :>> ', formattedDate);
                 const respuesta = await fetchBody('/profesores/listarProgramacion', 'POST', { fecha: formattedDate, idProfesor });
                 if (respuesta.exito) {
                     setProgramacion(respuesta.lista);

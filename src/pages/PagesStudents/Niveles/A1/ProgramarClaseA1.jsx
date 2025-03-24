@@ -308,7 +308,7 @@ function ProgramarClaseA1() {
                         let horasDisponibles = horas.filter(hora => {
                             // Fecha seleccionada en formato YYYY-MM-DD
                             const seleccionadaFecha = date.toISOString().split('T')[0];
-
+                            console.log('seleccionadaFecha :>> ', seleccionadaFecha);
                             // Filtrar horas agendadas para la fecha seleccionada
                             const esHoraDisponible = !horasAgendadas.some(agendada => {
                                 const agendadaFecha = agendada.fecha;

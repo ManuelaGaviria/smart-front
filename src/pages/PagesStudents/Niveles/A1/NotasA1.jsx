@@ -75,13 +75,103 @@ function NotasA1() {
 
     }
 
-    async function handleSolicitud(examenId) {
-        //Acá solo se manda una solicitud al administrador para que lo deje presentar el examen otra vez
-        //Primero mira la nota promedio, si la nota promedio es 4 le dice que no puede solicitar intento
-        //Si es menos de 4 le dice que se mando la solicitud y se guarda en la bd
-        //Solicitudes/idEstudiante/nivel/examenId/ -> campos: intentos: 1
-        //Si intentos es mayor a 3, le debe salir una alerta diciendo que debe ir presencial a solicitarla
-    }
+        async function handleSolicitud(examenId, nivel, promedio) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "Usuario no autenticado",
+                    customClass: { confirmButton: 'btn-color' },
+                    buttonsStyling: false
+                });
+                return;
+            }
+        
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const idEstudiante = payload.id;
+        
+            // Si la nota es mayor o igual a 4, no puede solicitar otro intento
+            if (parseFloat(promedio) >= 4.0) {
+                Swal.fire({
+                    icon: "info",
+                    title: "No puedes solicitar otro intento",
+                    text: "Tu nota es igual o mayor a 4.0, por lo que no puedes repetir este examen.",
+                    customClass: { confirmButton: 'btn-color' },
+                    buttonsStyling: false
+                });
+                return;
+            }
+        
+            try {
+                // Obtener el estado de la última solicitud desde Firebase
+                const respuesta = await fetchBody('/estudiantes/obtenerIntento', 'POST', { idEstudiante, nivel, examenId });
+                console.log(respuesta);
+        
+                if (respuesta.exito) {
+                    const intentosPrevios = respuesta.intentos;
+                    const estadoSolicitud = respuesta.estado || null;
+        
+                    // Si ya tiene una solicitud pendiente, mostrar alerta
+                    if (estadoSolicitud === "pendiente") {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Solicitud en revisión",
+                            text: "Ya has solicitado un intento adicional. Debes esperar la aprobación del administrador.",
+                            customClass: { confirmButton: 'btn-color' },
+                            buttonsStyling: false
+                        });
+                        return;
+                    }
+        
+                    // Si ya ha intentado 3 veces, debe solicitar presencialmente
+                    if (intentosPrevios >= 3) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Límite de intentos alcanzado",
+                            text: "Has alcanzado el máximo de intentos permitidos. Debes solicitar otro intento presencialmente.",
+                            customClass: { confirmButton: 'btn-color' },
+                            buttonsStyling: false
+                        });
+                        return;
+                    }
+        
+                    // Si tiene menos de 3 intentos y no hay solicitud pendiente, registrar la solicitud
+                    const data = {
+                        idEstudiante: idEstudiante,
+                        nivel: nivel,
+                        examenId: examenId,
+                        intentos: intentosPrevios + 1,
+                        estado: "pendiente",
+                        fechaSolicitud: new Date().toISOString()
+                    };
+                    console.log('nuevaSolicitud :>> ', data);
+        
+                    // Enviar la solicitud a Firebase
+                    const respuestaGuardar = await fetchBody('/estudiantes/solicitarIntento', 'POST', data);
+        
+                    if (respuestaGuardar.exito) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Solicitud enviada",
+                            text: "Tu solicitud ha sido enviada al administrador para su revisión.",
+                            customClass: { confirmButton: 'btn-color' },
+                            buttonsStyling: false
+                        });
+                    } else {
+                        throw new Error(respuestaGuardar.error || "Error al enviar la solicitud.");
+                    }
+                } 
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.message,
+                    customClass: { confirmButton: 'btn-color' },
+                    buttonsStyling: false
+                });
+            }
+        }        
 
     return (
         <motion.div
@@ -123,7 +213,7 @@ function NotasA1() {
                                         <td>{nota.promedio}</td>
                                         <td>{nota.comentario}</td>
                                         <td>
-                                            <button className='btn-edit' onClick={() => handleSolicitud(nota.examenId)}>Solicitar</button>
+                                            <button className='' onClick={() => handleSolicitud(nota.examenId, "A1", nota.promedio)}>Solicitar</button>
                                         </td>
                                     </tr>
                                 ))}
