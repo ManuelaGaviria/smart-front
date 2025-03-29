@@ -28,8 +28,9 @@ function PrincipalAdmin() {
   useEffect(() => {
     const obtenerSolicitudesPendientes = async () => {
       try {
-        const respuesta = await fetchBody('/solicitudes/pendientes', 'GET');
+        const respuesta = await fetchBody('/solicitudes/obtenerSolicitudesPendientes', 'GET');
         if (respuesta.exito) {
+          console.log(respuesta);
           setNotificaciones(respuesta.cantidad || 0);
         }
       } catch (error) {
