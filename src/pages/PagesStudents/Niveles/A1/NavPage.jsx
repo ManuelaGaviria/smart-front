@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 function NavPage() {
   const navigate = useNavigate();
 
-  const [timeLeft, setTimeLeft] = useState(300); // ✅ Solo una vez
+  const [timeLeft, setTimeLeft] = useState(3000); // ✅ Solo una vez
 
   // ⏳ UseEffect para el temporizador
   useEffect(() => {
@@ -47,7 +47,7 @@ function NavPage() {
       respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
     }));
 
- 
+    console.log(respuestasFinales);
 
     const dataExamen = {
       examenId,
@@ -153,6 +153,7 @@ function NavPage() {
         if (respuesta.exito) {
           const preguntas = respuesta.examen;
           console.log("holi");
+          console.log('preguntas :>> ', preguntas);
           console.log(preguntas);
           setData(preguntas); // Guardar las preguntas en el estado
         } else {
@@ -250,9 +251,8 @@ function NavPage() {
         idPregunta: pregunta.idPregunta,
         respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
       }));
-
+      console.log('respuestasFinales :>> ', respuestasFinales);
    
-
       const dataExamen = {
         examenId,
         idEstudiante,

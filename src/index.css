@@ -942,3 +942,29 @@ th{
   text-align: center;
 }
 
+.BtnSuccess {
+  background-color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.BtnSuccess:hover {
+  font-size: 25px;
+  transition: 0.3s;
+}
+
+.BtnDanger {
+  background-color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.BtnDanger:hover {
+  font-size: 25px;
+  transition: 0.3s;
+}
+
+

@@ -78,24 +78,11 @@ function ExamenEscrito() {
       const payload = JSON.parse(atob(token.split('.')[1]));
       const idUsuario = payload.id;
   
-      // Validar si el examen ya fue presentado
-      const yaPresentado = await verificarExamenPresentado(idUsuario, id);
-      console.log("yaPresentado");
-      console.log(yaPresentado);
-      if (yaPresentado) {
-        Swal.fire({
-          icon: "info",
-          title: "Examen ya presentado",
-          text: "Si necesitas solicitar otro intento, accede al portal de notas",
-          customClass: {
-            confirmButton: 'btn-color'
-          },
-          buttonsStyling: false
-        });
-        return;
-      }
+      // 🔍 Verificar si puede presentar según promedio + solicitud
+      const puedePresentar = await verificarExamenPresentado(idUsuario, id);
+      if (!puedePresentar) return; // ya se mostró el mensaje correspondiente desde la función
   
-      // Validar el estado del examen
+      // 🔓 Verificar el estado del examen (por progreso de clases)
       const estadoValido = await verificarEstadoExamen(idUsuario, id);
       if (!estadoValido) {
         Swal.fire({
@@ -110,26 +97,26 @@ function ExamenEscrito() {
         return;
       }
   
-      // Mostrar alerta de confirmación antes de redirigir
-    const resultado = await Swal.fire({
-      title: "¿Estás seguro de presentar el examen?",
-      text: "Una vez entres deberás completarlo.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, presentar",
-      cancelButtonText: "Cancelar",
-      customClass: {
-        confirmButton: 'btn-color',
-        cancelButton: 'btn-color-cancel'
-      },
-      buttonsStyling: false
-    });
-
-    if (resultado.isConfirmed) {
-      // Redirigir al examen
-      navigate('/NavPage', { state: { examenId: id } });
-    }
+      // ✅ Mostrar confirmación
+      const resultado = await Swal.fire({
+        title: "¿Estás seguro de presentar el examen?",
+        text: "Una vez entres deberás completarlo.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, presentar",
+        cancelButtonText: "Cancelar",
+        customClass: {
+          confirmButton: 'btn-color',
+          cancelButton: 'btn-color-cancel'
+        },
+        buttonsStyling: false
+      });
+  
+      if (resultado.isConfirmed) {
+        navigate('/NavPage', { state: { examenId: id } });
+      }
     } catch (error) {
+      console.error("Error en accederExamen:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -139,25 +126,94 @@ function ExamenEscrito() {
         },
         buttonsStyling: false
       });
-      console.error("Error en accederExamen:", error);
     }
-  }
-  
+  }  
+
   // Función para verificar si el examen ya fue presentado
   async function verificarExamenPresentado(idUsuario, idExamen) {
     try {
-      const respuesta = await fetchBody('/estudiantes/verificarPresentado', 'POST', { idEstudiante: idUsuario, examenId: idExamen, nivel: 'A1' });
+      const respuesta = await fetchBody('/estudiantes/verificarPresentado', 'POST', {
+        idEstudiante: idUsuario,
+        examenId: idExamen,
+        nivel: 'A1'
+      });
+
       if (respuesta.exito) {
-        return respuesta.presentado; // true si ya fue presentado
+        // Si puede presentar, devolvemos true
+        if (respuesta.puedePresentar) {
+          return true;
+        }
+
+        // Si no puede, mostramos alerta personalizada según la razón
+        switch (respuesta.razon) {
+          case 'nota-suficiente':
+            Swal.fire({
+              icon: 'info',
+              title: 'Examen ya aprobado',
+              text: 'Ya obtuviste una nota igual o mayor a 4.0. No necesitas volver a presentarlo.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
+
+          case 'pendiente':
+            Swal.fire({
+              icon: 'info',
+              title: 'Solicitud pendiente',
+              text: 'Tu solicitud para repetir el examen está pendiente. Espera la aprobación del administrador.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
+
+          case 'rechazado':
+            Swal.fire({
+              icon: 'warning',
+              title: 'Solicitud rechazada',
+              text: 'Tu solicitud fue rechazada. Debes enviar una nueva solicitud si deseas repetir el examen.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
+
+          case 'no-hay-solicitud':
+            Swal.fire({
+              icon: 'info',
+              title: 'Sin solicitud',
+              text: 'Debes enviar una solicitud para poder volver a presentar el examen.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
+
+          default:
+            Swal.fire({
+              icon: 'error',
+              title: 'Estado desconocido',
+              text: 'No se pudo determinar el estado de tu examen. Contacta con soporte.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
+        }
+
+        return false;
       } else {
         throw new Error(respuesta.error || "Error al verificar si el examen fue presentado.");
       }
     } catch (error) {
       console.error("Error en verificarExamenPresentado:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al verificar el estado del examen.',
+        customClass: { confirmButton: 'btn-color' },
+        buttonsStyling: false
+      });
       return false;
     }
   }
-  
+
   // Función para verificar el estado del examen
   async function verificarEstadoExamen(idUsuario, idExamen) {
     try {
@@ -171,7 +227,7 @@ function ExamenEscrito() {
       console.error("Error en verificarEstadoExamen:", error);
       return false;
     }
-  }  
+  }
 
   return (
     <motion.div

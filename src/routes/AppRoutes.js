@@ -57,6 +57,8 @@ import NivelesCulminados from "../pages/PagesStudents/NivelesCulminados";
 import NavPage from "../pages/PagesStudents/Niveles/A1/NavPage";
 import ProgramacionTeacher from "../pages/PagesTeachers/ProgramacionTeacher";
 import CalificarExamen from "../pages/PagesTeachers/CalificarExamen";
+import Solicitudes from "../pages/Solicitudes";
+import GestionarSolicitudes from "../pages/GestionarSolicitudes";
 
 function AppRoutes() {
     const location = useLocation();
@@ -73,6 +75,8 @@ function AppRoutes() {
                 <Route exact path="/CreateStudent" element={<CreateStudent></CreateStudent>}></Route>
                 <Route exact path="/ActionsTeacher" element={<ActionsTeacher></ActionsTeacher>}></Route>
                 <Route exact path="/ActionsStudent" element={<ActionsStudent></ActionsStudent>}></Route>
+                <Route exact path="/Solicitudes" element={<Solicitudes></Solicitudes>}></Route>
+                <Route exact path="/GestionarSolicitudes" element={<GestionarSolicitudes></GestionarSolicitudes>}></Route>
 
                 <Route exact path="/Administrador" element={<PrincipalSuperAdmin></PrincipalSuperAdmin>}></Route>
                 <Route exact path="/GestionarAdmins" element={<GestionarAdmin></GestionarAdmin>}></Route>

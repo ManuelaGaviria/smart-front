@@ -60,7 +60,7 @@ function PrincipalAdmin() {
       >
         <div className='ButtonsAdminContainer'>
           <div className='headerContainer'>
-            <button className='notificationButton' onClick={() => navigate('/notificaciones')}>
+            <button className='notificationButton' onClick={() => navigate('/Solicitudes')}>
               <IoMdNotificationsOutline size={24} />
               Notificaciones
               {notificaciones > 0 && (
@@ -72,7 +72,7 @@ function PrincipalAdmin() {
           <div>
             <ImageButton icon={FaChalkboardTeacher} texto="Gestionar Profesores" destino="/PrincipalTeacher" />
             <ImageButton icon={PiStudentBold} texto="Gestionar Estudiantes" destino="/PrincipalStudent" />
-            <ImageButton icon={MdOutlineCallMade} texto="Gestionar Solicitudes" destino="/PrincipalSolicitud" />
+            <ImageButton icon={MdOutlineCallMade} texto="Gestionar Solicitudes" destino="/GestionarSolicitudes" />
           </div>
         </div>
       </motion.div>
