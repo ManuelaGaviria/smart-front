@@ -415,7 +415,10 @@ function ProgramarClaseA1() {
                 },
                 buttonsStyling: false
             });
-        } else if (selectedCheckbox === null) {
+            return;
+        }
+
+        if (selectedCheckbox === null) {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -425,84 +428,128 @@ function ProgramarClaseA1() {
                 },
                 buttonsStyling: false
             });
-        } else {
-            const token = localStorage.getItem("token");
+            return;
+        }
 
-            if (token) {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                const idUsuario = payload.id;
+        const token = localStorage.getItem("token");
+        if (!token) return;
 
-                // Validar que la clase seleccionada sea la próxima en la secuencia
-                const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', { id: idUsuario, nivel: 'A1' });
-                if (respuestaClasesProgramadas.exito) {
-                    const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
-                    const siguienteClase = clasesProgramadas.length + 1; // La siguiente clase debería ser la próxima en la secuencia
-                    const claseSiguienteId = `Clase${siguienteClase}`;
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const idUsuario = payload.id;
 
-                    if (claseSeleccionada !== claseSiguienteId) {
+        // Validar secuencia de clase
+        const respuestaClasesProgramadas = await fetchBody('/estudiantes/actualizarClasesDisponibles', 'POST', {
+            id: idUsuario,
+            nivel: 'A1'
+        });
+
+        if (!respuestaClasesProgramadas.exito) return;
+
+        const clasesProgramadas = respuestaClasesProgramadas.clasesProgramadas;
+        const siguienteClase = clasesProgramadas.length + 1;
+        const claseSiguienteId = `Clase${siguienteClase}`;
+
+        if (claseSeleccionada !== claseSiguienteId) {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        // ✅ Verificar si la clase anterior desbloquea un examen
+        if (siguienteClase > 1) {
+            console.log('siguienteClase :>> ', siguienteClase);
+            const claseAnterior = `Clase${siguienteClase - 1}`;
+            console.log('claseAnterior :>> ', claseAnterior);
+            const examenes = await fetchBody('/niveles/obtenerExamenData', 'POST', { nivel: 'A1' });
+            if (examenes.exito) {
+                console.log("obteniendo examenes");
+                console.log('examenes.lista :>> ', examenes.lista);
+                const examenesDesbloqueados = examenes.lista.filter(ex => ex.clase === claseAnterior);
+                console.log('examenesDesbloqueados :>> ', examenesDesbloqueados);
+                for (const examen of examenesDesbloqueados) {
+                    const examenId = examen.id;
+                    console.log('examenId :>> ', examenId);
+                    // Obtener intentos del examen
+                    const respuestaExamen = await fetchBody('/estudiantes/obtenerIntentosExamen', 'POST', {
+                        idEstudiante: idUsuario,
+                        nivel: 'A1',
+                        claseAProgramar: claseSeleccionada
+                    });
+
+                    console.log("respuesta examen desde backend:", respuestaExamen);
+
+                    if (!respuestaExamen.exito) {
                         Swal.fire({
                             icon: "error",
-                            title: "Oops...",
-                            text: `Debes seleccionar la clase en orden. Por favor selecciona ${claseSiguienteId}.`,
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
+                            title: "Error",
+                            text: respuestaExamen.error || "No se pudo validar la clase y el examen.",
+                            customClass: { confirmButton: 'btn-color' },
                             buttonsStyling: false
                         });
                         return;
                     }
 
+                    const { desbloqueaExamen, examenGanado, examenId2 } = respuestaExamen;
 
-
-                    const data = {
-                        clase: claseSeleccionada,
-                        fecha: selectedDate, // Aquí deberías tener la fecha original
-                        horaInicial: selectedTime.horaInicial,
-                        horaFinal: selectedTime.horaFinal
-                    };
-
-                    const formattedDate = formatDate(data.fecha);
-
-                    const requestData = {
-                        nivel: 'A1',
-                        clase: data.clase,
-                        fecha: formattedDate,
-                        horaInicial: data.horaInicial,
-                        horaFinal: data.horaFinal,
-                        idEstudiante: idUsuario
-                    };
-
-                    const respuesta = await fetchBody('/estudiantes/programarClase', 'POST', requestData);
-
-                    if (respuesta.exito) {
+                    if (desbloqueaExamen && !examenGanado) {
                         Swal.fire({
-                            icon: "success",
-                            title: "Clase programada con exito!",
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
+                            icon: "warning",
+                            title: "Examen pendiente",
+                            text: `Antes de agendar esta clase debes presentar y aprobar el examen: ${examenId2}`,
+                            customClass: { confirmButton: 'btn-color' },
                             buttonsStyling: false
                         });
-                        window.location.reload();
-                        listClases();
-                        listClasesDisponibles();
-                        handleCloseModal();
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: 'Error al programar una clase',
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
-                            buttonsStyling: false
-                        });
+                        return;
                     }
                 }
             }
         }
-    }
 
+        // ✅ Si pasa todas las validaciones, se agenda la clase
+        const formattedDate = formatDate(selectedDate);
+
+        const requestData = {
+            nivel: 'A1',
+            clase: claseSeleccionada,
+            fecha: formattedDate,
+            horaInicial: selectedTime.horaInicial,
+            horaFinal: selectedTime.horaFinal,
+            idEstudiante: idUsuario
+        };
+
+        const respuesta = await fetchBody('/estudiantes/programarClase', 'POST', requestData);
+
+        if (respuesta.exito) {
+            Swal.fire({
+                icon: "success",
+                title: "Clase programada con éxito",
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
+            listClases();
+            listClasesDisponibles();
+            handleCloseModal();
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: 'Error al programar la clase',
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
+        }
+    }
 
     const handleCheckboxChange = (index, horaInicial, horaFinal, checked) => {
         if (checked) {
