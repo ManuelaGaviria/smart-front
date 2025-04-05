@@ -79,8 +79,7 @@ function ExamenEscrito() {
       const idUsuario = payload.id;
 
       // 🔍 Verificar si puede presentar según promedio + solicitud
-      const puedePresentar = await verificarExamenPresentado(idUsuario, id);
-      if (!puedePresentar) return; // ya se mostró el mensaje correspondiente desde la función
+      await verificarExamenPresentado(idUsuario, id);
 
       // 🔓 Verificar el estado del examen (por progreso de clases)
       const estadoValido = await verificarEstadoExamen(idUsuario, id);
@@ -180,7 +179,7 @@ function ExamenEscrito() {
             Swal.fire({
               icon: 'warning',
               title: 'Ya presentaste',
-              text: 'Debes presentar el examen oral o hacer una salicitud de intento.',
+              text: 'Debes presentar el examen oral o hacer una solicitud de intento.',
               customClass: { confirmButton: 'btn-color' },
               buttonsStyling: false
             });
@@ -197,13 +196,6 @@ function ExamenEscrito() {
             break;
 
           default:
-            Swal.fire({
-              icon: 'error',
-              title: 'Estado desconocido',
-              text: 'No se pudo determinar el estado de tu examen. Contacta con soporte.',
-              customClass: { confirmButton: 'btn-color' },
-              buttonsStyling: false
-            });
             break;
         }
 
@@ -228,6 +220,7 @@ function ExamenEscrito() {
   async function verificarEstadoExamen(idUsuario, idExamen) {
     try {
       const respuesta = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: idExamen, nivel: 'A1' });
+      console.log(respuesta);
       if (respuesta.exito) {
         return respuesta.estado === "tomado"; // Validar si el estado permite tomar el examen
       } else {
