@@ -61,7 +61,7 @@ function ExamenEscrito() {
   async function accederExamen(id) {
     try {
       const token = localStorage.getItem("token");
-  
+
       if (!token) {
         Swal.fire({
           icon: "error",
@@ -74,14 +74,14 @@ function ExamenEscrito() {
         });
         return;
       }
-  
+
       const payload = JSON.parse(atob(token.split('.')[1]));
       const idUsuario = payload.id;
-  
+
       // 🔍 Verificar si puede presentar según promedio + solicitud
       const puedePresentar = await verificarExamenPresentado(idUsuario, id);
       if (!puedePresentar) return; // ya se mostró el mensaje correspondiente desde la función
-  
+
       // 🔓 Verificar el estado del examen (por progreso de clases)
       const estadoValido = await verificarEstadoExamen(idUsuario, id);
       if (!estadoValido) {
@@ -96,7 +96,7 @@ function ExamenEscrito() {
         });
         return;
       }
-  
+
       // ✅ Mostrar confirmación
       const resultado = await Swal.fire({
         title: "¿Estás seguro de presentar el examen?",
@@ -111,7 +111,7 @@ function ExamenEscrito() {
         },
         buttonsStyling: false
       });
-  
+
       if (resultado.isConfirmed) {
         navigate('/NavPage', { state: { examenId: id } });
       }
@@ -127,7 +127,7 @@ function ExamenEscrito() {
         buttonsStyling: false
       });
     }
-  }  
+  }
 
   // Función para verificar si el examen ya fue presentado
   async function verificarExamenPresentado(idUsuario, idExamen) {
@@ -171,6 +171,16 @@ function ExamenEscrito() {
               icon: 'warning',
               title: 'Solicitud rechazada',
               text: 'Tu solicitud fue rechazada. Debes enviar una nueva solicitud si deseas repetir el examen.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
+
+          case 'ya-tiene-intento':
+            Swal.fire({
+              icon: 'warning',
+              title: 'Ya presentaste',
+              text: 'Debes presentar el examen oral o hacer una salicitud de intento.',
               customClass: { confirmButton: 'btn-color' },
               buttonsStyling: false
             });

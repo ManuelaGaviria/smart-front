@@ -47,14 +47,20 @@ function ProgramarExamenA1() {
     };
 
     const handleCloseModal = () => {
+        listExamenesDisponibles();
+        listExamenesProgramados();
         setAsignModalOpen(false);
     };
 
     const openCancelModal = () => {
+        listExamenesDisponibles();
+        listExamenesProgramados();
         setCancelModalOpen(true);
     };
 
     const handleCloseCancelModal = () => {
+        listExamenesDisponibles();
+        listExamenesProgramados();
         setCancelModalOpen(false);
     };
 
@@ -92,6 +98,8 @@ function ProgramarExamenA1() {
             }
         }
         obtenerExamenes();
+        listExamenesProgramados();
+        listExamenesDisponibles();
     }, []);
 
     async function listExamenes() {
@@ -170,7 +178,6 @@ function ProgramarExamenA1() {
                         const fechaHoraActual = new Date();
                         return fechaHoraExamen > fechaHoraActual;
                     });
-
                     setExamenProgramado(examenesValidos);
                 } else {
                     Swal.fire({
@@ -269,7 +276,7 @@ function ProgramarExamenA1() {
     }
 
     async function listHoras(date) {
-        
+
         try {
             // Obtener las horas disponibles
             const respuesta = await fetchGet('/estudiantes/obtenerHora');
@@ -282,7 +289,7 @@ function ProgramarExamenA1() {
                     horaFinal: horasFinales[index]
                 }));
 
-                
+
 
                 // Obtener ID del estudiante desde el token
                 const token = localStorage.getItem("token");
@@ -295,7 +302,7 @@ function ProgramarExamenA1() {
 
                     if (respuestaHorasAgendadas.exito) {
                         const horasAgendadas = respuestaHorasAgendadas.horasAgendadas;
-                        
+
 
                         // Crear una nueva lista de horas disponibles filtrando horas agendadas
                         let horasDisponibles = horas.filter(hora => {
@@ -418,14 +425,14 @@ function ProgramarExamenA1() {
                 const payload = JSON.parse(atob(token.split('.')[1]));
                 const idUsuario = payload.id;
                 // Validar que el examen seleccionado si lo pueda agendar
-                const respuestaExamenesProgramados = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: examenSeleccionado,  nivel: 'A1' });
+                const respuestaExamenesProgramados = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: examenSeleccionado, nivel: 'A1' });
                 if (respuestaExamenesProgramados.exito) {
-                    
+
                     const estado = respuestaExamenesProgramados.estado;
-                    
-                    
+
+
                     if (estado !== "tomado") {
-                        
+
                         Swal.fire({
                             icon: "error",
                             title: "Oops...",
@@ -467,9 +474,9 @@ function ProgramarExamenA1() {
                             },
                             buttonsStyling: false
                         });
-                        window.location.reload();
                         listExamenes();
                         listExamenesDisponibles();
+                        listExamenesProgramados();
                         handleCloseModal();
                     } else {
                         Swal.fire({
@@ -488,11 +495,11 @@ function ProgramarExamenA1() {
     }
 
     const handleCheckboxChange = (index, horaInicial, horaFinal, checked) => {
-        
+
         if (checked) {
             setSelectedCheckbox(index);
             setSelectedTime({ horaInicial, horaFinal });
-           
+
         } else {
             // Aquí, al desmarcar, se limpia la selección solo si el índice coincide
             if (selectedCheckbox === index) {
@@ -556,6 +563,8 @@ function ProgramarExamenA1() {
                             },
                             buttonsStyling: false
                         });
+                        listExamenes();
+                        listExamenesDisponibles();
                         listExamenesProgramados();
                     } else {
                         Swal.fire({
@@ -683,7 +692,7 @@ function ProgramarExamenA1() {
                 </>
             )}
 
-{cancelModalOpen && (
+            {cancelModalOpen && (
                 <>
                     <div
                         className="BackgroundOverlay"
@@ -720,7 +729,7 @@ function ProgramarExamenA1() {
                                                         <td>{examenProgramado.horaInicial}</td>
                                                         <td>{examenProgramado.horaFinal}</td>
                                                         <td>
-                                                            <button className='btn-cancel' onClick={() => handleCancelExam(examenProgramado.id)}>Cancelar</button>
+                                                            <button className='btn-color-cancel' onClick={() => handleCancelExam(examenProgramado.id)}>Cancelar</button>
                                                         </td>
                                                     </tr>
                                                 ))}

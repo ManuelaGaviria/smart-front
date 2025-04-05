@@ -42,18 +42,26 @@ function ProgramarClaseA1() {
     const [selectedTime, setSelectedTime] = useState({ horaInicial: "", horaFinal: "" });
 
     const openAsignModal = () => {
+        listClasesProgramadas();
+        listClasesDisponibles();
         setAsignModalOpen(true);
     };
 
     const handleCloseModal = () => {
+        listClasesProgramadas();
+        listClasesDisponibles();
         setAsignModalOpen(false);
     };
 
     const openCancelModal = () => {
+        listClasesProgramadas();
+        listClasesDisponibles();
         setCancelModalOpen(true);
     };
 
     const handleCloseCancelModal = () => {
+        listClasesProgramadas();
+        listClasesDisponibles();
         setCancelModalOpen(false);
     };
 
@@ -564,7 +572,10 @@ function ProgramarClaseA1() {
         }
     };
 
-    async function handleCancelClass(id) {
+    async function handleCancelClass(claseProgramada) {
+        const id = claseProgramada.id;
+        const fecha = claseProgramada.fecha;
+        const hora = claseProgramada.horaInicial;
         try {
             // Obtener la lista actual de clases programadas
             const clases = [...clasesProgramadas];
@@ -606,7 +617,13 @@ function ProgramarClaseA1() {
                     const idEst = payload.id;
 
                     // Realizar la solicitud para cancelar la clase
-                    const respuesta = await fetchBody('/estudiantes/cancelarClase', 'POST', { idEstudiante: idEst, idClase: id, nivel: 'A1' });
+                    const respuesta = await fetchBody('/estudiantes/cancelarClase', 'POST', { 
+                        idEstudiante: idEst, 
+                        idClase: id, 
+                        nivel: 'A1',
+                        fecha: fecha,
+                        hora: hora
+                    });
 
                     if (respuesta.exito) {
                         Swal.fire({
@@ -780,7 +797,7 @@ function ProgramarClaseA1() {
                                                         <td>{claseProgramada.horaInicial}</td>
                                                         <td>{claseProgramada.horaFinal}</td>
                                                         <td>
-                                                            <button className='btn-cancel' onClick={() => handleCancelClass(claseProgramada.id)}>Cancelar</button>
+                                                            <button className='btn-color-cancel' onClick={() => handleCancelClass(claseProgramada)}>Cancelar</button>
                                                         </td>
                                                     </tr>
                                                 ))}
