@@ -140,7 +140,7 @@ function ProgramacionTeacher() {
                 });
                 return;
             }
-    
+
             const asistenciasArray = Object.entries(asistencias).map(([estudianteId, asistencia]) => ({
                 estudianteId,
                 asistencia, // true o false
@@ -148,9 +148,9 @@ function ProgramacionTeacher() {
                 nivel: nivelSeleccionado, // Usamos el nivel almacenado en el estado
             }));
             console.log(asistenciasArray);
-    
+
             const respuesta = await fetchBody('/profesores/guardarAsistencias', 'POST', { asistencias: asistenciasArray });
-    
+
             if (respuesta.exito) {
                 Swal.fire({
                     icon: "success",
@@ -179,7 +179,7 @@ function ProgramacionTeacher() {
             });
         }
     };
-    
+
     return (
         <motion.div
             className='ContainerFull'
@@ -202,24 +202,31 @@ function ProgramacionTeacher() {
                             </tr>
                         </thead>
                         <tbody>
-                            {programaciones.map((programacion) => (
-                                <tr key={programacion.id}>
-                                    <td>{programacion.fecha}</td>
-                                    <td>{programacion.hora}</td>
-                                    <td>{programacion.nivel}</td>
-                                    <td>
-                                        <button
-                                            className="btn-ver"
-                                            onClick={() => handleVerEstudiantes(programacion)}
-                                            disabled={loadingEstudiantes}
-                                        >
-                                            {loadingEstudiantes ? 'Cargando...' : 'Ver'}
-                                        </button>
-
+                            {programaciones.length === 0 ? (
+                                <tr>
+                                    <td colSpan="5">
+                                        <p>No hay estudiantes programados.</p>
                                     </td>
-                                    <td>{programacion.tipo}</td>
                                 </tr>
-                            ))}
+                            ) : (
+                                programaciones.map((programacion) => (
+                                    <tr key={programacion.id}>
+                                        <td>{programacion.fecha}</td>
+                                        <td>{programacion.hora}</td>
+                                        <td>{programacion.nivel}</td>
+                                        <td>
+                                            <button
+                                                className="btn-ver"
+                                                onClick={() => handleVerEstudiantes(programacion)}
+                                                disabled={loadingEstudiantes}
+                                            >
+                                                {loadingEstudiantes ? 'Cargando...' : 'Ver'}
+                                            </button>
+                                        </td>
+                                        <td>{programacion.tipo}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -245,19 +252,26 @@ function ProgramacionTeacher() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {estudiantesSeleccionados.map(({ estudianteId, nombreCompleto, idEvento }, index) => (
-                                        <tr key={index}>
-                                            <td>{nombreCompleto}</td>
-                                            <td>{idEvento}</td>
-                                            <td>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={asistencias[estudianteId]} // Usar estudianteId como clave
-                                                    onChange={() => toggleAsistencia(estudianteId)}
-                                                />
+                                    {estudiantesSeleccionados.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="5">
+                                                <p>No hay estudiantes programados.</p>
                                             </td>
                                         </tr>
-                                    ))}
+                                    ) : (
+                                        estudiantesSeleccionados.map(({ estudianteId, nombreCompleto, idEvento }, index) => (
+                                            <tr key={index}>
+                                                <td>{nombreCompleto}</td>
+                                                <td>{idEvento}</td>
+                                                <td>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={asistencias[estudianteId]} // Usar estudianteId como clave
+                                                        onChange={() => toggleAsistencia(estudianteId)}
+                                                    />
+                                                </td>
+                                            </tr>
+                                        )))}
                                 </tbody>
                             </table>
                         </div>

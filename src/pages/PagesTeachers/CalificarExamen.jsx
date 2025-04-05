@@ -32,6 +32,7 @@ function CalificarExamen() {
   const [intentoSeleccionado, setIntentoSeleccionado] = useState(null);
   const [nota, setNota] = useState("");
   const [comentario, setComentario] = useState("");
+  const [botones, setBotones] = useState(false);
 
   const changeNiveles = (nivel) => {
     console.log('nivel :>> ', nivel);
@@ -87,6 +88,7 @@ function CalificarExamen() {
         title: 'Campos incompletos',
         text: 'Debe completar todos los campos antes de continuar.',
       });
+      setBotones(false);
       return;
     }
 
@@ -96,8 +98,10 @@ function CalificarExamen() {
         console.log(respuesta);
         console.log('respuesta.examenEncontrado :>> ', respuesta.examenEncontrado);
         setResultados(respuesta.examenEncontrado);
+        setBotones(true);
       } else {
         setResultados([]);
+        setBotones(false);
         Swal.fire({
           icon: 'info',
           title: 'No hay datos',
@@ -110,6 +114,7 @@ function CalificarExamen() {
         title: 'Error',
         text: 'Error al procesar la solicitud.',
       });
+      setBotones(false);
     }
   };
 
@@ -178,6 +183,42 @@ function CalificarExamen() {
     }
   };
 
+  const downloadExamen = async (id, nivel) => {
+    console.log('id :>> ', id);
+    console.log('nivel :>> ', nivel);
+      const data = {
+        id: id,
+        nivel: nivel
+      }
+      try {
+        const respuesta = await fetchBody('/niveles/obtenerExamenOral', 'POST', data);
+        if (respuesta.exito) {
+          const url = respuesta.archivoUrl;
+          window.open(url, '_blank');
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: respuesta.error,
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: 'Error al procesar la solicitud para descargar el examen oral',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+        });
+      }
+    }
+
   return (
     <motion.div
       className='ContainerFull'
@@ -224,14 +265,24 @@ function CalificarExamen() {
               </tr>
             </thead>
             <tbody>
-              {resultados && (
+            {!botones ? (
+                  <tr>
+                      <td colSpan="5">
+                          <p>Selecciona datos para filtrar</p>
+                      </td>
+                  </tr>
+              ) : (
+              resultados && (
                 <tr>
                   <td>{resultados.examen}</td>
                   <td><Button clase="Button" eventoClick={() => handleVerExamenEscrito(resultados.examenEscrito)}>Ver</Button></td>
-                  <td><Button clase="Button" eventoClick={() => { setModalData({ tipo: 'calificar' }); setModalVisible(true); }}>Calificar</Button></td>
+                  <td>
+                    <Button clase="Button" eventoClick={() => { setModalData({ tipo: 'calificar' }); setModalVisible(true); }}>Calificar</Button>
+                    <Button clase="Button" eventoClick={() => {downloadExamen(examenSeleccionado, niveles)}}>Descargar</Button>
+                  </td>
                   <td><Button clase="Button" eventoClick={() => { setModalData({ tipo: 'comentarios' }); setModalVisible(true); }}>Comentarios</Button></td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
         </div>
