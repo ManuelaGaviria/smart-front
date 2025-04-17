@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState, useContext } from 'react';
 import { fetchBody } from "../../../../utils/fetch";
 import Swal from 'sweetalert2';
+import { FaEye } from "react-icons/fa";
 
 function NotasA1() {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ function NotasA1() {
             const payload = JSON.parse(atob(token.split('.')[1]));
             const idEstudiante = payload.id;
             try {
-                
+
                 const respuesta = await fetchBody('/estudiantes/listarNotasExamen', 'POST', { idEstudiante: idEstudiante, nivel: "A1" })
                 if (respuesta.exito) {
                     console.log('respuesta.lista.notasExamenes :>> ', respuesta.lista.notasExamenes);
@@ -183,6 +184,116 @@ function NotasA1() {
         }
     }
 
+    async function handleVerSolicitud(examenId, nivel) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Usuario no autenticado",
+                customClass: { confirmButton: 'btn-color' },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const idEstudiante = payload.id;
+
+        const data = {
+            idEstudiante: idEstudiante,
+            nivel: nivel,
+            examenId: examenId
+        };
+
+        const respuesta = await fetchBody('/estudiantes/verSolicitud', 'POST', data);
+
+        if (respuesta.exito) {
+            switch (respuesta.estado) {
+                case 'pendiente':
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Solicitud pendiente",
+                        text: "Tu solicitud ha sido enviada al administrador para su revisión.",
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                case 'rechazado':
+                    Swal.fire({
+                        icon: "error",
+                        title: "Solicitud rechazada",
+                        text: "Tu solicitud ha sido rechazada, solicita un nuevo intento.",
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                case 'aprobado':
+                    Swal.fire({
+                        icon: "success",
+                        title: "Solicitud aprobada",
+                        text: "Tu solicitud ha sido aprobada, puedes presentar el examen " + examenId + " nuevamente",
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                  case 'gano':
+                    Swal.fire({
+                        icon: "success",
+                        title: "Solicitud aprobada",
+                        text: "Ya realizaste el intento y lo ganaste!",
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                  case 'perdio':
+                    Swal.fire({
+                        icon: "error",
+                        title: "Solicitud aprobada",
+                        text: "Ya realizaste el intento y lo perdiste. Solicita un nuevo intento",
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                  case 'pendiente nota':
+                    Swal.fire({
+                        icon: "success",
+                        title: "Solicitud aprobada",
+                        text: "Tu solicitud fue aprobada, estás realizando otro intento",
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                  case 'sin solicitud':
+                    Swal.fire({
+                        icon: "error",
+                        title: "Sin solicitud",
+                        text: "No tienes solicitudes relacionadas al examen " + examenId,
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+                  break;
+                default:
+                    Swal.fire({
+                        icon: "error",
+                        title: "Solicitud Inválida",
+                        text: "No tienes solicitudes relacionadas al examen " + examenId,
+                        customClass: { confirmButton: 'btn-color' },
+                        buttonsStyling: false
+                    });
+            }
+            
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "No tienes una solicitud en proceso",
+                customClass: { confirmButton: 'btn-color' },
+                buttonsStyling: false
+            });
+        }
+    }
+
     return (
         <motion.div
             className='ContainerFull'
@@ -230,6 +341,14 @@ function NotasA1() {
                                                 }
                                             >
                                                 Solicitar
+                                            </button>
+                                            <button
+                                                className='btn-eye'
+                                                onClick={() =>
+                                                    handleVerSolicitud(nota.examenId, "A1")
+                                                }
+                                            >
+                                                <FaEye />
                                             </button>
 
                                         </td>

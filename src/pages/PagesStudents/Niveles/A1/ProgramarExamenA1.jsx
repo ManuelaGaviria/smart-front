@@ -23,7 +23,7 @@ function ProgramarExamenA1() {
             } else {
                 listExamenes();
                 listExamenesProgramados();
-                listExamenesDisponibles();
+                //listExamenesDisponibles();
                 listHoras(new Date());
             }
         }
@@ -47,19 +47,19 @@ function ProgramarExamenA1() {
     };
 
     const handleCloseModal = () => {
-        listExamenesDisponibles();
+        //listExamenesDisponibles();
         listExamenesProgramados();
         setAsignModalOpen(false);
     };
 
     const openCancelModal = () => {
-        listExamenesDisponibles();
+        //listExamenesDisponibles();
         listExamenesProgramados();
         setCancelModalOpen(true);
     };
 
     const handleCloseCancelModal = () => {
-        listExamenesDisponibles();
+        //listExamenesDisponibles();
         listExamenesProgramados();
         setCancelModalOpen(false);
     };
@@ -73,6 +73,7 @@ function ProgramarExamenA1() {
                         nombre: examen.id,
                         id: examen.id
                     }));
+                    console.log('examenesFormateados :>> ', examenesFormateados);
                     setExamenSelect(examenesFormateados);
                 } else {
                     Swal.fire({
@@ -99,7 +100,7 @@ function ProgramarExamenA1() {
         }
         obtenerExamenes();
         listExamenesProgramados();
-        listExamenesDisponibles();
+        //listExamenesDisponibles();
     }, []);
 
     async function listExamenes() {
@@ -483,7 +484,7 @@ function ProgramarExamenA1() {
                 buttonsStyling: false
             });
             listExamenes();
-            listExamenesDisponibles();
+           // listExamenesDisponibles();
             listExamenesProgramados();
             handleCloseModal();
         } else {
@@ -579,7 +580,7 @@ function ProgramarExamenA1() {
                             buttonsStyling: false
                         });
                         listExamenes();
-                        listExamenesDisponibles();
+                        //listExamenesDisponibles();
                         listExamenesProgramados();
                         handleCloseModal();
                     } else {

@@ -545,6 +545,22 @@ th{
   width: 150px;
 }
 
+.btn-eye{
+  cursor: pointer;
+  background-color: #72b9a9;
+  color: white;
+  padding: 5px;
+  border-radius: 50px;
+  border-color: #72b9a9;
+  margin-left: 3px;
+  width: 50px;
+  transition: 0.3s;
+}
+
+.btn-eye:hover{
+  width: 60px;
+}
+
 .btn-color-cancel{
   cursor: pointer;
   background-color: #c11612;
