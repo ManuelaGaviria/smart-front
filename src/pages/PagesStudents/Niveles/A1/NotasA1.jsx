@@ -31,6 +31,7 @@ function NotasA1() {
             const payload = JSON.parse(atob(token.split('.')[1]));
             const idEstudiante = payload.id;
             try {
+                
                 const respuesta = await fetchBody('/estudiantes/listarNotasExamen', 'POST', { idEstudiante: idEstudiante, nivel: "A1" })
                 if (respuesta.exito) {
                     console.log('respuesta.lista.notasExamenes :>> ', respuesta.lista.notasExamenes);

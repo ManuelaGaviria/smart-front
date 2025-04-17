@@ -65,7 +65,9 @@ function CalificarExamen() {
           icon: "warning",
           title: "No hay exámenes disponibles",
           text: "No se encontraron exámenes para este nivel.",
-          customClass: { confirmButton: 'btn-color' },
+          customClass: {
+            confirmButton: 'btn-color'
+          },
           buttonsStyling: false
         });
       }
@@ -75,7 +77,9 @@ function CalificarExamen() {
         icon: "error",
         title: "Error",
         text: 'Error al procesar la solicitud para listar los exámenes',
-        customClass: { confirmButton: 'btn-color' },
+        customClass: {
+          confirmButton: 'btn-color'
+        },
         buttonsStyling: false
       });
     }
@@ -87,6 +91,10 @@ function CalificarExamen() {
         icon: 'warning',
         title: 'Campos incompletos',
         text: 'Debe completar todos los campos antes de continuar.',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
       });
       setBotones(false);
       return;
@@ -106,6 +114,10 @@ function CalificarExamen() {
           icon: 'info',
           title: 'No hay datos',
           text: 'No se encontraron registros para los criterios seleccionados.',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
         });
       }
     } catch (error) {
@@ -113,6 +125,10 @@ function CalificarExamen() {
         icon: 'error',
         title: 'Error',
         text: 'Error al procesar la solicitud.',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
       });
       setBotones(false);
     }
@@ -149,37 +165,101 @@ function CalificarExamen() {
 
   const handleGuardarCalificacion = async () => {
     if (!nota) {
-      Swal.fire({ icon: 'warning', title: 'Campo vacío', text: 'Debe ingresar una nota antes de guardar.' });
+      Swal.fire({ 
+        icon: 'warning', 
+        title: 'Campo vacío', 
+        text: 'Debe ingresar una nota antes de guardar.',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false  
+      });
       return;
     }
     try {
       const respuesta = await fetchBody('/profesores/calificarExamen', 'POST', { documento, nivel:niveles, examen: examenSeleccionado, nota });
       if (respuesta.exito) {
-        Swal.fire({ icon: 'success', title: 'Guardado', text: 'Nota guardada exitosamente.' });
+        Swal.fire({ 
+          icon: 'success', 
+          title: 'Guardado', 
+          text: 'Nota guardada exitosamente.',
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false 
+        });
         setModalVisible(false);
       } else {
-        Swal.fire({ icon: 'error', title: 'Error', text: respuesta.error });
+        Swal.fire({ 
+          icon: 'error', 
+          title: 'Error', 
+          text: respuesta.error,
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false
+         });
       }
     } catch (error) {
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Error al procesar la solicitud.' });
+      Swal.fire({ 
+        icon: 'error', 
+        title: 'Error', 
+        text: 'Error al procesar la solicitud.',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+       });
     }
   };
 
   const handleGuardarComentario = async () => {
     if (!comentario) {
-      Swal.fire({ icon: 'warning', title: 'Campo vacío', text: 'Debe ingresar un comentario antes de guardar.' });
+      Swal.fire({ 
+        icon: 'warning', 
+        title: 'Campo vacío', 
+        text: 'Debe ingresar un comentario antes de guardar.',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+       });
       return;
     }
     try {
       const respuesta = await fetchBody('/profesores/guardarComentario', 'POST', { documento, nivel:niveles, examen: examenSeleccionado, comentario });
       if (respuesta.exito) {
-        Swal.fire({ icon: 'success', title: 'Guardado', text: 'Comentario guardado exitosamente.' });
+        Swal.fire({ 
+          icon: 'success', 
+          title: 'Guardado', 
+          text: 'Comentario guardado exitosamente.', 
+          customClass: {
+          confirmButton: 'btn-color'
+          },
+          buttonsStyling: false 
+        });
         setModalVisible(false);
       } else {
-        Swal.fire({ icon: 'error', title: 'Error', text: respuesta.error });
+        Swal.fire({ 
+          icon: 'error', 
+          title: 'Error', 
+          text: respuesta.error,
+          customClass: {
+            confirmButton: 'btn-color'
+          },
+          buttonsStyling: false 
+        });
       }
     } catch (error) {
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Error al procesar la solicitud.' });
+      Swal.fire({ 
+        icon: 'error', 
+        title: 'Error', 
+        text: 'Error al procesar la solicitud.',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false 
+      });
     }
   };
 

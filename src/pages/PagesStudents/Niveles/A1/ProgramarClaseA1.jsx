@@ -545,6 +545,7 @@ function ProgramarClaseA1() {
             });
             listClases();
             listClasesDisponibles();
+            listClasesProgramadas();
             handleCloseModal();
         } else {
             Swal.fire({
@@ -617,9 +618,9 @@ function ProgramarClaseA1() {
                     const idEst = payload.id;
 
                     // Realizar la solicitud para cancelar la clase
-                    const respuesta = await fetchBody('/estudiantes/cancelarClase', 'POST', { 
-                        idEstudiante: idEst, 
-                        idClase: id, 
+                    const respuesta = await fetchBody('/estudiantes/cancelarClase', 'POST', {
+                        idEstudiante: idEst,
+                        idClase: id,
                         nivel: 'A1',
                         fecha: fecha,
                         hora: hora
@@ -635,7 +636,9 @@ function ProgramarClaseA1() {
                             },
                             buttonsStyling: false
                         });
+                        listClases();
                         listClasesProgramadas();
+                        listClasesDisponibles();
                     } else {
                         Swal.fire({
                             icon: "error",

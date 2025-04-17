@@ -112,21 +112,22 @@ function ProgramarExamenA1() {
 
                 // Obtener la lista de examenes disponibles
                 const respuestaExamenes = await fetchBody('/niveles/listarExamen', 'POST', { nivel: 'A1' });
-
+                console.log('respuestaExamenes :>> ', respuestaExamenes);
                 // Obtener el estado de los examenes programados
                 const respuestaEstado = await fetchBody('/estudiantes/actualizarEstadoExamen', 'POST', { idEstudiante: idEst, nivel: 'A1' });
-
+                console.log('respuestaEstado :>> ', respuestaEstado);
                 if (respuestaExamenes.exito && respuestaEstado.exito) {
                     const examenesDisponibles = respuestaExamenes.lista;
                     const examenesProgramados = respuestaEstado.estadoExamenes;
-
+                    console.log('examenesProgramados :>> ', examenesProgramados);
                     // Combinar ambas listas
                     const examenesCombinados = examenesDisponibles.map(examen => {
-                        const examenProgramado = examenesProgramados.find(c => c.id === examen.id);
+                        const examenProgramado = examenesProgramados.find(ep => ep.examenId === examen.id);
+                        console.log('examenProgramado :>> ', examenProgramado);
                         return {
                             ...examen,
-                            estado: examenProgramado ? examenProgramado.data.estado : 'pendiente',
-                            nota: examenProgramado ? examenProgramado.data.nota : '0.0'
+                            estado: examenProgramado ? examenProgramado.estado : 'pendiente',
+                            nota: examenProgramado ? examenProgramado.nota : '0.0'
                         };
                     });
 
@@ -397,7 +398,6 @@ function ProgramarExamenA1() {
     };
 
     async function programarExamen() {
-        console.log(examenSeleccionado);
         if (examenSeleccionado === "") {
             Swal.fire({
                 icon: "error",
@@ -408,7 +408,10 @@ function ProgramarExamenA1() {
                 },
                 buttonsStyling: false
             });
-        } else if (selectedCheckbox === null) {
+            return;
+        }
+
+        if (selectedCheckbox === null) {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
@@ -418,81 +421,84 @@ function ProgramarExamenA1() {
                 },
                 buttonsStyling: false
             });
+            return;
+        }
+
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const idUsuario = payload.id;
+
+        // Validar si puede agendar el examen (primera vez o por solicitud aprobada)
+        const validacion = await fetchBody('/estudiantes/validarAgendamientoExamen', 'POST', {
+            idEstudiante: idUsuario,
+            examen: examenSeleccionado,
+            nivel: 'A1'
+        });
+
+        if (!validacion.exito) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: validacion.error || "No se pudo validar el estado del examen.",
+                customClass: { confirmButton: 'btn-color' },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        if (!validacion.puedeAgendar) {
+            Swal.fire({
+                icon: "warning",
+                title: "No puedes agendar el examen",
+                text: validacion.razon || "Debes completar las condiciones para poder agendar este examen.",
+                customClass: { confirmButton: 'btn-color' },
+                buttonsStyling: false
+            });
+            return;
+        }
+
+        // Construir los datos para la solicitud
+        const formattedDate = formatDate(selectedDate);
+        const requestData = {
+            nivel: 'A1',
+            examen: examenSeleccionado,
+            fecha: formattedDate,
+            horaInicial: selectedTime.horaInicial,
+            horaFinal: selectedTime.horaFinal,
+            idEstudiante: idUsuario
+        };
+
+        // Realizar solicitud para programar el examen
+        const respuesta = await fetchBody('/estudiantes/programarExamen', 'POST', requestData);
+
+        if (respuesta.exito) {
+            Swal.fire({
+                icon: "success",
+                title: "Examen programado con éxito!",
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
+            listExamenes();
+            listExamenesDisponibles();
+            listExamenesProgramados();
+            handleCloseModal();
         } else {
-            const token = localStorage.getItem("token");
-
-            if (token) {
-                const payload = JSON.parse(atob(token.split('.')[1]));
-                const idUsuario = payload.id;
-                // Validar que el examen seleccionado si lo pueda agendar
-                const respuestaExamenesProgramados = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: examenSeleccionado, nivel: 'A1' });
-                if (respuestaExamenesProgramados.exito) {
-
-                    const estado = respuestaExamenesProgramados.estado;
-
-
-                    if (estado !== "tomado") {
-
-                        Swal.fire({
-                            icon: "error",
-                            title: "Oops...",
-                            text: "Aún no puedes programar este examen porque no has visto todas las clases para desbloquearlo",
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
-                            buttonsStyling: false
-                        });
-                        return;
-                    }
-
-                    const data = {
-                        examen: examenSeleccionado,
-                        fecha: selectedDate, // Aquí deberías tener la fecha original
-                        horaInicial: selectedTime.horaInicial,
-                        horaFinal: selectedTime.horaFinal
-                    };
-
-                    const formattedDate = formatDate(data.fecha);
-
-                    const requestData = {
-                        nivel: 'A1',
-                        examen: data.examen,
-                        fecha: formattedDate,
-                        horaInicial: data.horaInicial,
-                        horaFinal: data.horaFinal,
-                        idEstudiante: idUsuario
-                    };
-
-                    const respuesta = await fetchBody('/estudiantes/programarExamen', 'POST', requestData);
-
-                    if (respuesta.exito) {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Examen programado con exito!",
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
-                            buttonsStyling: false
-                        });
-                        listExamenes();
-                        listExamenesDisponibles();
-                        listExamenesProgramados();
-                        handleCloseModal();
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: 'Error al programar un examen',
-                            customClass: {
-                                confirmButton: 'btn-color'
-                            },
-                            buttonsStyling: false
-                        });
-                    }
-                }
-            }
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: respuesta.error || 'Error al programar el examen',
+                customClass: {
+                    confirmButton: 'btn-color'
+                },
+                buttonsStyling: false
+            });
         }
     }
+
 
     const handleCheckboxChange = (index, horaInicial, horaFinal, checked) => {
 
@@ -509,7 +515,10 @@ function ProgramarExamenA1() {
         }
     };
 
-    async function handleCancelExam(id) {
+    async function handleCancelExam(examenProgramado) {
+        const id = examenProgramado.id;
+        const fecha = examenProgramado.fecha;
+        const hora = examenProgramado.horaInicial;
         try {
             // Obtener la lista actual de clases programadas
             const examenes = [...examenesProgramados];
@@ -551,7 +560,13 @@ function ProgramarExamenA1() {
                     const idEst = payload.id;
 
                     // Realizar la solicitud para cancelar la clase
-                    const respuesta = await fetchBody('/estudiantes/cancelarExamen', 'POST', { idEstudiante: idEst, idExamen: id, nivel: 'A1' });
+                    const respuesta = await fetchBody('/estudiantes/cancelarExamen', 'POST', {
+                        idEstudiante: idEst,
+                        idExamen: id,
+                        nivel: 'A1',
+                        fecha: fecha,
+                        hora: hora
+                    });
 
                     if (respuesta.exito) {
                         Swal.fire({
@@ -566,6 +581,7 @@ function ProgramarExamenA1() {
                         listExamenes();
                         listExamenesDisponibles();
                         listExamenesProgramados();
+                        handleCloseModal();
                     } else {
                         Swal.fire({
                             icon: "error",
@@ -616,7 +632,6 @@ function ProgramarExamenA1() {
                                 <th style={{ width: '200px' }}>Unidades</th>
                                 <th style={{ width: '200px' }}>Descripcion</th>
                                 <th style={{ width: '200px' }}>Clase que lo desbloquea</th>
-                                <th style={{ width: '200px' }}>Nota</th>
                                 <th style={{ width: '200px' }}>Estado</th>
                             </tr>
                         </thead>
@@ -628,7 +643,6 @@ function ProgramarExamenA1() {
                                     <td>{examen.unidades}</td>
                                     <td>{examen.tematica}</td>
                                     <td>{examen.clase}</td>
-                                    <td>{examen.nota}</td>
                                     <td>{examen.estado}</td>
                                 </tr>
                             ))}
@@ -729,7 +743,7 @@ function ProgramarExamenA1() {
                                                         <td>{examenProgramado.horaInicial}</td>
                                                         <td>{examenProgramado.horaFinal}</td>
                                                         <td>
-                                                            <button className='btn-color-cancel' onClick={() => handleCancelExam(examenProgramado.id)}>Cancelar</button>
+                                                            <button className='btn-color-cancel' onClick={() => handleCancelExam(examenProgramado)}>Cancelar</button>
                                                         </td>
                                                     </tr>
                                                 ))}
