@@ -126,6 +126,7 @@ function NotasA1() {
 
             if (respuesta.exito) {
                 const intentosPrevios = respuesta.intentos;
+                console.log('intentosPrevios :>> ', intentosPrevios);
                 const estadoSolicitud = respuesta.estado || null;
 
                 if (estadoSolicitud === "pendiente") {
@@ -139,7 +140,7 @@ function NotasA1() {
                     return;
                 }
 
-                if (intentosPrevios >= 3) {
+                if (intentosPrevios >= 2) {
                     Swal.fire({
                         icon: "warning",
                         title: "Límite de intentos alcanzado",

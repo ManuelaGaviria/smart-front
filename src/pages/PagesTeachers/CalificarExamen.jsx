@@ -176,6 +176,18 @@ function CalificarExamen() {
       });
       return;
     }
+    if (nota<0 || nota>5) {
+      Swal.fire({ 
+        icon: 'warning', 
+        title: 'Nota inválida', 
+        text: 'Debe ingresar una nota entre el rango 0.0 y 5.0',
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false  
+      });
+      return;
+    }
     try {
       const respuesta = await fetchBody('/profesores/calificarExamen', 'POST', { documento, nivel:niveles, examen: examenSeleccionado, nota });
       if (respuesta.exito) {

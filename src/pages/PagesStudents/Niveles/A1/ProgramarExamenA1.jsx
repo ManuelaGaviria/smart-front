@@ -425,6 +425,25 @@ function ProgramarExamenA1() {
             return;
         }
 
+        const respuestaTareas = await Swal.fire({
+            icon: 'question',
+            title: '¿Ya realizaste las tareas de Cambridge?',
+            showCancelButton: true,
+            confirmButtonText: 'Sí',
+            cancelButtonText: 'No',
+            customClass: { confirmButton: 'btn-color', cancelButton: 'btn-color-cancel' },
+            buttonsStyling: false
+        });
+
+        if (!respuestaTareas.isConfirmed) {
+            Swal.fire({
+                icon: 'info',
+                title: 'Debes realizar las tareas',
+                text: 'Completa las tareas de Cambridge antes de programar el examen.'
+            });
+            return;
+        }
+
         const token = localStorage.getItem("token");
         if (!token) return;
 

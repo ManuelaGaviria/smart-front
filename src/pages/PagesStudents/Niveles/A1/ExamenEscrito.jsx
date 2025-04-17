@@ -79,7 +79,11 @@ function ExamenEscrito() {
       const idUsuario = payload.id;
 
       // 🔍 Verificar si puede presentar según promedio + solicitud
-      await verificarExamenPresentado(idUsuario, id);
+      const verificacion = await verificarExamenPresentado(idUsuario, id);
+
+      if (!verificacion) {
+        return;
+      }
 
       // 🔓 Verificar el estado del examen (por progreso de clases)
       const estadoValido = await verificarEstadoExamen(idUsuario, id);
@@ -142,7 +146,6 @@ function ExamenEscrito() {
         if (respuesta.puedePresentar) {
           return true;
         }
-
         // Si no puede, mostramos alerta personalizada según la razón
         switch (respuesta.razon) {
           case 'nota-suficiente':
@@ -194,11 +197,18 @@ function ExamenEscrito() {
               buttonsStyling: false
             });
             break;
-
+          case 'estado-desconocido':
+            Swal.fire({
+              icon: 'info',
+              title: 'Sin solicitud',
+              text: 'Debes enviar una solicitud para poder volver a presentar el examen.',
+              customClass: { confirmButton: 'btn-color' },
+              buttonsStyling: false
+            });
+            break;
           default:
             break;
         }
-
         return false;
       } else {
         throw new Error(respuesta.error || "Error al verificar si el examen fue presentado.");
