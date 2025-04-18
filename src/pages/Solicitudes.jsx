@@ -1,16 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import Logo3 from '../components/Logo3';
 import { motion } from 'framer-motion';
 import FullScreenCard from '../components/FullScreenCard';
 import { fetchBody } from '../utils/fetch';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
-import ContenedorForms from '../components/ContenedorForms';
-import LabelInput from '../components/LabelInput';
-import Select from '../components/Select';
-import GeneralContext from '../context/GeneralContext';
 
 function Solicitudes() {
     const navigate = useNavigate();
@@ -198,7 +193,7 @@ function Solicitudes() {
                                             <td>{examen.idExamen}</td>
                                             <td>{examen.estado}</td>
                                             <td>{examen.fechaSolicitud}</td>
-                                            <td>{examen.intentos}</td>
+                                            <td>{examen.intentos + 1}</td>
                                             <td>
                                                 <button
                                                     className="BtnSuccess"

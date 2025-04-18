@@ -426,6 +426,7 @@ h1 {
   transition-duration: .3s;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
   background-color: #c11612;
+  z-index: 5;
 }
 
 /* plus sign */
@@ -917,6 +918,7 @@ th{
   justify-content: flex-start;
   margin-left: 30px;
   margin-bottom: 90px;
+  width: 50px;
 }
 
 .buttonGroup {

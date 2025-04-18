@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import Swal from 'sweetalert2';
 import Logo3 from '../../components/Logo3';
 import { motion } from 'framer-motion';
 import FullScreenCard from '../../components/FullScreenCard';
 import { fetchBody } from '../../utils/fetch';
-import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
 import ButtonLink from '../../components/ButtonLink';
 import ContenedorForms from '../../components/ContenedorForms';
@@ -13,7 +12,6 @@ import Select from '../../components/Select';
 import GeneralContext from '../../context/GeneralContext';
 
 function CalificarExamen() {
-  const navigate = useNavigate();
 
   const { documento, changeDocumento } = useContext(GeneralContext);
 
@@ -33,11 +31,6 @@ function CalificarExamen() {
   const [nota, setNota] = useState("");
   const [comentario, setComentario] = useState("");
   const [botones, setBotones] = useState(false);
-
-  const changeNiveles = (nivel) => {
-    console.log('nivel :>> ', nivel);
-    setNiveles(nivel); // Se asigna el valor directamente
-  };
 
   const opcionesNiveles = [
     { nombre: 'A1', id: 1 },
@@ -152,15 +145,6 @@ function CalificarExamen() {
     const nivelSeleccionado = e.target.value;
     setNiveles(nivelSeleccionado); // Actualiza el estado de niveles correctamente
     obtenerExamenesPorNivel(nivelSeleccionado); // Llama a la API para obtener exámenes
-  };
-
-  const abrirModal = (tipo, contenido) => {
-    setModalData({ tipo, contenido });
-    setModalVisible(true);
-  };
-
-  const handleCloseModal = () => {
-    setModalVisible(false);
   };
 
   const handleGuardarCalificacion = async () => {

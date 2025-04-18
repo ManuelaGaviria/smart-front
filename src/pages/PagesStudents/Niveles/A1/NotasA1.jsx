@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import FullscreenCard from '../../../../components/FullScreenCard';
 import ButtonLink from '../../../../components/ButtonLink';
 import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchBody } from "../../../../utils/fetch";
 import Swal from 'sweetalert2';
 import { FaEye } from "react-icons/fa";
