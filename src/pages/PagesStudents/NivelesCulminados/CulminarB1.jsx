@@ -15,6 +15,16 @@ function CulminarB1() {
   const [notas, setNotas] = useState([]);
 
   useEffect(() => {
+      const verificar = async () => {
+        const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+        if (respuesta.exito === false) {
+          navigate("/")
+        }
+      }
+      verificar();
+    }, [])
+
+  useEffect(() => {
     if (!idEstudiante || !nivel) {
       Swal.fire({
         icon: "error",

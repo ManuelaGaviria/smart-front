@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react';
 import Logo2 from '../../components/Logo2';
 import { motion } from 'framer-motion';
 import LogoutButton from '../../components/LogoutButton';
-import { fetchBody, fetchGet } from '../../utils/fetch';
+import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Button';
 import ContenedorForms from '../../components/ContenedorForms';
@@ -11,105 +11,111 @@ import GeneralContext from '../../context/GeneralContext';
 import Swal from 'sweetalert2';
 import ButtonLink from '../../components/ButtonLink';
 
+const nivelesOrden = ['A1', 'A2', 'B1', 'B2', 'C1'];
+
 function Student() {
   const navigate = useNavigate();
-  useEffect(() => {
-    const verificar = async () => {
-      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
-      if (respuesta.exito === false) {
-        navigate("/")
-      }
-    }
-    verificar();
-  }, [])
-
+  const [idUsuario, setIdUsuario] = useState(null);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [backgroundOpacity] = useState(1.5);
   const { password, changePassword, confirmationPassword, changeConfirmationPassword } = useContext(GeneralContext);
 
-
   useEffect(() => {
     const verificar = async () => {
       const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
       if (respuesta.exito === false) {
-        navigate("/")
-      } else {
-        if (respuesta.status) {
-          setShowPasswordModal(true);
+        navigate("/");
+      }
+    };
+
+    const obtenerId = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setIdUsuario(payload.id);
+      }
+    };
+
+    verificar();
+    obtenerId();
+  }, []);
+
+  const validateLevel = async () => {
+    try {
+      if (!idUsuario) return;
+
+      // 1. Obtener nivel actual
+      const nivelActualResp = await fetchBody('/estudiantes/nivelActual', 'POST', { id: idUsuario });
+
+      if (!nivelActualResp.exito) throw new Error("No se pudo obtener el nivel actual");
+
+      const nivelActual = nivelActualResp.nivelActual;
+
+      // 2. Verificar si lo culminó
+      const finalizadoResp = await fetchBody('/estudiantes/validarNivelFinalizado', 'POST', {
+        idEstudiante: idUsuario,
+        nivel: nivelActual
+      });
+
+      if (!finalizadoResp.exito) throw new Error("Error al verificar el nivel actual");
+
+      if (!finalizadoResp.finalizado) {
+        // Si no ha terminado, redirigir al nivel actual
+        navigate(`/${nivelActual}`);
+        return;
+      }
+
+      // 3. Obtener lista de niveles matriculados
+      const nivelesResp = await fetchBody('/estudiantes/nivelesMatriculados', 'POST', { idEstudiante: idUsuario });
+
+      if (!nivelesResp.exito) throw new Error("Error al obtener los niveles matriculados");
+
+      const nivelesMatriculados = nivelesResp.niveles;
+
+      // 4. Verificar cuál sigue
+      const indexActual = nivelesOrden.indexOf(nivelActual);
+      const siguienteNivel = nivelesOrden[indexActual + 1];
+
+      // 4. Actualizar nivelActual en Firebase
+      const actualizarNivel = await fetchBody('/estudiantes/actualizarNivelActual', 'POST', {
+        idEstudiante: idUsuario,
+        nuevoNivel: siguienteNivel
+      });
+
+      if (actualizarNivel) {
+        const nivelActualizado = await fetchBody('/estudiantes/nivelActual', 'POST', { id: idUsuario });
+
+        if (nivelActualizado && nivelesMatriculados.includes(siguienteNivel)) {
+          navigate(`/${nivelActualizado}`);
         }
       }
-    }
-    verificar();
-  }, [])
 
-  const closeModal = () => {
-    setShowPasswordModal(false);
-  }
-
-  async function validateLevel() {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (token) {
-        // Decodificar el payload del token (segundo segmento)
-        const payload = JSON.parse(atob(token.split('.')[1]));
-
-        // Acceder al id y rol del usuario
-        const idUsuario = payload.id;
-
-        console.log(`ID del usuario: ${idUsuario}`);
-
-        const data = {
-          id: idUsuario
-        }
-
-        const respuesta = await fetchBody('/estudiantes/nivelActual', 'POST', data);
-
-        if (respuesta.exito) {
-          switch (respuesta.nivelActual) {
-            case 'A1':
-              navigate('/A1');
-              break;
-            case 'A2':
-              navigate('/A2');
-              break;
-            case 'B1':
-              navigate('/B1');
-              break;
-            case 'B2':
-              navigate('/B2');
-              break;
-            case 'C1':
-              navigate('/C1');
-              break;
-            default:
-              console.error('Nivel desconocido:', respuesta.nivelActual);
-              Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: 'Error al navegar al nivel actual del estudiante',
-                customClass: {
-                  confirmButton: 'btn-color'
-                },
-                buttonsStyling: false
-              });
-              navigate('/Student');
-              break;
-          }
-        }
+      if (siguienteNivel && nivelesMatriculados.includes(siguienteNivel)) {
+        navigate(`/${siguienteNivel}`);
+      } else {
+        Swal.fire({
+          icon: "success",
+          title: "¡Felicidades!",
+          text: "Has culminado todos los niveles. Puedes revisar tu histórico en 'Niveles Culminados'.",
+          customClass: { confirmButton: 'btn-color' },
+          buttonsStyling: false
+        });
       }
     } catch (error) {
+      console.error("Error en validación del nivel actual:", error);
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: 'Error al obtener el nivel actual del estudiante',
-        customClass: {
-          confirmButton: 'btn-color'
-        },
+        text: error.message || "Error al validar tu nivel actual",
+        customClass: { confirmButton: 'btn-color' },
         buttonsStyling: false
       });
     }
-  }
+  };
+
+  const closeModal = () => {
+    setShowPasswordModal(false);
+  };
 
   async function changePass() {
     if (password === "" || confirmationPassword === "") {
@@ -117,9 +123,7 @@ function Student() {
         icon: "error",
         title: "Oops...",
         text: "Debes llenar todos los campos",
-        customClass: {
-          confirmButton: 'btn-color'
-        },
+        customClass: { confirmButton: 'btn-color' },
         buttonsStyling: false
       });
     } else {
@@ -128,9 +132,7 @@ function Student() {
           icon: "error",
           title: "Oops...",
           text: "Las contraseñas no coinciden",
-          customClass: {
-            confirmButton: 'btn-color'
-          },
+          customClass: { confirmButton: 'btn-color' },
           buttonsStyling: false
         });
       } else {
@@ -140,32 +142,24 @@ function Student() {
             icon: "error",
             title: "Oops...",
             text: "La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula, una minúscula y un número",
-            customClass: {
-              confirmButton: 'btn-color'
-            },
+            customClass: { confirmButton: 'btn-color' },
             buttonsStyling: false
-          })
+          });
         } else {
           try {
             const token = localStorage.getItem("token");
 
             if (token) {
-              // Decodificar el payload del token (segundo segmento)
               const payload = JSON.parse(atob(token.split('.')[1]));
-
-              // Acceder al id y rol del usuario
               const idUsuario = payload.id;
               const rolUsuario = payload.rol;
-
-              console.log(`ID del usuario: ${idUsuario}`);
-              console.log(`Rol del usuario: ${rolUsuario}`);
 
               const data = {
                 id: idUsuario,
                 newPassword: password,
                 rol: rolUsuario
-              }
-              console.log(data);
+              };
+
               const respuesta = await fetchBody('/usuarios/newPassword', 'PUT', data);
               if (respuesta.exito) {
                 Swal.fire({
@@ -176,8 +170,8 @@ function Student() {
                   },
                   buttonsStyling: false
                 });
+                setShowPasswordModal(false);
               }
-              setShowPasswordModal(false);
             } else {
               console.error("Token no encontrado en el localStorage");
             }
@@ -192,7 +186,6 @@ function Student() {
               buttonsStyling: false
             });
           }
-
         }
       }
     }
@@ -201,41 +194,40 @@ function Student() {
   return (
     <motion.div
       className='AdminContainer'
-      initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
-      animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
-      exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
-      transition={{ duration: 1 }}>
-      <LogoutButton></LogoutButton>
+      initial={{ opacity: 0, x: 1000 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -1000 }}
+      transition={{ duration: 1 }}
+    >
+      <LogoutButton />
       <div className='logoAdminContainer'>
-        <Logo2></Logo2>
+        <Logo2 />
       </div>
       <motion.div
         className='contentAdminContainer'
-        initial={{ opacity: 0, y: -500 }} // Inicia desde abajo (puedes ajustar la distancia según tus necesidades)
-        animate={{ opacity: 1, y: -50 }} // Animación de arriba hacia abajo
-        exit={{ opacity: 0, y: 500 }} // Sale hacia abajo
+        initial={{ opacity: 0, y: -500 }}
+        animate={{ opacity: 1, y: -50 }}
+        exit={{ opacity: 0, y: 500 }}
         transition={{ duration: 1 }}
       >
         <div className='ButtonsAdminContainer'>
           <h1>Bienvenido Estudiante</h1>
-          <div className=''>
+          <div>
             <Button eventoClick={validateLevel} clase="Button2">Nivel Actual</Button>
             <ButtonLink destino="/NivelesCulminados" clase="Button2">Niveles Culminados</ButtonLink>
           </div>
         </div>
       </motion.div>
+
       {showPasswordModal && (
         <>
-          <div
-            className="BackgroundOverlay"
-            style={{ opacity: backgroundOpacity }}
-          />
+          <div className="BackgroundOverlay" style={{ opacity: backgroundOpacity }} />
           <ContenedorForms>
             <span className="close" onClick={closeModal}>&times;</span>
             <h1>Cambiar Contraseña</h1>
             <div className="InputContainer">
-              <LabelInputIcon eventoCambio={changePassword} texto="Nueva contraseña"></LabelInputIcon>
-              <LabelInputIcon eventoCambio={changeConfirmationPassword} texto="Confirmar contraseña"></LabelInputIcon>
+              <LabelInputIcon eventoCambio={changePassword} texto="Nueva contraseña" />
+              <LabelInputIcon eventoCambio={changeConfirmationPassword} texto="Confirmar contraseña" />
             </div>
             <br />
             <Button clase="Button" eventoClick={changePass}>Cambiar Contraseña</Button>
@@ -243,7 +235,7 @@ function Student() {
         </>
       )}
     </motion.div>
-  )
+  );
 }
 
-export default Student
+export default Student;
