@@ -456,36 +456,6 @@ function VerExamenA1() {
     }
   }
 
-  const descargarExamenOral = async (id, nivel) => {
-    try {
-      const response = await fetch('http://localhost:5000/niveles/obtenerExamenOral', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id, nivel }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al obtener el examen oral');
-      }
-
-      const blob = await response.blob();
-      const urlBlob = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = urlBlob;
-      const contentDisposition = response.headers.get('Content-Disposition');
-      const filename = contentDisposition ? contentDisposition.split('filename=')[1] : 'downloaded_file.pdf';
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(urlBlob);
-    } catch (error) {
-      console.error('Error al descargar el examen oral:', error);
-    }
-  };
-
   const downloadExamen = async (id) => {
     const data = {
       id: id,
