@@ -1,17 +1,17 @@
 import React from 'react'
 import Page2Button from '../../../../components/Page2Button'
 
-function GestionarA2() {
+function GestionarB1() {
   return (
-    <Page2Button titulo="Gestionar A2"
+    <Page2Button titulo="Gestionar B1"
         tituloBoton1="Gestionar Clases"
-        destinoBoton1="/VerClasesA2"
+        destinoBoton1="/VerClasesB1"
         tituloBoton2="Gestionar Examenes"
-        destinoBoton2="/GestionarExamenA2"
+        destinoBoton2="/GestionarExamenB1"
         destinoRegreso="/GestionarNiveles"
     >
     </Page2Button>
   )
 }
 
-export default GestionarA2
+export default GestionarB1

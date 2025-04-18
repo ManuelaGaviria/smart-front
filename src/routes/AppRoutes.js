@@ -72,6 +72,30 @@ import NavPageC1 from "../pages/PagesStudents/Niveles/C1/NavPageC1";
 import HorarioB1 from "../pages/PagesStudents/Niveles/B1/HorarioB1";
 import HorarioB2 from "../pages/PagesStudents/Niveles/B2/HorarioB2";
 import HorarioC1 from "../pages/PagesStudents/Niveles/C1/HorarioC1";
+import GestionarA2 from "../pages/PagesSuperAdmin/Niveles/A2/GestionarA2";
+import VerClaseA2 from "../pages/PagesSuperAdmin/Niveles/A2/VerClaseA2";
+import GestionarExamenA2 from "../pages/PagesSuperAdmin/Niveles/A2/GestionarExamenA2";
+import CrearExamenA2 from "../pages/PagesSuperAdmin/Niveles/A2/CrearExamenA2";
+import VerExamenA2 from "../pages/PagesSuperAdmin/Niveles/A2/VerExamenA2";
+import VerExamenEscritoA2 from "../pages/PagesSuperAdmin/Niveles/A2/VerExamenEscritoA2";
+import GestionarB1 from "../pages/PagesSuperAdmin/Niveles/B1/GestionarB1";
+import VerClaseB1 from "../pages/PagesSuperAdmin/Niveles/B1/VerClaseB1";
+import GestionarExamenB1 from "../pages/PagesSuperAdmin/Niveles/B1/GestionarExamenB1";
+import CrearExamenB1 from "../pages/PagesSuperAdmin/Niveles/B1/CrearExamenB1";
+import VerExamenB1 from "../pages/PagesSuperAdmin/Niveles/B1/VerExamenB1";
+import VerExamenEscritoB1 from "../pages/PagesSuperAdmin/Niveles/B1/VerExamenEscritoB1";
+import GestionarB2 from "../pages/PagesSuperAdmin/Niveles/B2/GestionarB2";
+import VerClaseB2 from "../pages/PagesSuperAdmin/Niveles/B2/VerClaseB2";
+import GestionarExamenB2 from "../pages/PagesSuperAdmin/Niveles/B2/GestionarExamenB2";
+import CrearExamenB2 from "../pages/PagesSuperAdmin/Niveles/B2/CrearExamenB2";
+import VerExamenB2 from "../pages/PagesSuperAdmin/Niveles/B2/VerExamenB2";
+import VerExamenEscritoB2 from "../pages/PagesSuperAdmin/Niveles/B2/VerExamenEscritoB2";
+import GestionarC1 from "../pages/PagesSuperAdmin/Niveles/C1/GestionarC1";
+import VerClaseC1 from "../pages/PagesSuperAdmin/Niveles/C1/VerClaseC1";
+import GestionarExamenC1 from "../pages/PagesSuperAdmin/Niveles/C1/GestionarExamenC1";
+import CrearExamenC1 from "../pages/PagesSuperAdmin/Niveles/C1/CrearExamenC1";
+import VerExamenC1 from "../pages/PagesSuperAdmin/Niveles/C1/VerExamenC1";
+import VerExamenEscritoC1 from "../pages/PagesSuperAdmin/Niveles/C1/VerExamenEscritoC1";
 
 function AppRoutes() {
     const location = useLocation();
@@ -96,12 +120,41 @@ function AppRoutes() {
                 <Route exact path="/CreateAdmin" element={<CreateAdmin></CreateAdmin>}></Route>
                 <Route exact path="/ActionsAdmin" element={<ActionsAdmin></ActionsAdmin>}></Route>
                 <Route exact path="/GestionarNiveles" element={<GestionarNiveles></GestionarNiveles>}></Route>
+
                 <Route exact path="/GestionarA1" element={<GestionarA1></GestionarA1>}></Route>
                 <Route exact path="/VerClasesA1" element={<VerClaseA1></VerClaseA1>}></Route>
                 <Route exact path="/GestionarExamenA1" element={<GestionarExamenA1></GestionarExamenA1>}></Route>
                 <Route exact path="/CrearExamenA1" element={<CrearExamenA1></CrearExamenA1>}></Route>
                 <Route exact path="/VerExamenA1" element={<VerExamenA1></VerExamenA1>}></Route>
                 <Route exact path="/VerExamenEscritoA1" element={<VerExamenEscritoA1></VerExamenEscritoA1>}></Route>
+
+                <Route exact path="/GestionarA2" element={<GestionarA2></GestionarA2>}></Route>
+                <Route exact path="/VerClasesA2" element={<VerClaseA2></VerClaseA2>}></Route>
+                <Route exact path="/GestionarExamenA2" element={<GestionarExamenA2></GestionarExamenA2>}></Route>
+                <Route exact path="/CrearExamenA2" element={<CrearExamenA2></CrearExamenA2>}></Route>
+                <Route exact path="/VerExamenA2" element={<VerExamenA2></VerExamenA2>}></Route>
+                <Route exact path="/VerExamenEscritoA2" element={<VerExamenEscritoA2></VerExamenEscritoA2>}></Route>
+
+                <Route exact path="/GestionarB1" element={<GestionarB1></GestionarB1>}></Route>
+                <Route exact path="/VerClasesB1" element={<VerClaseB1></VerClaseB1>}></Route>
+                <Route exact path="/GestionarExamenB1" element={<GestionarExamenB1></GestionarExamenB1>}></Route>
+                <Route exact path="/CrearExamenB1" element={<CrearExamenB1></CrearExamenB1>}></Route>
+                <Route exact path="/VerExamenB1" element={<VerExamenB1></VerExamenB1>}></Route>
+                <Route exact path="/VerExamenEscritoB1" element={<VerExamenEscritoB1></VerExamenEscritoB1>}></Route>
+
+                <Route exact path="/GestionarB2" element={<GestionarB2></GestionarB2>}></Route>
+                <Route exact path="/VerClasesB2" element={<VerClaseB2></VerClaseB2>}></Route>
+                <Route exact path="/GestionarExamenB2" element={<GestionarExamenB2></GestionarExamenB2>}></Route>
+                <Route exact path="/CrearExamenB2" element={<CrearExamenB2></CrearExamenB2>}></Route>
+                <Route exact path="/VerExamenB2" element={<VerExamenB2></VerExamenB2>}></Route>
+                <Route exact path="/VerExamenEscritoB2" element={<VerExamenEscritoB2></VerExamenEscritoB2>}></Route>
+                
+                <Route exact path="/GestionarC1" element={<GestionarC1></GestionarC1>}></Route>
+                <Route exact path="/VerClasesC1" element={<VerClaseC1></VerClaseC1>}></Route>
+                <Route exact path="/GestionarExamenC1" element={<GestionarExamenC1></GestionarExamenC1>}></Route>
+                <Route exact path="/CrearExamenC1" element={<CrearExamenC1></CrearExamenC1>}></Route>
+                <Route exact path="/VerExamenC1" element={<VerExamenC1></VerExamenC1>}></Route>
+                <Route exact path="/VerExamenEscritoC1" element={<VerExamenEscritoC1></VerExamenEscritoC1>}></Route>
 
                 <Route exact path="/Teacher" element={<Teacher></Teacher>}></Route>
                 <Route exact path="/ProgramacionTeacher" element={<ProgramacionTeacher></ProgramacionTeacher>}></Route>
