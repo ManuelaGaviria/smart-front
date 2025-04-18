@@ -64,6 +64,14 @@ import CulminarA2 from "../pages/PagesStudents/NivelesCulminados/CulminarA2";
 import CulminarB1 from "../pages/PagesStudents/NivelesCulminados/CulminarB1";
 import CulminarB2 from "../pages/PagesStudents/NivelesCulminados/CulminarB2";
 import CulminarC1 from "../pages/PagesStudents/NivelesCulminados/CulminarC1";
+import NavPageA2 from "../pages/PagesStudents/Niveles/A2/NavPageA2";
+import HorarioA2 from "../pages/PagesStudents/Niveles/A2/HorarioA2";
+import NavPageB1 from "../pages/PagesStudents/Niveles/B1/NavPageB1";
+import NavPageB2 from "../pages/PagesStudents/Niveles/B2/NavPageB2";
+import NavPageC1 from "../pages/PagesStudents/Niveles/C1/NavPageC1";
+import HorarioB1 from "../pages/PagesStudents/Niveles/B1/HorarioB1";
+import HorarioB2 from "../pages/PagesStudents/Niveles/B2/HorarioB2";
+import HorarioC1 from "../pages/PagesStudents/Niveles/C1/HorarioC1";
 
 function AppRoutes() {
     const location = useLocation();
@@ -120,30 +128,38 @@ function AppRoutes() {
                 <Route exact path="/A2" element={<A2></A2>}></Route>
                 <Route exact path="/ProgramarA2" element={<ProgramarA2></ProgramarA2>}></Route>
                 <Route exact path="/ExamenEscritoA2" element={<ExamenEscritoA2></ExamenEscritoA2>}></Route>
+                <Route exact path="/NavPageA2" element={<NavPageA2></NavPageA2>}></Route>
                 <Route exact path="/NotasA2" element={<NotasA2></NotasA2>}></Route>
                 <Route exact path="/ProgramarClaseA2" element={<ProgramarClaseA2></ProgramarClaseA2>}></Route>
                 <Route exact path="/ProgramarExamenA2" element={<ProgramarExamenA2></ProgramarExamenA2>}></Route>
+                <Route exact path="/HorarioA2" element={<HorarioA2></HorarioA2>}></Route>
 
                 <Route exact path="/B1" element={<B1></B1>}></Route>
                 <Route exact path="/ProgramarB1" element={<ProgramarB1></ProgramarB1>}></Route>
                 <Route exact path="/ExamenEscritoB1" element={<ExamenEscritoB1></ExamenEscritoB1>}></Route>
+                <Route exact path="/NavPageB1" element={<NavPageB1></NavPageB1>}></Route>
                 <Route exact path="/NotasB1" element={<NotasB1></NotasB1>}></Route>
                 <Route exact path="/ProgramarClaseB1" element={<ProgramarClaseB1></ProgramarClaseB1>}></Route>
                 <Route exact path="/ProgramarExamenB1" element={<ProgramarExamenB1></ProgramarExamenB1>}></Route>
+                <Route exact path="/HorarioB1" element={<HorarioB1></HorarioB1>}></Route>
 
                 <Route exact path="/B2" element={<B2></B2>}></Route>
                 <Route exact path="/ProgramarB2" element={<ProgramarB2></ProgramarB2>}></Route>
                 <Route exact path="/ExamenEscritoB2" element={<ExamenEscritoB2></ExamenEscritoB2>}></Route>
+                <Route exact path="/NavPageB2" element={<NavPageB2></NavPageB2>}></Route>
                 <Route exact path="/NotasB2" element={<NotasB2></NotasB2>}></Route>
                 <Route exact path="/ProgramarClaseB2" element={<ProgramarClaseB2></ProgramarClaseB2>}></Route>
                 <Route exact path="/ProgramarExamenB2" element={<ProgramarExamenB2></ProgramarExamenB2>}></Route>
+                <Route exact path="/HorarioB2" element={<HorarioB2></HorarioB2>}></Route>
 
                 <Route exact path="/C1" element={<C1></C1>}></Route>
                 <Route exact path="/ProgramarC1" element={<ProgramarC1></ProgramarC1>}></Route>
                 <Route exact path="/ExamenEscritoC1" element={<ExamenEscritoC1></ExamenEscritoC1>}></Route>
+                <Route exact path="/NavPageC1" element={<NavPageC1></NavPageC1>}></Route>
                 <Route exact path="/NotasC1" element={<NotasC1></NotasC1>}></Route>
                 <Route exact path="/ProgramarClaseC1" element={<ProgramarClaseC1></ProgramarClaseC1>}></Route>
                 <Route exact path="/ProgramarExamenC1" element={<ProgramarExamenC1></ProgramarExamenC1>}></Route>
+                <Route exact path="/HorarioC1" element={<HorarioC1></HorarioC1>}></Route>
             </Routes>
         </AnimatePresence>
     </>

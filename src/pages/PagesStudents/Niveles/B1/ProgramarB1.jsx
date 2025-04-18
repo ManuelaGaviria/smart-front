@@ -1,4 +1,3 @@
-import LogoutButton from "../../../../components/LogoutButton";
 import Logo2 from "../../../../components/Logo2";
 import { motion} from 'framer-motion';
 import { MdOutlineClass } from "react-icons/md";
@@ -6,8 +5,22 @@ import { SiTestcafe } from "react-icons/si";
 import ImageButton from "../../../../components/ImageButton";
 import ButtonLink from "../../../../components/ButtonLink";
 import { FaCalendarAlt } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { fetchBody } from "../../../../utils/fetch";
 
 function ProgramarB1() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+      if (respuesta.exito === false) {
+        navigate("/")
+      }
+    }
+    verificar();
+  }, [])
+  
   return (
     <motion.div 
     className='AdminContainer'
@@ -15,7 +28,6 @@ function ProgramarB1() {
     animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
     exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
     transition={{ duration: 1 }}>
-      <LogoutButton></LogoutButton>
       <div className='logoAdminContainer'>
         <Logo2></Logo2>
       </div>

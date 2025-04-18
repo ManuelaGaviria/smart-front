@@ -2,8 +2,22 @@ import LogoutButton from "../../../../components/LogoutButton";
 import Logo2 from "../../../../components/Logo2";
 import { motion} from 'framer-motion';
 import ButtonLink from "../../../../components/ButtonLink";
+import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { fetchBody } from "../../../../utils/fetch";
 
 function B2() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+      if (respuesta.exito === false) {
+        navigate("/")
+      }
+    }
+    verificar();
+  }, [])
+
   return (
     <motion.div 
     className='AdminContainer'
