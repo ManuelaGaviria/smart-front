@@ -27,7 +27,6 @@ function Solicitudes() {
             try {
                 const respuesta = await fetchBody('/solicitudes/obtenerSolicitudes', 'GET');
                 if (respuesta.exito) {
-                    console.log(respuesta.lista);
                     const lista = respuesta.lista;
                     setSolicitudes(lista);
                 } else {
@@ -109,8 +108,6 @@ function Solicitudes() {
                 estado: nuevoEstado,
                 idAdmin
             };
-    
-            console.log('Data enviada al backend:', data);
     
             const respuesta = await fetchBody('/solicitudes/actualizarEstado', 'POST', data);
     

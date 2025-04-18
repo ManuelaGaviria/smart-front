@@ -30,7 +30,6 @@ function PrincipalAdmin() {
       try {
         const respuesta = await fetchBody('/solicitudes/obtenerSolicitudesPendientes', 'GET');
         if (respuesta.exito) {
-          console.log(respuesta);
           setNotificaciones(respuesta.cantidad || 0);
         }
       } catch (error) {

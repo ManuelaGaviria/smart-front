@@ -116,12 +116,9 @@ function ProgramarClaseC1() {
                 if (respuestaClases.exito && respuestaEstado.exito) {
                     const clasesDisponibles = respuestaClases.lista;
                     const clasesProgramadas = respuestaEstado.estadoClases;
-                    console.log("clases programadas");
-                    console.log(clasesProgramadas);
 
                     // Combinar ambas listas
                     const clasesCombinadas = clasesDisponibles.map(clase => {
-                        console.log('clase :>> ', clase);
                         const claseProgramada = clasesProgramadas.find(c => c.id === clase.id);
 
                         let asistenciaIcono = "❌";
@@ -135,8 +132,6 @@ function ProgramarClaseC1() {
                             estado: claseProgramada ? claseProgramada.data.estado : 'pendiente'
                         };
                     });
-                    console.log("clases combinadas");
-                    console.log(clasesCombinadas);
                     setClase(clasesCombinadas);
                 } else {
                     Swal.fire({
@@ -283,9 +278,6 @@ function ProgramarClaseC1() {
     }
 
     async function listHoras(date) {
-        console.log("Fecha seleccionada:", date);
-        console.log("Hora actual:", new Date().toLocaleString());
-        console.log("Hora actual UTC:", new Date().toISOString());
         try {
             // Obtener las horas disponibles
             const respuesta = await fetchGet('/estudiantes/obtenerHora');
@@ -297,7 +289,6 @@ function ProgramarClaseC1() {
                     horaInicial,
                     horaFinal: horasFinales[index]
                 }));
-                console.log("Horas disponibles antes de filtrar:", horas);
 
                 // Obtener ID del estudiante desde el token
                 const token = localStorage.getItem("token");
@@ -310,13 +301,11 @@ function ProgramarClaseC1() {
 
                     if (respuestaHorasAgendadas.exito) {
                         const horasAgendadas = respuestaHorasAgendadas.horasAgendadas;
-                        console.log("Horas agendadas:", horasAgendadas);
 
                         // Crear una nueva lista de horas disponibles filtrando horas agendadas
                         let horasDisponibles = horas.filter(hora => {
                             // Fecha seleccionada en formato YYYY-MM-DD
                             const seleccionadaFecha = date.toISOString().split('T')[0];
-                            console.log('seleccionadaFecha :>> ', seleccionadaFecha);
                             // Filtrar horas agendadas para la fecha seleccionada
                             const esHoraDisponible = !horasAgendadas.some(agendada => {
                                 const agendadaFecha = agendada.fecha;
@@ -332,18 +321,15 @@ function ProgramarClaseC1() {
                             return esHoraDisponible;
                         });
 
-                        console.log("Horas disponibles después de filtrar agendadas:", horasDisponibles);
 
                         // Filtrar horas si la fecha seleccionada es hoy
                         if (isToday(date)) {
                             const now = new Date();
                             horasDisponibles = horasDisponibles.filter(hora => {
                                 const horaDisponible = new Date(`${date.toDateString()} ${hora.horaInicial}`);
-                                console.log(`Comparando ${hora.horaInicial} ->`, horaDisponible, "con", now);
                                 return horaDisponible > now;
                             });
 
-                            console.log("Horas disponibles después de filtrar por la hora actual:", horasDisponibles);
                         }
 
                         setHoras(horasDisponibles);
@@ -401,7 +387,6 @@ function ProgramarClaseC1() {
 
     const handleChange = (e) => {
         setClaseSeleccionada(e.target.value); // Actualizar el estado con la clase seleccionada
-        console.log('Clase seleccionada:', e.target.value);
     };
 
     const formatDate = (date) => {
@@ -472,26 +457,18 @@ function ProgramarClaseC1() {
 
         // ✅ Verificar si la clase anterior desbloquea un examen
         if (siguienteClase > 1) {
-            console.log('siguienteClase :>> ', siguienteClase);
             const claseAnterior = `Clase${siguienteClase - 1}`;
-            console.log('claseAnterior :>> ', claseAnterior);
             const examenes = await fetchBody('/niveles/obtenerExamenData', 'POST', { nivel: 'C1' });
             if (examenes.exito) {
-                console.log("obteniendo examenes");
-                console.log('examenes.lista :>> ', examenes.lista);
                 const examenesDesbloqueados = examenes.lista.filter(ex => ex.clase === claseAnterior);
-                console.log('examenesDesbloqueados :>> ', examenesDesbloqueados);
                 for (const examen of examenesDesbloqueados) {
                     const examenId = examen.id;
-                    console.log('examenId :>> ', examenId);
                     // Obtener intentos del examen
                     const respuestaExamen = await fetchBody('/estudiantes/obtenerIntentosExamen', 'POST', {
                         idEstudiante: idUsuario,
                         nivel: 'C1',
                         claseAProgramar: claseSeleccionada
                     });
-
-                    console.log("respuesta examen desde backend:", respuestaExamen);
 
                     if (!respuestaExamen.exito) {
                         Swal.fire({

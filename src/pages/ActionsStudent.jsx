@@ -84,7 +84,6 @@ function ActionsStudent() {
       const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "estudiante"}) 
       if (respuesta.exito) {
         setStudents(respuesta.lista);
-        console.log(respuesta.lista);
       } else {
         Swal.fire({
           icon: "error",

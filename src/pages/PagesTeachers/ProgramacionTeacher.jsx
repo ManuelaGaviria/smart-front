@@ -21,7 +21,6 @@ function ProgramacionTeacher() {
     // Verificar usuario al cargar el componente
     useEffect(() => {
         const verificar = async () => {
-            console.log("Verificación ejecutada");
             const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "profesor" });
             if (!respuesta.exito) {
                 navigate("/");
@@ -32,7 +31,6 @@ function ProgramacionTeacher() {
 
     // Cargar programaciones
     useEffect(() => {
-        console.log("listProgramacion ejecutado");
         listProgramacion();
     }, []);
 
@@ -45,11 +43,9 @@ function ProgramacionTeacher() {
 
                 const today = new Date();
                 const formattedDate = today.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD
-                console.log('formattedDate :>> ', formattedDate);
                 const respuesta = await fetchBody('/profesores/listarProgramacion', 'POST', { fecha: formattedDate, idProfesor });
                 if (respuesta.exito) {
                     setProgramacion(respuesta.lista);
-                    console.log(respuesta.lista);
                 } else {
                     Swal.fire({
                         icon: "error",
@@ -147,7 +143,6 @@ function ProgramacionTeacher() {
                 idEvento: estudiantesSeleccionados.find(e => e.estudianteId === estudianteId)?.idEvento || null,
                 nivel: nivelSeleccionado, // Usamos el nivel almacenado en el estado
             }));
-            console.log(asistenciasArray);
 
             const respuesta = await fetchBody('/profesores/guardarAsistencias', 'POST', { asistencias: asistenciasArray });
 

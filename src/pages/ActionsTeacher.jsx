@@ -167,7 +167,6 @@ function ActionsTeacher() {
           nacimiento: nacimiento,
           rol: "profesor"
         };
-        console.log(data);
         try {
           const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
           if (respuesta.exito){

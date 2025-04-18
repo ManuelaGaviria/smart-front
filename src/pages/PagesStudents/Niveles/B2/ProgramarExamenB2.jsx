@@ -73,7 +73,6 @@ function ProgramarExamenB2() {
                         nombre: examen.id,
                         id: examen.id
                     }));
-                    console.log('examenesFormateados :>> ', examenesFormateados);
                     setExamenSelect(examenesFormateados);
                 } else {
                     Swal.fire({
@@ -113,18 +112,14 @@ function ProgramarExamenB2() {
 
                 // Obtener la lista de examenes disponibles
                 const respuestaExamenes = await fetchBody('/niveles/listarExamen', 'POST', { nivel: 'B2' });
-                console.log('respuestaExamenes :>> ', respuestaExamenes);
                 // Obtener el estado de los examenes programados
                 const respuestaEstado = await fetchBody('/estudiantes/actualizarEstadoExamen', 'POST', { idEstudiante: idEst, nivel: 'B2' });
-                console.log('respuestaEstado :>> ', respuestaEstado);
                 if (respuestaExamenes.exito && respuestaEstado.exito) {
                     const examenesDisponibles = respuestaExamenes.lista;
                     const examenesProgramados = respuestaEstado.estadoExamenes;
-                    console.log('examenesProgramados :>> ', examenesProgramados);
                     // Combinar ambas listas
                     const examenesCombinados = examenesDisponibles.map(examen => {
                         const examenProgramado = examenesProgramados.find(ep => ep.examenId === examen.id);
-                        console.log('examenProgramado :>> ', examenProgramado);
                         return {
                             ...examen,
                             estado: examenProgramado ? examenProgramado.estado : 'pendiente',

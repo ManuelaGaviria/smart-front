@@ -46,7 +46,6 @@ function CulminarB1() {
       });
 
       if (respuesta.exito) {
-        console.log('respuesta.lista.notasExamenes :>> ', respuesta.lista.notasExamenes);
         const notasConPromedio = respuesta.lista.notasExamenes.map(examen => {
           const notaEscrito = parseFloat(examen.notaExamenEscrito) || 0;
           const notaOral = parseFloat(examen.notaExamenOral) || 0;

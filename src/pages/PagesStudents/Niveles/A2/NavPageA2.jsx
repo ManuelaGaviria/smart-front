@@ -47,8 +47,6 @@ function NavPageA2() {
       respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
     }));
 
-    console.log(respuestasFinales);
-
     const dataExamen = {
       examenId,
       idEstudiante,
@@ -140,7 +138,6 @@ function NavPageA2() {
       return;
     }
     if (solicitudRealizada.current) {
-      console.log("La solicitud ya se realizó, evitando ejecución redundante.");
       return;
     }
     solicitudRealizada.current = true;
@@ -152,9 +149,6 @@ function NavPageA2() {
         const respuesta = await fetchBody('/estudiantes/getPreguntasExamen', 'POST', { nivel: "A2", examenId: examenId });
         if (respuesta.exito) {
           const preguntas = respuesta.examen;
-          console.log("holi");
-          console.log('preguntas :>> ', preguntas);
-          console.log(preguntas);
           setData(preguntas); // Guardar las preguntas en el estado
         } else {
           Swal.fire({
@@ -251,7 +245,6 @@ function NavPageA2() {
         idPregunta: pregunta.idPregunta,
         respuestaDada: answers[pregunta.pregunta] || '', // Usar respuesta si existe, o vacío
       }));
-      console.log('respuestasFinales :>> ', respuestasFinales);
    
       const dataExamen = {
         examenId,

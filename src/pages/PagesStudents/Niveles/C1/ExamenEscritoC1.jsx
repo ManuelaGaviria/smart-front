@@ -29,8 +29,6 @@ function ExamenEscritoC1() {
         const respuesta = await fetchBody('/niveles/obtenerExamen', 'POST', { nivel: "C1" });
         if (respuesta.exito) {
           const examenesFormateados = respuesta.lista;
-          console.log("holi");
-          console.log(examenesFormateados);
           setExamenSelect(examenesFormateados);
         } else {
           Swal.fire({
@@ -230,7 +228,6 @@ function ExamenEscritoC1() {
   async function verificarEstadoExamen(idUsuario, idExamen) {
     try {
       const respuesta = await fetchBody('/estudiantes/obtenerEstado', 'POST', { id: idUsuario, examen: idExamen, nivel: 'C1' });
-      console.log(respuesta);
       if (respuesta.exito) {
         return respuesta.estado === "tomado"; // Validar si el estado permite tomar el examen
       } else {

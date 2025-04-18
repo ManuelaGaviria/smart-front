@@ -51,7 +51,6 @@ function VerClaseA1() {
       if (respuesta.exito) {
         setClase(respuesta.lista);
         setNumClases(respuesta.lista.length); // Establecer el número actual de clases
-        console.log(respuesta.lista);
       } else {
         Swal.fire({
           icon: "error",
@@ -143,7 +142,6 @@ function VerClaseA1() {
   }
 
   async function editClase(id) {
-    console.log('id :>> ', id);
     const descripcion = document.getElementById('descripcion').value;
 
     if (descripcion.trim() === "") {

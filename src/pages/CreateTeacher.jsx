@@ -92,10 +92,8 @@ function CreateTeacher() {
           nacimiento: nacimiento,
           rol: "profesor"
         };
-        console.log(data);
         try {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
-          console.log(respuesta);
           if (respuesta.exito) {
             
             changeName({ target: { value: '' } });

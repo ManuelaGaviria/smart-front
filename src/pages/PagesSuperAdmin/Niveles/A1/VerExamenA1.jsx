@@ -71,7 +71,6 @@ function VerExamenA1() {
 
   const handleChange = (e) => {
     setClaseSeleccionada(e.target.value); // Actualizar el estado con la clase seleccionada
-    console.log('Clase seleccionada:', e.target.value);
   };
 
   const { changeNumero, changeDescripcion, changeUnidades } = useContext(GeneralContext);
@@ -99,13 +98,11 @@ function VerExamenA1() {
   };
 
   const openUploadEditModal = (examen) => {
-    console.log("Examen en openUploadEditModal:", examen);
     setSelectedExamen(examen);
     setUploadEditModalOpen(true);
   }
 
   const openEditUploadModal = (examen) => {
-    console.log("Examen en openEditUploadModal:", examen);
     setSelectedExamen(examen);
     setEditUploadModalOpen(true);
     setUploadEditModalOpen(false);
@@ -168,7 +165,6 @@ function VerExamenA1() {
 
   async function uploadExamen(id) {
     if (fileUpload === null) {
-      console.log("Archivo vacío");
       return;
     }
 
@@ -177,7 +173,6 @@ function VerExamenA1() {
       formData.append('archivo', fileUpload);
       formData.append('id', id); // Agregar el ID
       formData.append('nivel', "A1"); // Agregar el nivel
-      console.log(formData);
 
       const respuesta = await fetchFormData('/niveles/agregarExamenOral', 'POST', formData);
 
@@ -217,9 +212,7 @@ function VerExamenA1() {
   }
 
   async function uploadEditExamen(id) {
-    console.log("ID en uploadEditExamen" + id);
     if (fileUpload === null) {
-      console.log("Archivo vacío");
       return;
     }
 
@@ -228,10 +221,8 @@ function VerExamenA1() {
       formData.append('nuevoArchivo', fileUpload);
       formData.append('id', id); // Agregar el ID
       formData.append('nivel', "A1"); // Agregar el nivel
-      console.log(formData);
 
       const respuesta = await fetchFormData('/niveles/editarExamenOral', 'PUT', formData);
-      console.log(respuesta);
       if (respuesta.exito) {
         Swal.fire({
           icon: "success",
@@ -317,7 +308,6 @@ function VerExamenA1() {
         clase: claseSeleccionada,
         nivel: "A1"
       };
-      console.log(data);
       try {
         const respuesta = await fetchBody('/niveles/editarExamen', 'PUT', data);
         if (respuesta.exito) {
@@ -637,7 +627,6 @@ function VerExamenA1() {
             </div>
             <br />
             <Button clase="Button" eventoClick={() => {
-              console.log("selectedExamen antes de subir: ", selectedExamen);
               uploadEditExamen(selectedExamen);
             }}>Subir</Button>
             <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>

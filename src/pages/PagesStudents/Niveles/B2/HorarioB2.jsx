@@ -27,7 +27,6 @@ function HorarioB2() {
     const [clasesProgramadas, setClaseProgramada] = useState([]);
 
     async function listClasesProgramadas() {
-        console.log("holi");
         try {
             const token = localStorage.getItem("token");
 
@@ -40,14 +39,12 @@ function HorarioB2() {
 
                 if (respuesta.exito) {
                     const clasesProgramadas = respuesta.lista;
-                    console.log(clasesProgramadas);
                     // Filtrar las clases programadas que no han pasado
                     const clasesValidas = clasesProgramadas.filter(clase => {
                         const fechaHoraClase = new Date(`${clase.fecha}T${clase.horaFinal}`);
                         const fechaHoraActual = new Date();
                         return fechaHoraClase > fechaHoraActual;
                     });
-                    console.log(clasesValidas);
                     setClaseProgramada(clasesValidas);
                 } else {
                     Swal.fire({

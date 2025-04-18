@@ -96,7 +96,6 @@ function CreateStudent() {
           rol: "estudiante",
           niveles: selectedLevels
         };
-        console.log(data);
         try {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
           if (respuesta.exito) {

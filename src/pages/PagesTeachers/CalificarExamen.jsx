@@ -45,7 +45,6 @@ function CalificarExamen() {
       const respuesta = await fetchBody('/niveles/obtenerExamen', 'POST', { nivel: nivelId });
 
       if (respuesta.exito && respuesta.lista.length > 0) { // Solo habilitar si hay exámenes
-        console.log('respuesta.lista :>> ', respuesta.lista);
         const examenesFormateados = respuesta.lista.map(examen => ({
           nombre: examen.id,
           id: examen.id
@@ -96,8 +95,6 @@ function CalificarExamen() {
     try {
       const respuesta = await fetchBody('/profesores/buscarExamen', 'POST', { documento, nivel: niveles, examen: examenSeleccionado });
       if (respuesta.exito) {
-        console.log(respuesta);
-        console.log('respuesta.examenEncontrado :>> ', respuesta.examenEncontrado);
         setResultados(respuesta.examenEncontrado);
         setBotones(true);
       } else {
@@ -128,7 +125,6 @@ function CalificarExamen() {
   };
 
   async function handleVerExamenEscrito(examenEscrito) {
-    console.log(examenEscrito);
     setIntentos(Object.entries(examenEscrito));
     openExamenEscritoModal(examenEscrito);
   }
@@ -260,8 +256,6 @@ function CalificarExamen() {
   };
 
   const downloadExamen = async (id, nivel) => {
-    console.log('id :>> ', id);
-    console.log('nivel :>> ', nivel);
       const data = {
         id: id,
         nivel: nivel

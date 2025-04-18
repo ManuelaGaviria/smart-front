@@ -68,7 +68,6 @@ function ActionsAdmin() {
       const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: ['administrador', 'superadministrador']}) 
       if (respuesta.exito) {
         setAdmin(respuesta.lista)
-        console.log(respuesta.lista);
       } else {
         Swal.fire({
           icon: "error",
@@ -177,7 +176,6 @@ function ActionsAdmin() {
           rol: selectedAdmin.rol, // Rol actual
           nuevoRol: nuevoRol // Nuevo rol
         };
-        console.log(data);
         try {
           const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
           if (respuesta.exito){

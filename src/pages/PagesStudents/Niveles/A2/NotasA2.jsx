@@ -35,8 +35,6 @@ function NotasA2() {
 
                 const respuesta = await fetchBody('/estudiantes/listarNotasExamen', 'POST', { idEstudiante: idEstudiante, nivel: "A2" })
                 if (respuesta.exito) {
-                    console.log('respuesta.lista.notasExamenes :>> ', respuesta.lista.notasExamenes);
-
                     // Agregar el cálculo del promedio a cada examen
                     const notasConPromedio = respuesta.lista.notasExamenes.map(examen => {
                         const notaEscrito = parseFloat(examen.notaExamenEscrito) || 0;
@@ -48,8 +46,6 @@ function NotasA2() {
                             promedio: promedio
                         };
                     });
-
-                    console.log('Notas con promedio: ', notasConPromedio);
                     setNotas(notasConPromedio);
                 } else {
                     Swal.fire({
@@ -126,7 +122,6 @@ function NotasA2() {
 
             if (respuesta.exito) {
                 const intentosPrevios = respuesta.intentos;
-                console.log('intentosPrevios :>> ', intentosPrevios);
                 const estadoSolicitud = respuesta.estado || null;
 
                 if (estadoSolicitud === "pendiente") {

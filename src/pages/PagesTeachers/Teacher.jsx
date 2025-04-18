@@ -25,8 +25,6 @@ function Teacher() {
             if (respuesta.exito === false) {
                 navigate("/")
             } else {
-              console.log(respuesta);
-              console.log(respuesta.status);
               if (respuesta.status) {
                   setShowPasswordModal(true);
               }
@@ -81,15 +79,11 @@ function Teacher() {
                   const idUsuario = payload.id;
                   const rolUsuario = payload.rol;
 
-                  console.log(`ID del usuario: ${idUsuario}`);
-                  console.log(`Rol del usuario: ${rolUsuario}`);
-
                   const data = {
                     id: idUsuario,
                     newPassword: password,
                     rol: rolUsuario
                   }        
-                  console.log(data);     
                   const respuesta = await fetchBody('/usuarios/newPassword', 'PUT', data);
                   if (respuesta.exito) {
                     Swal.fire({

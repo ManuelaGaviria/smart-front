@@ -97,10 +97,8 @@ function CreateAdmin() {
           nacimiento: nacimiento,
           rol: administrador
         };
-        console.log(data);
         try {
           const respuesta = await fetchBody('/usuarios/agregar', 'POST', data);
-          console.log(respuesta);
           if (respuesta.exito) {
             Swal.fire({
               icon: "success",

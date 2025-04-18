@@ -123,7 +123,6 @@ function VerExamenEscritoA1() {
               respuesta4: respuesta4,
               respuestaCorrecta: respuestaCorrecta
             };
-            console.log(data);
             try {
               const respuesta = await fetchBody('/niveles/agregarExamenEscrito', 'POST', data);
               if (respuesta.exito) {
@@ -217,7 +216,6 @@ function VerExamenEscritoA1() {
               respuestaCorrecta: respuestaCorrecta,
               nivel: "A1"
             };
-            console.log(data);
             try {
               const respuesta = await fetchBody ('/niveles/editarExamenEscrito','PUT',data) 
               if (respuesta.exito){
@@ -281,7 +279,6 @@ function VerExamenEscritoA1() {
         };
           try {
             const respuesta = await fetchBody('/niveles/eliminarExamenEscrito', 'DELETE', data );
-            console.log(respuesta);
             if (respuesta.exito){
               Swal.fire({
                 icon: "success",

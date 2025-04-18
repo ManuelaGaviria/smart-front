@@ -75,7 +75,6 @@ function CrearExamenA1() {
 
   const handleChange = (e) => {
     setClaseSeleccionada(e.target.value); // Actualizar el estado con la clase seleccionada
-    console.log('Clase seleccionada:', e.target.value);
   };
 
 
@@ -98,10 +97,8 @@ function CrearExamenA1() {
           clase: claseSeleccionada,
           nivel: "A1"
         };
-        console.log(data);
         try {
           const respuesta = await fetchBody('/niveles/agregarExamen', 'POST', data);
-          console.log(respuesta);
           if (respuesta.exito) {
             Swal.fire({
               icon: "success",

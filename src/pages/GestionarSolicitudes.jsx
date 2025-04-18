@@ -5,9 +5,7 @@ import { motion } from 'framer-motion';
 import FullScreenCard from '../components/FullScreenCard';
 import { fetchBody } from '../utils/fetch';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
 import ButtonLink from '../components/ButtonLink';
-import ContenedorForms from '../components/ContenedorForms';
 import LabelInput from '../components/LabelInput';
 import Select from '../components/Select';
 import GeneralContext from '../context/GeneralContext';
@@ -33,11 +31,6 @@ function GestionarSolicitudes() {
   const [niveles, setNiveles] = useState("");
   const [botones, setBotones] = useState(false);
   const [resultados, setResultados] = useState([]);
-
-  const changeNiveles = (nivel) => {
-    console.log('nivel :>> ', nivel);
-    setNiveles(nivel); // Se asigna el valor directamente
-  };
 
   const opcionesNiveles = [
     { nombre: 'A1', id: 1 },
@@ -71,7 +64,6 @@ function GestionarSolicitudes() {
     try {
       const respuesta = await fetchBody('/solicitudes/buscarSolicitud', 'POST', { documento, nivel: niveles, examen: examenSeleccionado });
       if (respuesta.exito) {
-        console.log(respuesta);
         setResultados(respuesta.lista);
         setBotones(true);
       } else {
@@ -106,7 +98,6 @@ function GestionarSolicitudes() {
       const respuesta = await fetchBody('/niveles/obtenerExamen', 'POST', { nivel: nivelId });
 
       if (respuesta.exito && respuesta.lista.length > 0) { // Solo habilitar si hay exámenes
-        console.log('respuesta.lista :>> ', respuesta.lista);
         const examenesFormateados = respuesta.lista.map(examen => ({
           nombre: examen.id,
           id: examen.id
@@ -192,8 +183,6 @@ function GestionarSolicitudes() {
         estado: nuevoEstado,
         idAdmin
       };
-
-      console.log('Data enviada al backend:', data);
 
       const respuesta = await fetchBody('/solicitudes/actualizarEstado', 'POST', data);
 
