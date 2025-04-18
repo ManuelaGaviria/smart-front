@@ -59,6 +59,11 @@ import ProgramacionTeacher from "../pages/PagesTeachers/ProgramacionTeacher";
 import CalificarExamen from "../pages/PagesTeachers/CalificarExamen";
 import Solicitudes from "../pages/Solicitudes";
 import GestionarSolicitudes from "../pages/GestionarSolicitudes";
+import CulminarA1 from "../pages/PagesStudents/NivelesCulminados/CulminarA1";
+import CulminarA2 from "../pages/PagesStudents/NivelesCulminados/CulminarA2";
+import CulminarB1 from "../pages/PagesStudents/NivelesCulminados/CulminarB1";
+import CulminarB2 from "../pages/PagesStudents/NivelesCulminados/CulminarB2";
+import CulminarC1 from "../pages/PagesStudents/NivelesCulminados/CulminarC1";
 
 function AppRoutes() {
     const location = useLocation();
@@ -95,7 +100,13 @@ function AppRoutes() {
                 <Route exact path="/CalificarExamen" element={<CalificarExamen></CalificarExamen>}></Route>
 
                 <Route exact path="/Student" element={<Student></Student>}></Route>
+
                 <Route exact path="/NivelesCulminados" element={<NivelesCulminados></NivelesCulminados>}></Route>
+                <Route exact path="/CulminarA1" element={<CulminarA1></CulminarA1>}></Route>
+                <Route exact path="/CulminarA2" element={<CulminarA2></CulminarA2>}></Route>
+                <Route exact path="/CulminarB1" element={<CulminarB1></CulminarB1>}></Route>
+                <Route exact path="/CulminarB2" element={<CulminarB2></CulminarB2>}></Route>
+                <Route exact path="/CulminarC1" element={<CulminarC1></CulminarC1>}></Route>
 
                 <Route exact path="/A1" element={<A1></A1>}></Route>
                 <Route exact path="/ProgramarA1" element={<Programar></Programar>}></Route>

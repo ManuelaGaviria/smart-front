@@ -1,60 +1,122 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 import Logo2 from '../../components/Logo2';
-import { motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import LogoutButton from '../../components/LogoutButton';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
-import Button from '../../components/Button';
-import ContenedorForms from '../../components/ContenedorForms';
-import LabelInputIcon from '../../components/LabelInputIcon';
-import ButtonLink from '../../components/ButtonLink';
 
-function NivelesCukinados() {
+function NivelesCulminados() {
   const navigate = useNavigate();
-    useEffect(() => {
-        const verificar = async () => {
-            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "estudiante"});
-            if (respuesta.exito === false) {
-                navigate("/")
-            }
+  const [nivelesMatriculados, setNivelesMatriculados] = useState([]);
+  const [idEstudiante, setIdEstudiante] = useState(null);
+
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "estudiante" });
+      if (respuesta.exito === false) {
+        navigate("/");
+      }
+    };
+
+    const obtenerNiveles = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const idEst = payload.id;
+          setIdEstudiante(idEst);
+
+          const respuesta = await fetchBody('/estudiantes/nivelesMatriculados', 'POST', { idEstudiante: idEst });
+          if (respuesta.exito && Array.isArray(respuesta.niveles)) {
+            setNivelesMatriculados(respuesta.niveles);
+          } else {
+            setNivelesMatriculados([]);
+          }
         }
-        verificar();
-    }, [])
+      } catch (error) {
+        console.error("Error al traer niveles matriculados", error);
+        setNivelesMatriculados([]);
+      }
+    };
+
+    verificar();
+    obtenerNiveles();
+  }, [navigate]);
+
+  const nivelesDisponibles = [
+    { nivel: "A1", ruta: "/CulminarA1" },
+    { nivel: "A2", ruta: "/CulminarA2" },
+    { nivel: "B1", ruta: "/CulminarB1" },
+    { nivel: "B2", ruta: "/CulminarB2" },
+    { nivel: "C1", ruta: "/CulminarC1" },
+  ];
+
+  const manejarClickNivel = async (nivel, ruta) => {
+    if (!idEstudiante) return;
+
+    try {
+      const respuesta = await fetchBody('/estudiantes/validarNivelFinalizado', 'POST', {
+        idEstudiante: idEstudiante,
+        nivel: nivel
+      });
+
+      if (respuesta.exito && respuesta.finalizado === true) {
+        // Redirigir pasando nivel y id por state (alternativamente, puedes usar query params)
+        navigate(ruta, { state: { nivel, idEstudiante } });
+      } else {
+        alert("Aún no has culminado este nivel. No hay datos disponibles en el histórico.");
+      }
+
+    } catch (error) {
+      console.error("Error al verificar nivel:", error);
+      alert("Hubo un error al verificar el nivel.");
+    }
+  };
 
   return (
-    <motion.div 
-    className='AdminContainer'
-    initial={{ opacity: 0, x: 1000 }} // Inicia desde la derecha
-    animate={{ opacity: 1, x: 0 }} // Animación hacia la izquierda
-    exit={{ opacity: 0, x: -1000 }} // Sale hacia la izquierda
-    transition={{ duration: 1 }}>
-      <LogoutButton></LogoutButton>
+    <motion.div
+      className='AdminContainer'
+      initial={{ opacity: 0, x: 1000 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -1000 }}
+      transition={{ duration: 1 }}
+    >
+      <LogoutButton />
       <div className='logoAdminContainer'>
-        <Logo2></Logo2>
+        <Logo2 />
       </div>
       <motion.div
-      className='contentAdminContainer'
-      initial={{ opacity: 0, y: -500 }} // Inicia desde abajo (puedes ajustar la distancia según tus necesidades)
-      animate={{ opacity: 1, y: -50 }} // Animación de arriba hacia abajo
-      exit={{ opacity: 0, y: 500 }} // Sale hacia abajo
-      transition={{ duration: 1 }}
-      > 
+        className='contentAdminContainer'
+        initial={{ opacity: 0, y: -500 }}
+        animate={{ opacity: 1, y: -50 }}
+        exit={{ opacity: 0, y: 500 }}
+        transition={{ duration: 1 }}
+      >
         <div className='ButtonsAdminContainer'>
           <h1>Niveles Culminados</h1>
           <p>Selecciona el nivel</p>
-          <div className=''>
-            <ButtonLink destino="/GestionarA1" clase="circleLevels">A1</ButtonLink>
-            <ButtonLink destino="/GestionarA2" clase="circleLevels">A2</ButtonLink>
-            <ButtonLink destino="/GestionarB1" clase="circleLevels">B1</ButtonLink>
-            <ButtonLink destino="/GestionarB2" clase="circleLevels">B2</ButtonLink>
-            <ButtonLink destino="/GestionarC1" clase="circleLevels">C1</ButtonLink>
+          <div>
+            {
+              nivelesDisponibles.map(({ nivel, ruta }) =>
+                nivelesMatriculados.includes(nivel) && (
+                  <button
+                    key={nivel}
+                    className="circleLevels"
+                    onClick={() => manejarClickNivel(nivel, ruta)}
+                  >
+                    {nivel}
+                  </button>
+                )
+              )
+            }
           </div>
-          <br></br>
-          <ButtonLink destino="/Student" clase="Button2">Regresar</ButtonLink>
-        </div> 
+          <br />
+          <button className="Button2" onClick={() => navigate("/Student")}>Regresar</button>
+        </div>
       </motion.div>
     </motion.div>
-  )
+  );
 }
 
-export default NivelesCukinados
+export default NivelesCulminados;
