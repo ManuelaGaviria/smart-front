@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import LogoutButton from '../../components/LogoutButton';
 import { fetchBody } from '../../utils/fetch';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function NivelesCulminados() {
   const navigate = useNavigate();
@@ -35,7 +36,13 @@ function NivelesCulminados() {
           }
         }
       } catch (error) {
-        console.error("Error al traer niveles matriculados", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error niveles matriculados",
+          text: "Error al traer niveles matriculados", error,
+          customClass: { confirmButton: 'btn-color' },
+          buttonsStyling: false
+        });
         setNivelesMatriculados([]);
       }
     };
@@ -65,12 +72,23 @@ function NivelesCulminados() {
         // Redirigir pasando nivel y id por state (alternativamente, puedes usar query params)
         navigate(ruta, { state: { nivel, idEstudiante } });
       } else {
-        alert("Aún no has culminado este nivel. No hay datos disponibles en el histórico.");
+        Swal.fire({
+          icon: "warning",
+          title: "No hay datos",
+          text: "Aún no has culminado este nivel. No hay datos disponibles en el histórico.",
+          customClass: { confirmButton: 'btn-color' },
+          buttonsStyling: false
+        });
       }
 
     } catch (error) {
-      console.error("Error al verificar nivel:", error);
-      alert("Hubo un error al verificar el nivel.");
+      Swal.fire({
+        icon: "error",
+        title: "Error al verificar nivel",
+        text: "Hubo un error al verificar el nivel.",
+        customClass: { confirmButton: 'btn-color' },
+        buttonsStyling: false
+      });
     }
   };
 
