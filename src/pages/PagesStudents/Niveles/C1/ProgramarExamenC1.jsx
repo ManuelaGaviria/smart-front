@@ -531,7 +531,7 @@ function ProgramarExamenC1() {
     };
 
     async function handleCancelExam(examenProgramado) {
-        const id = examenProgramado.id;
+        const id = examenProgramado.unidad;
         const fecha = examenProgramado.fecha;
         const hora = examenProgramado.horaInicial;
         try {
@@ -539,7 +539,7 @@ function ProgramarExamenC1() {
             const examenes = [...examenesProgramados];
 
             // Verificar si la clase a cancelar es la primera en la lista
-            if (examenes[0].id !== id) {
+            if (examenes[0].unidad !== id) {
                 Swal.fire({
                     icon: "error",
                     title: "Error",
@@ -738,12 +738,12 @@ function ProgramarExamenC1() {
                             <div>
                                 <div className='CenterTable'>
                                     {examenesProgramados.length === 0 ? (
-                                        <p>No hay clases disponibles para cancelar</p>
+                                        <p>No hay examenes disponibles para cancelar</p>
                                     ) : (
                                         <table className='Table'>
                                             <thead>
                                                 <tr>
-                                                    <th style={{ width: '200px' }}>Clase #</th>
+                                                    <th style={{ width: '200px' }}>Examen #</th>
                                                     <th style={{ width: '200px' }}>Fecha</th>
                                                     <th style={{ width: '200px' }}>Hora Inicial</th>
                                                     <th style={{ width: '200px' }}>Hora Final</th>
@@ -753,7 +753,7 @@ function ProgramarExamenC1() {
                                             <tbody>
                                                 {examenesProgramados.map((examenProgramado, index) => (
                                                     <tr key={examenProgramado.id}>
-                                                        <td>{examenProgramado.id}</td>
+                                                        <td>{examenProgramado.unidad}</td>
                                                         <td>{examenProgramado.fecha}</td>
                                                         <td>{examenProgramado.horaInicial}</td>
                                                         <td>{examenProgramado.horaFinal}</td>
