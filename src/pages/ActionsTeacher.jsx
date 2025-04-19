@@ -17,15 +17,15 @@ import SelectEdit from '../components/SelectEdit';
 
 function ActionsTeacher() {
   const navigate = useNavigate();
-    useEffect(() => {
-        const verificar = async () => {
-            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "administrador"});
-            if (respuesta.exito === false) {
-                navigate("/")
-            }
-        }
-        verificar();
-    }, [])
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "administrador" });
+      if (respuesta.exito === false) {
+        navigate("/")
+      }
+    }
+    verificar();
+  }, [])
 
   const { changeName, changeApellido, changeTipoDocumento, changeDocumento, changeCorreo, changeGenero, changeNacimiento } = useContext(GeneralContext);
   const [teachers, setTeachers] = useState([]);
@@ -58,8 +58,9 @@ function ActionsTeacher() {
 
   async function listTeachers() {
     try {
-      const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: "profesor"}) 
+      const respuesta = await fetchBody('/usuarios/listar', 'POST', { rol: "profesor" })
       if (respuesta.exito) {
+        console.log('respuesta.lista :>> ', respuesta.lista);
         setTeachers(respuesta.lista)
       } else {
         Swal.fire({
@@ -144,7 +145,7 @@ function ActionsTeacher() {
       var fechaNacimiento = new Date(nacimiento);
       var edadMinima = new Date();
       edadMinima.setFullYear(edadMinima.getFullYear() - 18); // Restar 8 años a la fecha actual
-      
+
       if (fechaNacimiento >= new Date() || fechaNacimiento > edadMinima) {
         Swal.fire({
           icon: "error",
@@ -157,7 +158,7 @@ function ActionsTeacher() {
         });
       } else {
         const data = {
-          id:id,
+          id: id,
           nombre: name,
           apellido: apellido,
           tipoDocumento: tipoDocumento,
@@ -168,18 +169,18 @@ function ActionsTeacher() {
           rol: "profesor"
         };
         try {
-          const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
-          if (respuesta.exito){
-              Swal.fire({
-                icon: "success",
-                title: "Se actualizó profesor con éxito!",
-                customClass: {
-                  confirmButton: 'btn-color'
-                },
-                buttonsStyling: false
-              });
-              handleCloseModal();
-              await listTeachers();
+          const respuesta = await fetchBody('/usuarios/editar', 'PUT', data)
+          if (respuesta.exito) {
+            Swal.fire({
+              icon: "success",
+              title: "Se actualizó profesor con éxito!",
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+            handleCloseModal();
+            await listTeachers();
           }
           else {
             Swal.fire({
@@ -192,77 +193,90 @@ function ActionsTeacher() {
               buttonsStyling: false
             });
           }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: 'Error al procesar la solicitud para editar un profesor',
-          customClass: {
-            confirmButton: 'btn-color'
-          },
-          buttonsStyling: false
-        });
-      }
-      }
-    }
-  }
-
-
-  async function handleDelete(id) {
-    // Mostrar una alerta de confirmación antes de eliminar al profesor
-    const confirmacion = await Swal.fire({
-      title: '¿Estás seguro de eliminar este profesor?',
-      text: "Esta acción no se puede revertir",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      customClass: {
-        confirmButton: 'btn-color',
-        cancelButton: 'btn-color-cancel'
-      },
-      buttonsStyling: false
-  });
-    
-    // Verificar si el usuario confirmó la eliminación
-    if (confirmacion.isConfirmed) {
-      const data = { id: id, rol: "profesor"};
-      try {
-        const respuesta = await fetchBody('/usuarios/eliminar', 'DELETE', data );
-        if (respuesta.exito){
-          Swal.fire({
-            icon: "success",
-            title: "Profesor eliminado con éxito!",
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-          await listTeachers();
-        } else {
+        } catch (error) {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: respuesta.error,
+            text: 'Error al procesar la solicitud para editar un profesor',
             customClass: {
               confirmButton: 'btn-color'
             },
             buttonsStyling: false
           });
         }
-      } catch (error) {
+      }
+    }
+  }
+
+  const handleToggle = (id, currentState) => {
+    const action = currentState ? "inactivar" : "activar";
+    const confirmationText = currentState
+      ? "¿Estás seguro que deseas inactivar a este profesor?"
+      : "¿Estás seguro que deseas activar a este profesor?";
+
+    Swal.fire({
+      icon: "warning",
+      title: `Confirmar ${action}`,
+      text: confirmationText,
+      showCancelButton: true,
+      confirmButtonText: "Sí",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn-color",
+        cancelButton: 'btn-color-cancel'
+      },
+      buttonsStyling: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleToggleActive(id, !currentState);
+      }
+    });
+  };
+
+  async function handleToggleActive(id, isActive) {
+    console.log('isActive :>> ', isActive);
+    const data = {
+      id,
+      rol: "profesor",
+      isActive
+    };
+  
+    try {
+      const respuesta = await fetchBody('/usuarios/activar-inactivar', 'POST', data);
+      if (respuesta.exito) {
+        Swal.fire({
+          icon: "success",
+          title: isActive ? "Profesor activado con éxito!" : "Profesor inactivado con éxito!",
+          customClass: {
+            confirmButton: 'btn-color',
+            
+          },
+          buttonsStyling: false
+        });
+        await listTeachers();
+      } else {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: 'Error al procesar la solicitud para eliminar un profesor',
+          text: respuesta.error,
           customClass: {
             confirmButton: 'btn-color'
           },
           buttonsStyling: false
         });
       }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al actualizar el estado del profesor",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     }
-  }
-  
+  }  
 
   return (
     <motion.div
@@ -275,63 +289,70 @@ function ActionsTeacher() {
       <Logo3 />
       <FullScreenCard>
         <div className='CenterTable'>
-            <table className='Table'>
-              <thead>
-                <tr>
-                  <th style={{ width: '250px' }}>Nombre</th>
-                  <th style={{ width: '250px' }}>Apellidos</th>
-                  <th style={{ width: '250px' }}>Tipo Documento</th>
-                  <th style={{ width: '250px' }}>Documento</th>
-                  <th style={{ width: '250px' }}>Correo</th>
-                  <th style={{ width: '250px' }}>Genero</th>
-                  <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
-                  <th style={{ width: '250px' }}>Acciones</th>
+          <table className='Table'>
+            <thead>
+              <tr>
+                <th style={{ width: '250px' }}>Nombre</th>
+                <th style={{ width: '250px' }}>Apellidos</th>
+                <th style={{ width: '250px' }}>Tipo Documento</th>
+                <th style={{ width: '250px' }}>Documento</th>
+                <th style={{ width: '250px' }}>Correo</th>
+                <th style={{ width: '250px' }}>Genero</th>
+                <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
+                <th style={{ width: '250px' }}>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {teachers.map((teacher) => (
+                <tr key={teacher.id}>
+                  <td>{teacher.nombre}</td>
+                  <td>{teacher.apellido}</td>
+                  <td>{teacher.tipoDocumento}</td>
+                  <td>{teacher.documento}</td>
+                  <td>{teacher.correo}</td>
+                  <td>{teacher.genero}</td>
+                  <td>{teacher.nacimiento}</td>
+                  <td className='Actions'>
+                    <button className='btn-edit' onClick={() => handleEdit(teacher.id)}><MdModeEdit /></button>
+                    <div class="checkbox-con">
+                      <input
+                        id={`checkbox-${teacher.id}`}
+                        type="checkbox"
+                        checked={teacher.isActive}
+                        onChange={() => handleToggle(teacher.id, teacher.isActive)}
+                      />
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {teachers.map((teacher) => (
-                  <tr key={teacher.id}>
-                    <td>{teacher.nombre}</td>
-                    <td>{teacher.apellido}</td>
-                    <td>{teacher.tipoDocumento}</td>
-                    <td>{teacher.documento}</td>
-                    <td>{teacher.correo}</td>
-                    <td>{teacher.genero}</td>
-                    <td>{teacher.nacimiento}</td>
-                    <td className='Actions'>
-                      <button className='btn-edit' onClick={() => handleEdit(teacher.id)}><MdModeEdit /></button>
-                      <button className='btn-delete' onClick={() => handleDelete(teacher.id)}><MdDelete /></button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
         </div>
         <ButtonLink destino="/PrincipalTeacher" clase="ButtonRegresar">Regresar</ButtonLink>
       </FullScreenCard>
       {editModalOpen && (
-      <>
-        <div
-          className="BackgroundOverlay"
-          style={{ opacity: backgroundOpacity }}
-        />
-        <ContenedorForms>
-          <h1>Editar Profesor</h1>
-          <div className="InputContainer">
-            <LabelInputEdit id='teacherName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedTeacher.nombre}></LabelInputEdit>
-            <LabelInputEdit id="teacherApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedTeacher.apellido}></LabelInputEdit>
-            <SelectEdit id="teacherTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedTeacher.tipoDocumento} readOnly={true}></SelectEdit>
-            <LabelInputEdit id='teacherDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedTeacher.documento} readOnly={true}></LabelInputEdit>
-            <LabelInputEdit id='teacherEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedTeacher.correo}></LabelInputEdit>
-            <SelectEdit id="teacherGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedTeacher.genero}></SelectEdit>
-            <LabelInputEdit id='teacherDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedTeacher.nacimiento}></LabelInputEdit>
-          </div>
-          <br />
-          <Button clase="Button" eventoClick={() => editTeacher(selectedTeacher.id)}>Editar</Button>
-          <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
-        </ContenedorForms>
-      </>
-    )}
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Editar Profesor</h1>
+            <div className="InputContainer">
+              <LabelInputEdit id='teacherName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedTeacher.nombre}></LabelInputEdit>
+              <LabelInputEdit id="teacherApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedTeacher.apellido}></LabelInputEdit>
+              <SelectEdit id="teacherTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedTeacher.tipoDocumento} readOnly={true}></SelectEdit>
+              <LabelInputEdit id='teacherDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedTeacher.documento} readOnly={true}></LabelInputEdit>
+              <LabelInputEdit id='teacherEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedTeacher.correo}></LabelInputEdit>
+              <SelectEdit id="teacherGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedTeacher.genero}></SelectEdit>
+              <LabelInputEdit id='teacherDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedTeacher.nacimiento}></LabelInputEdit>
+            </div>
+            <br />
+            <Button clase="Button" eventoClick={() => editTeacher(selectedTeacher.id)}>Editar</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
     </motion.div>
   );
 }

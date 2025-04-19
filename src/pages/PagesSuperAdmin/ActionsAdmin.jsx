@@ -17,15 +17,15 @@ import SelectEdit from '../../components/SelectEdit';
 
 function ActionsAdmin() {
   const navigate = useNavigate();
-    useEffect(() => {
-        const verificar = async () => {
-            const respuesta = await fetchBody('/usuarios/', 'POST', {rol: "superadministrador"});
-            if (respuesta.exito === false) {
-                navigate("/")
-            }
-        }
-        verificar();
-    }, [])
+  useEffect(() => {
+    const verificar = async () => {
+      const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "superadministrador" });
+      if (respuesta.exito === false) {
+        navigate("/")
+      }
+    }
+    verificar();
+  }, [])
 
   const { changeName, changeApellido, changeTipoDocumento, changeDocumento, changeCorreo, changeGenero, changeNacimiento, changeAdministrador } = useContext(GeneralContext);
   const [admins, setAdmin] = useState([]);
@@ -56,7 +56,7 @@ function ActionsAdmin() {
   const openEditModal = (admin) => {
     setSelectedAdmin(admin);
     setNuevoRol(admin.rol); // Establecer el rol actual como valor inicial del nuevo rol
-    setEditModalOpen(true); 
+    setEditModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -65,7 +65,7 @@ function ActionsAdmin() {
 
   async function listAdmins() {
     try {
-      const respuesta = await fetchBody ('/usuarios/listar','POST', {rol: ['administrador', 'superadministrador']}) 
+      const respuesta = await fetchBody('/usuarios/listar', 'POST', { rol: ['administrador', 'superadministrador'] })
       if (respuesta.exito) {
         setAdmin(respuesta.lista)
       } else {
@@ -151,7 +151,7 @@ function ActionsAdmin() {
       var fechaNacimiento = new Date(nacimiento);
       var edadMinima = new Date();
       edadMinima.setFullYear(edadMinima.getFullYear() - 18); // Restar 8 años a la fecha actual
-      
+
       if (fechaNacimiento >= new Date() || fechaNacimiento > edadMinima) {
         Swal.fire({
           icon: "error",
@@ -164,7 +164,7 @@ function ActionsAdmin() {
         });
       } else {
         const data = {
-          id:id,
+          id: id,
           nombre: name,
           apellido: apellido,
           tipoDocumento: tipoDocumento,
@@ -177,18 +177,18 @@ function ActionsAdmin() {
           nuevoRol: nuevoRol // Nuevo rol
         };
         try {
-          const respuesta = await fetchBody ('/usuarios/editar','PUT',data) 
-          if (respuesta.exito){
-              Swal.fire({
-                icon: "success",
-                title: "Se actualizó administrador con éxito!",
-                customClass: {
-                  confirmButton: 'btn-color'
-                },
-                buttonsStyling: false
-              });
-              handleCloseModal();
-              await listAdmins();
+          const respuesta = await fetchBody('/usuarios/editar', 'PUT', data)
+          if (respuesta.exito) {
+            Swal.fire({
+              icon: "success",
+              title: "Se actualizó administrador con éxito!",
+              customClass: {
+                confirmButton: 'btn-color'
+              },
+              buttonsStyling: false
+            });
+            handleCloseModal();
+            await listAdmins();
           }
           else {
             Swal.fire({
@@ -201,77 +201,90 @@ function ActionsAdmin() {
               buttonsStyling: false
             });
           }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: 'Error al procesar la solicitud para editar un administrador',
-          customClass: {
-            confirmButton: 'btn-color'
-          },
-          buttonsStyling: false
-        });
-      }
-      }
-    }
-  }
-
-
-  async function handleDelete(id) {
-    // Mostrar una alerta de confirmación antes de eliminar al profesor
-    const confirmacion = await Swal.fire({
-      title: '¿Estás seguro de eliminar este administrador?',
-      text: "Esta acción no se puede revertir",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      customClass: {
-        confirmButton: 'btn-color',
-        cancelButton: 'btn-color-cancel'
-      },
-      buttonsStyling: false
-  });
-    
-    // Verificar si el usuario confirmó la eliminación
-    if (confirmacion.isConfirmed) {
-      const data = { id: id, rol: ['administrador', 'superadministrador']};
-      try {
-        const respuesta = await fetchBody('/usuarios/eliminar', 'DELETE', data );
-        if (respuesta.exito){
-          Swal.fire({
-            icon: "success",
-            title: "Administrador eliminado con éxito!",
-            customClass: {
-              confirmButton: 'btn-color'
-            },
-            buttonsStyling: false
-          });
-          await listAdmins();
-        } else {
+        } catch (error) {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: respuesta.error,
+            text: 'Error al procesar la solicitud para editar un administrador',
             customClass: {
               confirmButton: 'btn-color'
             },
             buttonsStyling: false
           });
         }
-      } catch (error) {
+      }
+    }
+  }
+
+  const handleToggle = (id, currentState) => {
+    const action = currentState ? "inactivar" : "activar";
+    const confirmationText = currentState
+      ? "¿Estás seguro que deseas inactivar a este administrador?"
+      : "¿Estás seguro que deseas activar a este administrador?";
+
+    Swal.fire({
+      icon: "warning",
+      title: `Confirmar ${action}`,
+      text: confirmationText,
+      showCancelButton: true,
+      confirmButtonText: "Sí",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn-color",
+        cancelButton: 'btn-color-cancel'
+      },
+      buttonsStyling: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleToggleActive(id, !currentState);
+      }
+    });
+  };
+
+  async function handleToggleActive(id, isActive) {
+    console.log('isActive :>> ', isActive);
+    const data = {
+      id,
+      rol: "administrador",
+      isActive
+    };
+
+    try {
+      const respuesta = await fetchBody('/usuarios/activar-inactivar', 'POST', data);
+      if (respuesta.exito) {
+        Swal.fire({
+          icon: "success",
+          title: isActive ? "Administrador activado con éxito!" : "Administrador inactivado con éxito!",
+          customClass: {
+            confirmButton: 'btn-color',
+
+          },
+          buttonsStyling: false
+        });
+        await listAdmins();
+      } else {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: 'Error al procesar la solicitud para eliminar un administrador',
+          text: respuesta.error,
           customClass: {
             confirmButton: 'btn-color'
           },
           buttonsStyling: false
         });
       }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Error al actualizar el estado del administrador",
+        customClass: {
+          confirmButton: 'btn-color'
+        },
+        buttonsStyling: false
+      });
     }
   }
-  
 
   return (
     <motion.div
@@ -284,73 +297,80 @@ function ActionsAdmin() {
       <Logo3 />
       <FullScreenCard>
         <div className='CenterTable'>
-            <table className='Table'>
-              <thead>
-                <tr>
-                  <th style={{ width: '250px' }}>Nombre</th>
-                  <th style={{ width: '250px' }}>Apellidos</th>
-                  <th style={{ width: '250px' }}>Tipo Documento</th>
-                  <th style={{ width: '250px' }}>Documento</th>
-                  <th style={{ width: '250px' }}>Correo</th>
-                  <th style={{ width: '250px' }}>Genero</th>
-                  <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
-                  <th style={{ width: '250px' }}>Rol</th>
-                  <th style={{ width: '250px' }}>Acciones</th>
+          <table className='Table'>
+            <thead>
+              <tr>
+                <th style={{ width: '250px' }}>Nombre</th>
+                <th style={{ width: '250px' }}>Apellidos</th>
+                <th style={{ width: '250px' }}>Tipo Documento</th>
+                <th style={{ width: '250px' }}>Documento</th>
+                <th style={{ width: '250px' }}>Correo</th>
+                <th style={{ width: '250px' }}>Genero</th>
+                <th style={{ width: '250px' }}>Fecha de Nacimiento</th>
+                <th style={{ width: '250px' }}>Rol</th>
+                <th style={{ width: '250px' }}>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {admins.map((admin) => (
+                <tr key={admin.id}>
+                  <td>{admin.nombre}</td>
+                  <td>{admin.apellido}</td>
+                  <td>{admin.tipoDocumento}</td>
+                  <td>{admin.documento}</td>
+                  <td>{admin.correo}</td>
+                  <td>{admin.genero}</td>
+                  <td>{admin.nacimiento}</td>
+                  <td>{admin.rol}</td>
+                  <td className='Actions'>
+                    <button className='btn-edit' onClick={() => handleEdit(admin.id)}><MdModeEdit /></button>
+                    <div class="checkbox-con">
+                      <input
+                        id={`checkbox-${admin.id}`}
+                        type="checkbox"
+                        checked={admin.isActive}
+                        onChange={() => handleToggle(admin.id, admin.isActive)}
+                      />
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {admins.map((admin) => (
-                  <tr key={admin.id}>
-                    <td>{admin.nombre}</td>
-                    <td>{admin.apellido}</td>
-                    <td>{admin.tipoDocumento}</td>
-                    <td>{admin.documento}</td>
-                    <td>{admin.correo}</td>
-                    <td>{admin.genero}</td>
-                    <td>{admin.nacimiento}</td>
-                    <td>{admin.rol}</td>
-                    <td className='Actions'>
-                      <button className='btn-edit' onClick={() => handleEdit(admin.id)}><MdModeEdit /></button>
-                      <button className='btn-delete' onClick={() => handleDelete(admin.id)}><MdDelete /></button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              ))}
+            </tbody>
+          </table>
         </div>
         <ButtonLink destino="/GestionarAdmins" clase="ButtonRegresar">Regresar</ButtonLink>
       </FullScreenCard>
       {editModalOpen && (
-      <>
-        <div
-          className="BackgroundOverlay"
-          style={{ opacity: backgroundOpacity }}
-        />
-        <ContenedorForms>
-          <h1>Editar Administrador</h1>
-          <div className="InputContainer">
-            <LabelInputEdit id='adminName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedAdmin.nombre}></LabelInputEdit>
-            <LabelInputEdit id="adminApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedAdmin.apellido}></LabelInputEdit>
-            <SelectEdit id="adminTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedAdmin.tipoDocumento} readOnly={true}></SelectEdit>
-            <LabelInputEdit id='adminDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedAdmin.documento} readOnly={true}></LabelInputEdit>
-            <LabelInputEdit id='adminEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedAdmin.correo}></LabelInputEdit>
-            <SelectEdit id="adminGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedAdmin.genero}></SelectEdit>
-            <LabelInputEdit id='adminDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedAdmin.nacimiento}></LabelInputEdit>
-            <SelectEdit
-              id="adminRol"
-              titulo="Rol"
-              opciones={opcionesAdmin}
-              eventoCambio={(e) => setNuevoRol(e.target.value)}
-              valorInicial={selectedAdmin.rol} // Aquí debería ser selectedAdmin.rol
-            ></SelectEdit>
+        <>
+          <div
+            className="BackgroundOverlay"
+            style={{ opacity: backgroundOpacity }}
+          />
+          <ContenedorForms>
+            <h1>Editar Administrador</h1>
+            <div className="InputContainer">
+              <LabelInputEdit id='adminName' texto="Nombre" eventoCambio={changeName} valorInicial={selectedAdmin.nombre}></LabelInputEdit>
+              <LabelInputEdit id="adminApellido" texto="Apellido" eventoCambio={changeApellido} valorInicial={selectedAdmin.apellido}></LabelInputEdit>
+              <SelectEdit id="adminTipoDocumento" titulo="Tipo Documento" opciones={opcionesDocumento} eventoCambio={changeTipoDocumento} valorInicial={selectedAdmin.tipoDocumento} readOnly={true}></SelectEdit>
+              <LabelInputEdit id='adminDocumento' tipo="number" texto="Documento" eventoCambio={changeDocumento} valorInicial={selectedAdmin.documento} readOnly={true}></LabelInputEdit>
+              <LabelInputEdit id='adminEmail' tipo="email" texto="Correo" eventoCambio={changeCorreo} valorInicial={selectedAdmin.correo}></LabelInputEdit>
+              <SelectEdit id="adminGenero" titulo="Sexo" opciones={opcionesGenero} eventoCambio={changeGenero} valorInicial={selectedAdmin.genero}></SelectEdit>
+              <LabelInputEdit id='adminDate' tipo="date" texto="Fecha Nacimiento" eventoCambio={changeNacimiento} valorInicial={selectedAdmin.nacimiento}></LabelInputEdit>
+              <SelectEdit
+                id="adminRol"
+                titulo="Rol"
+                opciones={opcionesAdmin}
+                eventoCambio={(e) => setNuevoRol(e.target.value)}
+                valorInicial={selectedAdmin.rol} // Aquí debería ser selectedAdmin.rol
+              ></SelectEdit>
 
-          </div>
-          <br />
-          <Button clase="Button" eventoClick={() => editAdmin(selectedAdmin.id)}>Editar</Button>
-          <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
-        </ContenedorForms>
-      </>
-    )}
+            </div>
+            <br />
+            <Button clase="Button" eventoClick={() => editAdmin(selectedAdmin.id)}>Editar</Button>
+            <Button clase="Button" eventoClick={handleCloseModal}>Regresar</Button>
+          </ContenedorForms>
+        </>
+      )}
     </motion.div>
   );
 }

@@ -505,7 +505,7 @@ function ProgramarExamenA1() {
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: respuesta.error || 'Error al programar el examen',
+                text: `Error al programar el examen: ${respuesta.reason}`,
                 customClass: {
                     confirmButton: 'btn-color'
                 },

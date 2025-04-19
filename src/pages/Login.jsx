@@ -56,6 +56,16 @@ function Login() {
           } else {
             navigate("/")
           }
+        } else if (respuesta.reason === "Inactivado") {
+          Swal.fire({
+            icon: "error",
+            title: "Usuario inactivo",
+            text: 'El usuario fue inactivado, si fue un error comunícate con el administrador.',
+            customClass: {
+              confirmButton: 'btn-color'
+            },
+            buttonsStyling: false
+          });
         } else {
           Swal.fire({
             icon: "error",

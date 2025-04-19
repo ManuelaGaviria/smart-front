@@ -527,7 +527,7 @@ function ProgramarClaseB2() {
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: 'Error al programar la clase',
+                text: `Error al programar la clase: ${respuesta.reason}`,
                 customClass: {
                     confirmButton: 'btn-color'
                 },
