@@ -47,7 +47,6 @@ function ProgramarA2() {
           <div className=''>
             <ImageButton icon={MdOutlineClass} texto="Programar clases" destino="/ProgramarClaseA2"></ImageButton>
             <ImageButton icon={SiTestcafe} texto="Programar examen" destino="/ProgramarExamenA2"></ImageButton>
-            <ImageButton icon={FaCalendarAlt} texto="Horario" destino="/HorarioA2"></ImageButton>
             <br></br>
             <br></br>
             <ButtonLink destino="/A2" clase="Button2">Regresar</ButtonLink>
