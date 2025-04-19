@@ -635,7 +635,6 @@ function ProgramarExamenA2() {
                 <div>
                     <button onClick={openAsignModal} className="ButtonRegresar">Asignar</button>
                     <button onClick={openCancelModal} className="ButtonRegresar">Cancelar</button>
-                    <ButtonLink destino="/HorarioExamenA2" clase="ButtonRegresar">Ver Horario</ButtonLink>
                 </div>
                 <br></br>
                 <div className='CenterTable'>
