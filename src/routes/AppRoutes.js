@@ -96,6 +96,11 @@ import GestionarExamenC1 from "../pages/PagesSuperAdmin/Niveles/C1/GestionarExam
 import CrearExamenC1 from "../pages/PagesSuperAdmin/Niveles/C1/CrearExamenC1";
 import VerExamenC1 from "../pages/PagesSuperAdmin/Niveles/C1/VerExamenC1";
 import VerExamenEscritoC1 from "../pages/PagesSuperAdmin/Niveles/C1/VerExamenEscritoC1";
+import HorarioExamenA1 from "../pages/PagesStudents/Niveles/A1/HorarioExamenA1";
+import HorarioExamenA2 from "../pages/PagesStudents/Niveles/A2/HorarioExamenA2";
+import HorarioExamenB1 from "../pages/PagesStudents/Niveles/B1/HorarioExamenB1";
+import HorarioExamenB2 from "../pages/PagesStudents/Niveles/B2/HorarioExamenB2";
+import HorarioExamenC1 from "../pages/PagesStudents/Niveles/C1/HorarioExamenC1";
 
 function AppRoutes() {
     const location = useLocation();
@@ -177,6 +182,7 @@ function AppRoutes() {
                 <Route exact path="/ProgramarClaseA1" element={<ProgramarClaseA1></ProgramarClaseA1>}></Route>
                 <Route exact path="/ProgramarExamenA1" element={<ProgramarExamenA1></ProgramarExamenA1>}></Route>
                 <Route exact path="/HorarioA1" element={<HorarioA1></HorarioA1>}></Route>
+                <Route exact path="/HorarioExamenA1" element={<HorarioExamenA1></HorarioExamenA1>}></Route>
 
                 <Route exact path="/A2" element={<A2></A2>}></Route>
                 <Route exact path="/ProgramarA2" element={<ProgramarA2></ProgramarA2>}></Route>
@@ -186,6 +192,7 @@ function AppRoutes() {
                 <Route exact path="/ProgramarClaseA2" element={<ProgramarClaseA2></ProgramarClaseA2>}></Route>
                 <Route exact path="/ProgramarExamenA2" element={<ProgramarExamenA2></ProgramarExamenA2>}></Route>
                 <Route exact path="/HorarioA2" element={<HorarioA2></HorarioA2>}></Route>
+                <Route exact path="/HorarioExamenA2" element={<HorarioExamenA2></HorarioExamenA2>}></Route>
 
                 <Route exact path="/B1" element={<B1></B1>}></Route>
                 <Route exact path="/ProgramarB1" element={<ProgramarB1></ProgramarB1>}></Route>
@@ -195,6 +202,7 @@ function AppRoutes() {
                 <Route exact path="/ProgramarClaseB1" element={<ProgramarClaseB1></ProgramarClaseB1>}></Route>
                 <Route exact path="/ProgramarExamenB1" element={<ProgramarExamenB1></ProgramarExamenB1>}></Route>
                 <Route exact path="/HorarioB1" element={<HorarioB1></HorarioB1>}></Route>
+                <Route exact path="/HorarioExamenB1" element={<HorarioExamenB1></HorarioExamenB1>}></Route>
 
                 <Route exact path="/B2" element={<B2></B2>}></Route>
                 <Route exact path="/ProgramarB2" element={<ProgramarB2></ProgramarB2>}></Route>
@@ -204,6 +212,7 @@ function AppRoutes() {
                 <Route exact path="/ProgramarClaseB2" element={<ProgramarClaseB2></ProgramarClaseB2>}></Route>
                 <Route exact path="/ProgramarExamenB2" element={<ProgramarExamenB2></ProgramarExamenB2>}></Route>
                 <Route exact path="/HorarioB2" element={<HorarioB2></HorarioB2>}></Route>
+                <Route exact path="/HorarioExamenB2" element={<HorarioExamenB2></HorarioExamenB2>}></Route>
 
                 <Route exact path="/C1" element={<C1></C1>}></Route>
                 <Route exact path="/ProgramarC1" element={<ProgramarC1></ProgramarC1>}></Route>
@@ -213,6 +222,7 @@ function AppRoutes() {
                 <Route exact path="/ProgramarClaseC1" element={<ProgramarClaseC1></ProgramarClaseC1>}></Route>
                 <Route exact path="/ProgramarExamenC1" element={<ProgramarExamenC1></ProgramarExamenC1>}></Route>
                 <Route exact path="/HorarioC1" element={<HorarioC1></HorarioC1>}></Route>
+                <Route exact path="/HorarioExamenC1" element={<HorarioExamenC1></HorarioExamenC1>}></Route>
             </Routes>
         </AnimatePresence>
     </>
