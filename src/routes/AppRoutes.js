@@ -101,6 +101,8 @@ import HorarioExamenA2 from "../pages/PagesStudents/Niveles/A2/HorarioExamenA2";
 import HorarioExamenB1 from "../pages/PagesStudents/Niveles/B1/HorarioExamenB1";
 import HorarioExamenB2 from "../pages/PagesStudents/Niveles/B2/HorarioExamenB2";
 import HorarioExamenC1 from "../pages/PagesStudents/Niveles/C1/HorarioExamenC1";
+import Reportes from "../pages/Reportes";
+import GraficaIntentos from "../pages/GraficaIntentos";
 
 function AppRoutes() {
     const location = useLocation();
@@ -119,6 +121,8 @@ function AppRoutes() {
                 <Route exact path="/ActionsStudent" element={<ActionsStudent></ActionsStudent>}></Route>
                 <Route exact path="/Solicitudes" element={<Solicitudes></Solicitudes>}></Route>
                 <Route exact path="/GestionarSolicitudes" element={<GestionarSolicitudes></GestionarSolicitudes>}></Route>
+                <Route exact path="/Reportes" element={<Reportes></Reportes>}></Route>
+                <Route exact path="/GraficaIntentos" element={<GraficaIntentos></GraficaIntentos>}></Route>
 
                 <Route exact path="/Administrador" element={<PrincipalSuperAdmin></PrincipalSuperAdmin>}></Route>
                 <Route exact path="/GestionarAdmins" element={<GestionarAdmin></GestionarAdmin>}></Route>

@@ -9,6 +9,7 @@ import { fetchBody } from '../utils/fetch';
 import { useNavigate } from 'react-router-dom';
 import { MdOutlineCallMade } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
+import { TbReportAnalytics } from "react-icons/tb";
 
 function PrincipalAdmin() {
   const navigate = useNavigate();
@@ -72,6 +73,7 @@ function PrincipalAdmin() {
             <ImageButton icon={FaChalkboardTeacher} texto="Gestionar Profesores" destino="/PrincipalTeacher" />
             <ImageButton icon={PiStudentBold} texto="Gestionar Estudiantes" destino="/PrincipalStudent" />
             <ImageButton icon={MdOutlineCallMade} texto="Gestionar Solicitudes" destino="/GestionarSolicitudes" />
+            <ImageButton icon={TbReportAnalytics} texto="Reportes" destino="/Reportes" />
           </div>
         </div>
       </motion.div>
