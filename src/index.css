@@ -1082,3 +1082,7 @@ th{
   border: none;
   cursor: pointer;
 }
+
+.contenedorGrafica{
+  background-color: white;
+}
