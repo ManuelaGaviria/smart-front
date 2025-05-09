@@ -928,7 +928,9 @@ th{
 }
 
 .notificationButton {
-  margin-top: 100px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
   position: relative;
   display: flex;
   align-items: center;
@@ -1085,4 +1087,45 @@ th{
 
 .contenedorGrafica{
   background-color: white;
+}
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* arriba del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  white-space: nowrap;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.descripcionReporte {
+  max-width: 600px;
+  line-height: 1.6;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+.descripcionReporte ul {
+  padding-left: 20px;
+}
+
+.tituloAdmin{
+  margin-bottom: 0px;
+  margin-top: 20px;
 }

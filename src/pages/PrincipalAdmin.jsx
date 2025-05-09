@@ -59,7 +59,7 @@ function PrincipalAdmin() {
         transition={{ duration: 1 }}
       >
         <div className='ButtonsAdminContainer'>
-          <div className='headerContainer'>
+          <div className=''>
             <button className='notificationButton' onClick={() => navigate('/Solicitudes')}>
               <IoMdNotificationsOutline size={24} />
               Notificaciones
@@ -68,7 +68,7 @@ function PrincipalAdmin() {
               )}
             </button>
           </div>
-          <h1>Bienvenido Administrador</h1>
+          <h1 className='tituloAdmin'>Bienvenido Administrador</h1>
           <div>
             <ImageButton icon={FaChalkboardTeacher} texto="Gestionar Profesores" destino="/PrincipalTeacher" />
             <ImageButton icon={PiStudentBold} texto="Gestionar Estudiantes" destino="/PrincipalStudent" />
