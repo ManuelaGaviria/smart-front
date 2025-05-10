@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineCallMade } from "react-icons/md";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { TbReportAnalytics } from "react-icons/tb";
+import { FiHelpCircle } from "react-icons/fi";
 
 function PrincipalAdmin() {
   const navigate = useNavigate();
@@ -47,6 +48,13 @@ function PrincipalAdmin() {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -1000 }}
       transition={{ duration: 2 }}>
+      <button
+        className="helpButton"
+        onClick={() => window.location.href = 'https://drive.google.com/file/d/1i5pgaslplUdF-ELGlIz_Z5tWp2hVOEW6/view?usp=sharing'}
+        aria-label="Ayuda"
+      >
+        <FiHelpCircle size={40} />
+      </button>
       <LogoutButton />
       <div className='logoAdminContainer'>
         <Logo2 />

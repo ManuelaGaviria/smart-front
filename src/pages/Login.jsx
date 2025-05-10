@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useContext } from "react"
 import { useNavigate } from 'react-router-dom';
-import { motion} from 'framer-motion';
+import { motion } from 'framer-motion';
 import Logo from '../components/Logo';
 import Contenedor from '../components/Contenedor';
 import LabelInput from '../components/LabelInput';
@@ -14,18 +14,19 @@ import LabelInputIcon from '../components/LabelInputIcon';
 
 function Login() {
   const navigate = useNavigate();
-  const {password, changePassword, correo, changeCorreo} = useContext (GeneralContext)
+  const { password, changePassword, correo, changeCorreo } = useContext(GeneralContext)
 
   const [logoAnimationComplete, setLogoAnimationComplete] = useState(false);
   const [animateContenedor, setAnimateContenedor] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const handleLogoAnimationComplete = () => {
     setLogoAnimationComplete(true);
     setAnimateContenedor(true); // Indica que el contenedor debe animarse
   };
 
-  async function validateLogin () {
-    if (correo === "" || password === "" ) {
+  async function validateLogin() {
+    if (correo === "" || password === "") {
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -93,10 +94,10 @@ function Login() {
 
   return (
     <motion.div className="login-container"
-    initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
-    animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
-    exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
-    transition={{ duration: 1 }}>
+      initial={{ opacity: 0, x: -1000 }} // Inicia desde la izquierda
+      animate={{ opacity: 1, x: 0 }} // Animación hacia la derecha
+      exit={{ opacity: 0, x: 1000 }} // Sale hacia la derecha
+      transition={{ duration: 1 }}>
       <Logo onAnimationComplete={handleLogoAnimationComplete}></Logo>
       {logoAnimationComplete && (
         <Contenedor animate={animateContenedor}>
@@ -109,6 +110,29 @@ function Login() {
           <br />
           <Button eventoClick={validateLogin} clase="Button">Iniciar Sesión</Button>
         </Contenedor>
+
+      )}
+      <button className="about-button" onClick={() => setShowModal(true)}>
+        Acerca de
+      </button>
+      {showModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Sobre la aplicación</h2>
+            <p>Esta plataforma permite la gestión académica entre estudiantes, profesores y administradores, facilitando la programación, seguimiento y evaluación de clases y exámenes.</p>
+            <h3>Versión de la aplicación</h3>
+            <p> Versión 1.0.0 – Mayo 2025</p>
+            <h3>Desarrolladores</h3>
+            <p>Desarrollado por estudiantes del Politécnico Colombiano Jaime Isaza Cadavid:</p>
+            <p>- Manuela Gaviria Moreno</p>
+            <p>- Juan José Muriel Rendón</p>
+            <h3>Contacto o soporte</h3>
+            <p>Para soporte técnico o comentarios, contáctanos en:</p>
+            <a href="mailto:smartacademyprojectppi@gmail.com">smartacademyprojectppi@gmail.com</a>
+            <br></br>
+            <button onClick={() => setShowModal(false)}>Cerrar</button>
+          </div>
+        </div>
       )}
     </motion.div>
   );

@@ -10,6 +10,7 @@ import LabelInputIcon from '../../components/LabelInputIcon';
 import GeneralContext from '../../context/GeneralContext';
 import Swal from 'sweetalert2';
 import ButtonLink from '../../components/ButtonLink';
+import { FiHelpCircle } from "react-icons/fi";
 
 const nivelesOrden = ['A1', 'A2', 'B1', 'B2', 'C1'];
 
@@ -199,6 +200,13 @@ function Student() {
       exit={{ opacity: 0, x: -1000 }}
       transition={{ duration: 1 }}
     >
+      <button
+        className="helpButton"
+        onClick={() => window.location.href = 'https://drive.google.com/file/d/1d-oRYbOAmw8nZneOcWBZbjFkFckOKAAa/view?usp=drive_link'}
+        aria-label="Ayuda"
+      >
+        <FiHelpCircle size={40} />
+      </button>
       <LogoutButton />
       <div className='logoAdminContainer'>
         <Logo2 />
