@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 function NavPageA2() {
   const navigate = useNavigate();
 
-  const [timeLeft, setTimeLeft] = useState(3000); // ✅ Solo una vez
+  const [timeLeft, setTimeLeft] = useState(3600); // ✅ Solo una vez
 
   // ⏳ UseEffect para el temporizador
   useEffect(() => {

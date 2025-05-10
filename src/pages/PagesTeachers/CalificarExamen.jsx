@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import Logo3 from '../../components/Logo3';
 import { motion } from 'framer-motion';
@@ -10,8 +10,19 @@ import ContenedorForms from '../../components/ContenedorForms';
 import LabelInput from '../../components/LabelInput';
 import Select from '../../components/Select';
 import GeneralContext from '../../context/GeneralContext';
+import { useNavigate } from 'react-router-dom';
 
 function CalificarExamen() {
+  const navigate = useNavigate();
+  useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "profesor" });
+            if (!respuesta.exito) {
+                navigate("/");
+            }
+        };
+        verificar();
+    }, []);
 
   const { documento, changeDocumento } = useContext(GeneralContext);
 

@@ -16,6 +16,16 @@ function GraficaIntentos() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "administrador" });
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        };
+        verificar();
+    }, []);
+
+    useEffect(() => {
         const cargarDatos = async () => {
             try {
                 const generado = await fetchGet('/reportes/intentosExamen');

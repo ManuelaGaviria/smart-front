@@ -1,13 +1,24 @@
 import { motion } from 'framer-motion';
 import Logo2 from '../components/Logo2';
 import Button from '../components/Button';
-import { fetchGet } from '../utils/fetch';
+import { fetchGet, fetchBody } from '../utils/fetch';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import ButtonLink from '../components/ButtonLink';
+import { useEffect } from 'react';
 
 function Reportes() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const verificar = async () => {
+            const respuesta = await fetchBody('/usuarios/', 'POST', { rol: "administrador" });
+            if (respuesta.exito === false) {
+                navigate("/")
+            }
+        };
+        verificar();
+    }, []);
 
     async function intentosExamen() {
         const respuesta = await fetchGet('/reportes/intentosExamen');

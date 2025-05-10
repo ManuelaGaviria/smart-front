@@ -58,8 +58,6 @@ function Student() {
         nivel: nivelActual
       });
 
-      if (!finalizadoResp.exito) throw new Error("Error al verificar el nivel actual");
-
       if (!finalizadoResp.finalizado) {
         // Si no ha terminado, redirigir al nivel actual
         navigate(`/${nivelActual}`);
