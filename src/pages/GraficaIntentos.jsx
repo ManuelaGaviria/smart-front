@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { fetchGet } from '../utils/fetch';
+import { fetchGet, fetchBody } from '../utils/fetch';
 import Swal from 'sweetalert2';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
